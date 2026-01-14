@@ -428,44 +428,44 @@ build
 
 ### Core Setup
 
-- [ ] React Router v7 đã khởi tạo
-- [ ] Git repository đã init
-- [ ] `npm run dev` chạy thành công
+- [x] React Router v7 đã khởi tạo
+- [x] Git repository đã init
+- [x] `npm run dev` chạy thành công
 
 ### Database & Backend
 
-- [ ] Prisma đã cài đặt (`prisma`, `tsx`)
-- [ ] `schema.prisma` đã cấu hình
-- [ ] `DATABASE_URL` đã set trong `.env`
-- [ ] Migration đầu tiên đã chạy thành công
-- [ ] Supabase Client đã setup (`@supabase/supabase-js`)
-- [ ] Supabase types đã generate
+- [x] Prisma đã cài đặt (`prisma`, `tsx`)
+- [x] `schema.prisma` đã cấu hình
+- [x] `DATABASE_URL` đã set trong `.env`
+- [x] Migration đầu tiên đã chạy thành công
+- [x] Supabase Client đã setup (`@supabase/supabase-js`)
+- [x] Supabase types đã generate
 
 ### Frontend Libraries
 
-- [ ] TailwindCSS đã hoạt động
-- [ ] `cn` utility đã tạo
-- [ ] Shadcn/UI đã init
-- [ ] Lucide React icons đã cài
-- [ ] TanStack Query đã setup
-- [ ] Zustand đã cài (nếu cần)
+- [x] TailwindCSS đã hoạt động
+- [x] `cn` utility đã tạo
+- [x] Shadcn/UI đã init
+- [x] Lucide React icons đã cài
+- [x] TanStack Query đã setup
+- [x] Zustand đã cài (nếu cần)
 
 ### Form & Validation
 
-- [ ] React Hook Form đã cài
-- [ ] Zod đã cài
+- [x] React Hook Form đã cài
+- [x] Zod đã cài
 
 ### Dev Tools
 
-- [ ] ESLint đã cấu hình
-- [ ] Prettier đã cấu hình
-- [ ] npm scripts đã thêm (`lint`, `format`)
+- [x] ESLint đã cấu hình
+- [x] Prettier đã cấu hình
+- [x] npm scripts đã thêm (`lint`, `format`)
 
 ### Environment
 
-- [ ] `.env` đã tạo và cấu hình
-- [ ] `.env.example` đã tạo
-- [ ] `.gitignore` đã cập nhật
+- [x] `.env` đã tạo và cấu hình
+- [x] `.env.example` đã tạo
+- [x] `.gitignore` đã cập nhật
 
 ---
 
