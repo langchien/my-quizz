@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
 import type { Route } from './+types/root'
 import './app.css'
+import { ThemeProvider } from './components/themes/ThemeProvider'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -50,7 +51,9 @@ export default function App() {
   )
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
+        <Outlet />
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }

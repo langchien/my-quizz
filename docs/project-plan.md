@@ -17,6 +17,7 @@ Xây dựng ứng dụng Quiz platform với hai mục tiêu chính:
   - [x] Khởi tạo dự án React Router v7 + Vite.
   - [x] Cấu hình TailwindCSS + CN (shadcn/ui compatible utils).
   - [x] Setup Supabase Project & Prisma Schema ban đầu.
+  - [x] Trang chủ (Welcome Page).
   - [ ] Chức năng Đăng ký / Đăng nhập (Google OAuth & Email).
   - [ ] Bảo vệ Route (Private Routes).
   - [ ] Thiết lập RLS Policies cho User ownership (Resource-based Authorization).
