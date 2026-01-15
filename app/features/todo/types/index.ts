@@ -13,3 +13,34 @@ export const todoKeys = {
   details: () => [...todoKeys.all, 'detail'] as const,
   detail: (id: string) => [...todoKeys.details(), id] as const,
 }
+
+// Types cho Pagination
+export interface PaginatedResult<T> {
+  data: T[]
+  totalCount: number
+  totalPages: number
+  currentPage: number
+  pageSize: number
+  hasNextPage: boolean
+  hasPrevPage: boolean
+}
+
+// Types cho Import
+export interface ImportTodoItem {
+  id?: string
+  title: string
+  completed?: boolean
+}
+
+export interface SkippedItem {
+  id: string
+  title: string
+  reason: string
+}
+
+export interface ImportResult {
+  success: boolean
+  insertedCount: number
+  skippedCount: number
+  skippedItems: SkippedItem[]
+}

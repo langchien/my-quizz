@@ -1,10 +1,24 @@
 import { cn } from '@/lib/utils'
 import { ClipboardList, Loader2 } from 'lucide-react'
-import { useTodos } from '../hooks/useTodos'
+import { useState } from 'react'
+import { usePaginatedTodos } from '../hooks/usePaginatedTodos'
+import { Pagination } from './Pagination'
 import { TodoItem } from './TodoItem'
 
+const PAGE_SIZE = 10
+
 export const TodoList: React.FC = () => {
-  const { data: todos, isLoading, isError, error } = useTodos()
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const {
+    data: paginatedData,
+    isLoading,
+    isError,
+    error,
+  } = usePaginatedTodos({
+    page: currentPage,
+    pageSize: PAGE_SIZE,
+  })
 
   if (isLoading) {
     return (
@@ -32,7 +46,7 @@ export const TodoList: React.FC = () => {
     )
   }
 
-  if (!todos || todos.length === 0) {
+  if (!paginatedData || paginatedData.data.length === 0) {
     return (
       <div className='flex flex-col items-center justify-center py-16 gap-4'>
         <div className='p-4 bg-muted/30 rounded-full'>
@@ -46,26 +60,29 @@ export const TodoList: React.FC = () => {
     )
   }
 
+  const { data: todos, totalCount, totalPages, hasNextPage, hasPrevPage } = paginatedData
+
+  // Tính completed count cho trang hiện tại
   const completedCount = todos.filter((t) => t.completed).length
-  const totalCount = todos.length
+  const pageItemCount = todos.length
 
   return (
     <div className='space-y-4'>
       {/* Progress */}
       <div className='flex items-center justify-between px-2'>
         <p className='text-sm text-muted-foreground'>
-          <span className='font-semibold text-foreground'>{completedCount}</span> / {totalCount}{' '}
-          hoàn thành
+          <span className='font-semibold text-foreground'>{completedCount}</span> / {pageItemCount}{' '}
+          hoàn thành (trang này)
         </p>
         <div className='flex items-center gap-2'>
           <div className='h-2 w-24 bg-muted rounded-full overflow-hidden'>
             <div
               className='h-full bg-linear-to-r from-primary to-primary/70 rounded-full transition-all duration-500 ease-out'
-              style={{ width: `${(completedCount / totalCount) * 100}%` }}
+              style={{ width: `${(completedCount / pageItemCount) * 100}%` }}
             />
           </div>
           <span className='text-xs text-muted-foreground font-mono'>
-            {Math.round((completedCount / totalCount) * 100)}%
+            {Math.round((completedCount / pageItemCount) * 100)}%
           </span>
         </div>
       </div>
@@ -78,6 +95,17 @@ export const TodoList: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        hasNextPage={hasNextPage}
+        hasPrevPage={hasPrevPage}
+        onPageChange={setCurrentPage}
+        totalCount={totalCount}
+        pageSize={PAGE_SIZE}
+      />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { useState } from 'react'
 import type { Route } from './+types/root'
 import './app.css'
 import { ThemeProvider } from './components/themes/ThemeProvider'
+import { Toaster } from './components/ui/sonner'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -53,6 +54,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
         <Outlet />
+        <Toaster />
       </ThemeProvider>
     </QueryClientProvider>
   )

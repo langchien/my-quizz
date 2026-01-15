@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { Check, Loader2, Pencil, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
@@ -46,19 +48,18 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   }
 
   return (
-    <div
+    <Card
       className={cn(
-        'group flex items-center gap-3 p-4 rounded-xl border border-border/50',
-        'bg-linear-to-r from-background to-muted/30',
+        'group flex-row items-center gap-3 p-4',
         'hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5',
         'transition-all duration-300 ease-out',
         'animate-in fade-in-0 slide-in-from-left-2',
-        todo.completed && 'opacity-60 bg-muted/50',
+        todo.completed && 'opacity-60',
         deleteMutation.isPending && 'scale-95 opacity-50',
       )}
     >
       {/* Checkbox */}
-      <div className='flex-shrink-0'>
+      <div className='shrink-0'>
         <Checkbox
           checked={todo.completed}
           onCheckedChange={handleToggle}
@@ -73,18 +74,12 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
       {/* Content */}
       <div className='flex-1 min-w-0'>
         {isEditing ? (
-          <input
+          <Input
             type='text'
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
             onKeyDown={handleKeyDown}
             autoFocus
-            className={cn(
-              'w-full px-3 py-1.5 rounded-lg',
-              'bg-background/80 border border-primary/30',
-              'focus:outline-none focus:ring-2 focus:ring-primary/30',
-              'transition-all duration-200',
-            )}
           />
         ) : (
           <p
@@ -156,6 +151,6 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
           </>
         )}
       </div>
-    </div>
+    </Card>
   )
 }

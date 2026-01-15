@@ -1,7 +1,7 @@
 import { Header } from '@/components/layout/Header'
 import { Card } from '@/components/ui/card'
 import { CheckCircle, Sparkles, Zap } from 'lucide-react'
-import { TodoForm, TodoList } from '../components'
+import { ImportTodosModal, TodoForm, TodoList } from '../components'
 
 export default function Todo1Page() {
   return (
@@ -29,7 +29,10 @@ export default function Todo1Page() {
               </p>
             </div>
 
-            <TodoForm />
+            <div className='flex items-center gap-3'>
+              <ImportTodosModal />
+              <TodoForm />
+            </div>
           </div>
         </div>
       </div>

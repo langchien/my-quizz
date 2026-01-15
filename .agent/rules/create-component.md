@@ -4,6 +4,8 @@ trigger: always_on
 
 # Component Creation Rules
 
+0. **Style UX/UI component**
+   - Ưu tiên sử dụng các component có sẵn, đặc biệt các component của shadcn ui
 1. **Structure**:
    - Tạo thư mục trùng tên component (nếu component phức tạp).
    - File chính: `index.tsx` hoặc `TênComponent.tsx`.

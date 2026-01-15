@@ -1,3 +1,5 @@
+export { ImportTodosModal } from './ImportTodosModal'
+export { Pagination } from './Pagination'
 export { TodoForm } from './TodoForm'
 export { TodoItem } from './TodoItem'
 export { TodoList } from './TodoList'
