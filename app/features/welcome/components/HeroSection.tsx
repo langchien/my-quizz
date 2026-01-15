@@ -13,7 +13,7 @@ export const HeroSection: React.FC = () => {
         </h1>
 
         <p className='mx-auto max-w-2xl text-lg opacity-90 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 sm:text-xl'>
-          Học tập thông minh, Thi thử hiệu quả
+          Đây là trang template sử dụng React Query + Supabase để CRUD
         </p>
       </div>
     </section>
