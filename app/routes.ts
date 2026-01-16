@@ -4,6 +4,8 @@ export default [
   index('features/welcome/pages/home.tsx'),
   route('login', 'features/auth/pages/login.tsx'),
   route('register', 'features/auth/pages/register.tsx'),
+  route('forgot-password', 'features/auth/pages/forgot-password.tsx'),
+  route('reset-password', 'features/auth/pages/reset-password.tsx'),
   route('auth/callback', 'features/auth/pages/callback.tsx'),
 
   // Protected routes - yêu cầu đăng nhập

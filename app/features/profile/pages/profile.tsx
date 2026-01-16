@@ -1,8 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useProtectedContext } from '@/hooks/useProtectedContext'
-import { CalendarDays, Mail } from 'lucide-react'
+import { CalendarDays, Mail, Shield } from 'lucide-react'
 import { AvatarUpload } from '../components/AvatarUpload'
+import { ChangePasswordForm } from '../components/ChangePasswordForm'
+import { DeleteAccountDialog } from '../components/DeleteAccountDialog'
 import { ProfileForm } from '../components/ProfileForm'
 import { useProfile } from '../hooks/useProfile'
 
@@ -64,7 +67,7 @@ export default function ProfilePage() {
     : null
 
   return (
-    <div className='container mx-auto max-w-4xl py-8'>
+    <div className='container mx-auto max-w-4xl py-8 px-2'>
       <div className='mb-8'>
         <h1 className='text-3xl font-bold'>Hồ sơ cá nhân</h1>
         <p className='text-muted-foreground'>
@@ -105,16 +108,48 @@ export default function ProfilePage() {
           </Card>
         </div>
 
-        {/* Right Column - Profile Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Chỉnh sửa hồ sơ</CardTitle>
-            <CardDescription>Cập nhật thông tin cá nhân của bạn</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ProfileForm key={profile?.updatedAt} userId={user.id} profile={profile ?? null} />
-          </CardContent>
-        </Card>
+        {/* Right Column - Profile Form & Security */}
+        <div className='space-y-6'>
+          <Card>
+            <CardHeader>
+              <CardTitle>Chỉnh sửa hồ sơ</CardTitle>
+              <CardDescription>Cập nhật thông tin cá nhân của bạn</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ProfileForm key={profile?.updatedAt} userId={user.id} profile={profile ?? null} />
+            </CardContent>
+          </Card>
+
+          {/* Security Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center gap-2'>
+                <Shield className='h-5 w-5' />
+                Bảo mật & Tài khoản
+              </CardTitle>
+              <CardDescription>Quản lý mật khẩu và tài khoản của bạn</CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-6'>
+              {/* Change Password */}
+              <div>
+                <h3 className='text-sm font-medium mb-3'>Đổi mật khẩu</h3>
+                <ChangePasswordForm />
+              </div>
+
+              <Separator />
+
+              {/* Delete Account */}
+              <div>
+                <h3 className='text-sm font-medium mb-2'>Xóa tài khoản</h3>
+                <p className='text-sm text-muted-foreground mb-3'>
+                  Xóa vĩnh viễn tài khoản và tất cả dữ liệu của bạn. Hành động này không thể hoàn
+                  tác.
+                </p>
+                <DeleteAccountDialog />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )
