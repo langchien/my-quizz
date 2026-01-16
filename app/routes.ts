@@ -9,6 +9,7 @@ export default [
   // Protected routes - yêu cầu đăng nhập
   layout('layouts/protected.tsx', [
     route('todo', 'features/todo/pages/todo.tsx'),
+    route('profile', 'features/profile/pages/profile.tsx'),
     // Thêm các route cần bảo vệ ở đây
   ]),
 ] satisfies RouteConfig

@@ -11,6 +11,7 @@ import {
 import { PAGES } from '@/config/pages'
 import { useAuth } from '@/features/auth/context/AuthContext'
 import { logout } from '@/features/auth/hooks/useAuthActions'
+import { useProfile } from '@/features/profile/hooks/useProfile'
 import { LogOut, User } from 'lucide-react'
 import { Link, useNavigate } from 'react-router'
 import { toast } from 'sonner'
@@ -18,6 +19,9 @@ import { toast } from 'sonner'
 export function UserMenu() {
   const { user, loading } = useAuth()
   const navigate = useNavigate()
+
+  // Fetch profile từ bảng User
+  const { data: profile } = useProfile(user?.id)
 
   // Đang loading
   if (loading) {
@@ -33,11 +37,19 @@ export function UserMenu() {
     )
   }
 
-  // Lấy thông tin user
+  // Ưu tiên lấy từ bảng User, fallback sang user_metadata
   const displayName =
-    user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'
+    profile?.displayName ||
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.email?.split('@')[0] ||
+    'User'
+
   const email = user.email || ''
-  const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || ''
+
+  const avatarUrl =
+    profile?.avatarUrl || user.user_metadata?.avatar_url || user.user_metadata?.picture || ''
+
   const initials = displayName.charAt(0).toUpperCase()
 
   const handleLogout = async () => {

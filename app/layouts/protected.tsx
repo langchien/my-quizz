@@ -1,3 +1,4 @@
+import { Header } from '@/components/layout/Header'
 import { PAGES } from '@/config/pages'
 import { supabase } from '@/lib/supabase'
 import { Outlet, redirect } from 'react-router'
@@ -44,6 +45,12 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 clientLoader.hydrate = true as const
 
 export default function ProtectedLayout({ loaderData }: Route.ComponentProps) {
-  // loaderData.user chứa thông tin user đã xác thực
-  return <Outlet context={{ user: loaderData.user }} />
+  return (
+    <div className='flex min-h-screen flex-col'>
+      <Header />
+      <main className='flex-1'>
+        <Outlet context={{ user: loaderData.user }} />
+      </main>
+    </div>
+  )
 }
