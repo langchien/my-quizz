@@ -5,9 +5,9 @@ import { Github } from 'lucide-react'
 import { Link } from 'react-router'
 import LogoFull from './quizz_logo_full.png'
 import LogoIcon from './quizz_logo_icon.png'
+import { UserMenu } from './UserMenu'
 
 export const Header: React.FC = () => {
-  // TODO: Kiểm tra xem người dùng đã đăng nhập hay chưa
   return (
     <header className='sticky top-0 z-50 h-16 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60'>
       <div className='mx-auto container flex h-full items-center justify-between px-4'>
@@ -31,9 +31,7 @@ export const Header: React.FC = () => {
 
           <ModeToggle />
 
-          <Button size='sm' asChild>
-            <Link to={PAGES.LOGIN}>Đăng nhập</Link>
-          </Button>
+          <UserMenu />
         </div>
       </div>
     </header>

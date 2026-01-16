@@ -18,8 +18,8 @@ Xây dựng ứng dụng Quiz platform với hai mục tiêu chính:
   - [x] Cấu hình TailwindCSS + CN (shadcn/ui compatible utils).
   - [x] Setup Supabase Project & Prisma Schema ban đầu.
   - [x] Trang chủ (Welcome Page).
-  - [ ] Chức năng Đăng ký / Đăng nhập (Google OAuth & Email).
-  - [ ] Bảo vệ Route (Private Routes).
+  - [x] Chức năng Đăng ký / Đăng nhập (Google OAuth & Email).
+  - [x] Bảo vệ Route (Private Routes).
   - [ ] Thiết lập RLS Policies cho User ownership (Resource-based Authorization).
   - [ ] Generate Supabase Types từ Prisma Schema.
 
