@@ -1,18 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Moon, Sun, Plus, Trash2, Edit, Play } from 'lucide-react'
-import { useAuth } from '@/hooks/useAuth'
 import { useTheme } from '@/components/theme-provider'
-import { useQuizzes } from '@/hooks/useQuizzes'
-import { useNavigate } from 'react-router-dom'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +10,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { useAuth } from '@/hooks/useAuth'
+import { useQuizzes } from '@/hooks/useQuizzes'
+import { roomService } from '@/services/roomService'
+import { Edit, Moon, Play, Plus, Sun, Trash2 } from 'lucide-react'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function Dashboard() {
   const { user, logout } = useAuth()
@@ -43,9 +44,20 @@ export default function Dashboard() {
     await deleteQuiz(id)
   }
 
+  const handleHost = async (quizId: string) => {
+    if (!user) return
+    try {
+      const { sessionId } = await roomService.createLiveSession(quizId, user.uid)
+      navigate(`/host/${sessionId}`)
+    } catch (err) {
+      console.error(err)
+      alert('Không thể tạo phòng lúc này')
+    }
+  }
+
   return (
     <div className='min-h-screen bg-gray-50 transition-colors duration-300 dark:bg-slate-950'>
-      <header className='bg-gradient-to-r from-red-600 via-rose-500 to-orange-500 text-white shadow-lg'>
+      <header className='bg-linear-to-r from-red-600 via-rose-500 to-orange-500 text-white shadow-lg'>
         <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-4'>
           <h1
             className='cursor-pointer text-2xl font-bold tracking-tight'
@@ -210,7 +222,8 @@ export default function Dashboard() {
 
                   <Button
                     size='sm'
-                    className='gap-2 border-0 bg-gradient-to-r from-orange-500 to-rose-500 text-white hover:from-orange-600 hover:to-rose-600'
+                    className='gap-2 border-0 bg-linear-to-r from-orange-500 to-rose-500 text-white hover:from-orange-600 hover:to-rose-600'
+                    onClick={() => handleHost(quiz.id)}
                   >
                     <Play size={16} /> Host
                   </Button>

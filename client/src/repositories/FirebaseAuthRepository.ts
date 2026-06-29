@@ -1,17 +1,21 @@
 import {
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  updateProfile,
   GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
+  updateProfile,
   type User as FirebaseUser,
 } from 'firebase/auth'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
-import { auth, db } from '../lib/firebase'
-import type { IAuthRepository, LoginCredentials, RegisterCredentials } from './IAuthRepository'
-import { type User } from '../types/user'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { auth, db } from '@/lib/firebase'
+import { type User } from '@/types/user'
+import type {
+  IAuthRepository,
+  LoginCredentials,
+  RegisterCredentials,
+} from '@/repositories/IAuthRepository'
 
 export class FirebaseAuthRepository implements IAuthRepository {
   getCurrentUser(): Promise<User | null> {

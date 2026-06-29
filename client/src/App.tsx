@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import AppRoutes from './routes/AppRoutes'
 import { useAuth } from '@/hooks/useAuth'
+import { useEffect } from 'react'
+import AppRoutes from '@/routes/AppRoutes'
 
 export function App() {
   const { initialize } = useAuth()

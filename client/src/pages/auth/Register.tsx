@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
-import { authService } from '../../services/authService'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import { z } from 'zod'
+import { authService } from '@/services/authService'
 
 const registerSchema = z.object({
   displayName: z.string().min(2, 'Tên hiển thị phải có ít nhất 2 ký tự'),

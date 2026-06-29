@@ -1,10 +1,10 @@
+import { useAuth } from '@/hooks/useAuth'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '@/hooks/useAuth'
-import { authService } from '../../services/authService'
+import { z } from 'zod'
+import { authService } from '@/services/authService'
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Vui lòng nhập Email').email('Địa chỉ email không hợp lệ'),

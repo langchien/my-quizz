@@ -1,17 +1,17 @@
 import {
   collection,
+  deleteDoc,
   doc,
-  setDoc,
   getDoc,
   getDocs,
   query,
-  where,
+  setDoc,
   updateDoc,
-  deleteDoc,
+  where,
 } from 'firebase/firestore'
-import { db } from '../lib/firebase'
-import type { IQuizRepository } from './IQuizRepository'
-import type { Quiz } from '../types/quiz'
+import { db } from '@/lib/firebase'
+import type { Quiz } from '@/types/quiz'
+import type { IQuizRepository } from '@/repositories/IQuizRepository'
 
 export class FirebaseQuizRepository implements IQuizRepository {
   private collectionName = 'quizzes'

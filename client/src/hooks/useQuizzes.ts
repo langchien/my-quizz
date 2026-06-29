@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react'
-import type { Quiz } from '../types/quiz'
-import { quizService } from '../services/quizService'
-import { useAuth } from './useAuth'
+import { useCallback, useState } from 'react'
+import { quizService } from '@/services/quizService'
+import type { Quiz } from '@/types/quiz'
+import { useAuth } from '@/hooks/useAuth'
 
 export function useQuizzes() {
   const { user } = useAuth()

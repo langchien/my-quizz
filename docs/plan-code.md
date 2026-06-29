@@ -82,22 +82,22 @@ client/src/
 
 ### PHẦN 4: CHẾ ĐỘ CHƠI LIVE (REAL-TIME GAME SESSION)
 
-- [ ] **4.1. Thiết kế Repository & Service cho Live Game**
-  - [ ] Định nghĩa `IRoomRepository` interface.
-  - [ ] Triển khai `FirebaseRoomRepository` sử dụng Firestore Real-time Listeners (`onSnapshot`) để lắng nghe sự thay đổi của phòng (`sessions`), danh sách người chơi (`participants`), và câu trả lời (`answers`).
-  - [ ] Tạo `roomService` xử lý logic game (tạo phòng, join phòng, cập nhật câu hỏi hiện tại, tính điểm).
-- [ ] **4.2. Viết Custom Hook `useLiveRoom`**
-  - [ ] Trạng thái đồng bộ real-time cho Host và Player.
-- [ ] **4.3. Phát triển UI phía Host (Người tổ chức)**
-  - [ ] **Màn hình Lobby Chờ:** Hiển thị mã phòng gồm 5-6 ký tự chữ + số ngẫu nhiên, danh sách người chơi tham gia real-time. Có nút "Bắt đầu".
-  - [ ] **Màn hình Câu hỏi đang diễn ra:** Hiển thị nội dung câu hỏi, đếm ngược thời gian, số lượng người chơi đã nộp bài. Nút "Kết thúc câu hỏi" hoặc tự động kết thúc khi hết giờ.
-  - [ ] **Màn hình Leaderboard câu hỏi:** Hiển thị top 3/5 người chơi điểm cao nhất sau câu hỏi đó kèm hiệu ứng hoạt họa tăng điểm.
-  - [ ] **Màn hình Kết thúc game:** Hiển thị bục vinh quang (Podium) vinh danh Top 3 người chơi thắng cuộc.
-- [ ] **4.4. Phát triển UI phía Player (Người chơi)**
-  - [ ] **Màn hình Vào phòng:** Nhập mã phòng và tên hiển thị (không cần tài khoản).
-  - [ ] **Màn hình Chờ Host bắt đầu:** Animation động tạo cảm giác hồi hộp.
-  - [ ] **Màn hình Trả lời:** Hiển thị 4 nút màu sắc lớn tương ứng 4 đáp án (hoặc hiển thị cả nội dung câu hỏi tùy thiết kế). Có thanh tiến trình đếm ngược.
-  - [ ] **Màn hình Phản hồi:** Hiển thị ngay lập tức kết quả Đúng/Sai, số điểm nhận được (tính theo công thức chính xác + tốc độ), và chuỗi trả lời đúng (Streak).
+- [x] **4.1. Thiết kế Repository & Service cho Live Game**
+  - [x] Định nghĩa `IRoomRepository` interface.
+  - [x] Triển khai `FirebaseRoomRepository` sử dụng Firestore Real-time Listeners (`onSnapshot`) để lắng nghe sự thay đổi của phòng (`sessions`), danh sách người chơi (`participants`), và câu trả lời (`answers`).
+  - [x] Tạo `roomService` xử lý logic game (tạo phòng, join phòng, cập nhật câu hỏi hiện tại, tính điểm).
+- [x] **4.2. Viết Custom Hook `useLiveRoom`**
+  - [x] Trạng thái đồng bộ real-time cho Host và Player.
+- [x] **4.3. Phát triển UI phía Host (Người tổ chức)**
+  - [x] **Màn hình Lobby Chờ:** Hiển thị mã phòng gồm 5-6 ký tự chữ + số ngẫu nhiên, danh sách người chơi tham gia real-time. Có nút "Bắt đầu".
+  - [x] **Màn hình Câu hỏi đang diễn ra:** Hiển thị nội dung câu hỏi, đếm ngược thời gian, số lượng người chơi đã nộp bài. Nút "Kết thúc câu hỏi" hoặc tự động kết thúc khi hết giờ.
+  - [x] **Màn hình Leaderboard câu hỏi:** Hiển thị top 3/5 người chơi điểm cao nhất sau câu hỏi đó kèm hiệu ứng hoạt họa tăng điểm.
+  - [x] **Màn hình Kết thúc game:** Hiển thị bục vinh quang (Podium) vinh danh Top 3 người chơi thắng cuộc.
+- [x] **4.4. Phát triển UI phía Player (Người chơi)**
+  - [x] **Màn hình Vào phòng:** Nhập mã phòng và tên hiển thị (không cần tài khoản).
+  - [x] **Màn hình Chờ Host bắt đầu:** Animation động tạo cảm giác hồi hộp.
+  - [x] **Màn hình Trả lời:** Hiển thị 4 nút màu sắc lớn tương ứng 4 đáp án (hoặc hiển thị cả nội dung câu hỏi tùy thiết kế). Có thanh tiến trình đếm ngược.
+  - [x] **Màn hình Phản hồi:** Hiển thị ngay lập tức kết quả Đúng/Sai, số điểm nhận được (tính theo công thức chính xác + tốc độ), và chuỗi trả lời đúng (Streak).
 
 ---
 

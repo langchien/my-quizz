@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
-import { envConfig } from '../config/env'
+import { envConfig } from '@/config/env'
 
 const firebaseConfig = {
   apiKey: envConfig.VITE_FIREBASE_API_KEY,

@@ -1,11 +1,14 @@
-import React from 'react'
-import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-router-dom'
-import Login from '../pages/auth/Login'
-import Register from '../pages/auth/Register'
-import Dashboard from '../pages/dashboard/Dashboard'
-import QuizEditor from '../pages/dashboard/QuizEditor'
-import ProtectedRoute from './ProtectedRoute'
 import { useAuth } from '@/hooks/useAuth'
+import React from 'react'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
+import Login from '@/pages/auth/Login'
+import Register from '@/pages/auth/Register'
+import Dashboard from '@/pages/dashboard/Dashboard'
+import QuizEditor from '@/pages/dashboard/QuizEditor'
+import LiveHost from '@/pages/host/LiveHost'
+import JoinRoom from '@/pages/player/JoinRoom'
+import LivePlayer from '@/pages/player/LivePlayer'
+import ProtectedRoute from '@/routes/ProtectedRoute'
 
 // AuthGuard for public routes (redirects to dashboard if already logged in)
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -64,8 +67,20 @@ const router = createBrowserRouter([
             path: '/dashboard/quiz/:id/edit',
             element: <QuizEditor />,
           },
+          {
+            path: '/host/:sessionId',
+            element: <LiveHost />,
+          },
           // Additional protected routes will go here
         ],
+      },
+      {
+        path: '/join',
+        element: <JoinRoom />,
+      },
+      {
+        path: '/play/:sessionId',
+        element: <LivePlayer />,
       },
       {
         // Fallback route

@@ -1,19 +1,7 @@
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useQuizzes } from '@/hooks/useQuizzes'
-import type { Question, AnswerOption } from '@/types/quiz'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-  CardDescription,
-} from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -21,7 +9,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowLeft, Save, Plus, Trash2, CheckCircle2 } from 'lucide-react'
+import { Textarea } from '@/components/ui/textarea'
+import { useQuizzes } from '@/hooks/useQuizzes'
+import type { AnswerOption, Question } from '@/types/quiz'
+import { ArrowLeft, CheckCircle2, Plus, Save, Trash2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 // Simple ID generator to avoid adding external dependency just for UI temp IDs
 const generateId = () => Math.random().toString(36).substring(2, 9)

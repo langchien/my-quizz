@@ -1,3 +1,3 @@
-import { FirebaseQuizRepository } from '../repositories/FirebaseQuizRepository'
+import { FirebaseQuizRepository } from '@/repositories/FirebaseQuizRepository'
 
 export const quizService = new FirebaseQuizRepository()

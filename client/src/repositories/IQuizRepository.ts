@@ -1,4 +1,4 @@
-import type { Quiz } from '../types/quiz'
+import type { Quiz } from '@/types/quiz'
 
 export interface IQuizRepository {
   createQuiz(quizData: Omit<Quiz, 'id' | 'createdAt' | 'updatedAt'>): Promise<Quiz>

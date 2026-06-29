@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import type { User } from '../types/user'
-import { authService } from '../services/authService'
+import { authService } from '@/services/authService'
+import type { User } from '@/types/user'
 
 interface AuthState {
   user: User | null
@@ -8,7 +8,7 @@ interface AuthState {
   initialized: boolean
   setUser: (user: User | null) => void
   setLoading: (loading: boolean) => void
-  initialize: () => void
+  initialize: () => () => void
   logout: () => Promise<void>
 }
 

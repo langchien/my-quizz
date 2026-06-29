@@ -17,3 +17,8 @@ const snap = await getDoc(doc(db, "quizzes", id));
 // ✅ GOOD — component qua hook
 const { quiz, isLoading } = useQuiz(quizId);
 ```
+
+## Định dạng Import
+
+Ưu tiên sử dụng tuyệt đối (absolute imports) thông qua alias `@/` thay vì đường dẫn tương đối để import các module nội bộ của dự án. 
+Ví dụ: thay vì `../../components/Button`, hãy sử dụng `@/components/Button`. Điều này giúp tránh tình trạng "relative import hell" và dễ dàng refactor.
