@@ -21,8 +21,12 @@ Các quy tắc (Rules) và quy trình (Workflows) chi tiết nằm ở các file
 
 ## Cấu trúc thư mục Agent
 
-| File / Thư mục           | Ý nghĩa                            |
-| ------------------------ | ---------------------------------- |
-| `.agents/rules/`         | Chứa các quy tắc code, kiến trúc   |
-| `.agents/skills/`        | Chứa các bộ kỹ năng (React, Shadcn, Vercel...) giúp Agent tối ưu hóa code sinh ra |
-| `.agents/workflows/`     | Chứa các quy trình làm việc chung  |
+| File / Thư mục       | Ý nghĩa                                                                           |
+| -------------------- | --------------------------------------------------------------------------------- |
+| `.agents/rules/`     | Chứa các quy tắc code, kiến trúc                                                  |
+| `.agents/skills/`    | Chứa các bộ kỹ năng (React, Shadcn, Vercel...) giúp Agent tối ưu hóa code sinh ra |
+| `.agents/workflows/` | Chứa các quy trình làm việc chung                                                 |
+
+## Ngôn ngữ sử dụng
+
+- Dự án nhằm phục vụ cho người Việt Nam và sử dụng tiếng Việt, vì vậy các phần liên quan đến hiển thị ngôn ngữ hãy để tiếng việt

@@ -28,40 +28,43 @@ client/src/
 ## TIẾN ĐỘ & KẾ HOẠCH CHI TIẾT (CHECKLIST)
 
 ### PHẦN 1: THIẾT LẬP NỀN TẢNG (FOUNDATION & CORE SETUP)
-- [ ] **1.1. Cấu hình Firebase Console**
-  - [ ] Tạo project Firebase (ví dụ: `my-quizz-dev`).
-  - [ ] Bật Firebase Authentication (Email/Password).
-  - [ ] Bật Firestore Database (chọn chế độ test/mở rule đọc ghi cho môi trường phát triển).
-- [ ] **1.2. Khởi tạo & Cài đặt Thư viện phía Client**
-  - [ ] Cài đặt firebase SDK: `npm install firebase` trong thư mục `client`.
-  - [ ] Cài đặt Lucide React để dùng icons: `npm install lucide-react`.
-  - [ ] Cài đặt React Router DOM: `npm install react-router-dom`.
-- [ ] **1.3. Cấu hình Firebase Connection**
-  - [ ] Tạo file `.env` và `.env.example` chứa thông tin kết nối Firebase.
-  - [ ] Tạo file [firebase.ts](file:///p:/Nodejs/my-quizz/client/src/lib/firebase.ts) khởi tạo Firebase App, Auth, và Firestore.
-- [ ] **1.4. Định nghĩa Domain Types (client/src/types)**
-  - [ ] Tạo file `user.ts` (User profile).
-  - [ ] Tạo file `quiz.ts` (Quiz, Question, AnswerOption).
-  - [ ] Tạo file `room.ts` (GameSession/Room, Participant, PlayerAnswer, Leaderboard).
+
+- [x] **1.1. Cấu hình Firebase Console**
+  - [x] Tạo project Firebase (ví dụ: `my-quizz-dev`).
+  - [x] Bật Firebase Authentication (Email/Password).
+  - [x] Bật Firestore Database (chọn chế độ test/mở rule đọc ghi cho môi trường phát triển).
+- [x] **1.2. Khởi tạo & Cài đặt Thư viện phía Client**
+  - [x] Cài đặt firebase SDK: `npm install firebase` trong thư mục `client`.
+  - [x] Cài đặt Lucide React để dùng icons: `npm install lucide-react`.
+  - [x] Cài đặt React Router DOM: `npm install react-router-dom`.
+- [x] **1.3. Cấu hình Firebase Connection**
+  - [x] Tạo file `.env` và `.env.example` chứa thông tin kết nối Firebase.
+  - [x] Tạo file [firebase.ts](file:///p:/Nodejs/my-quizz/client/src/lib/firebase.ts) khởi tạo Firebase App, Auth, và Firestore.
+- [x] **1.4. Định nghĩa Domain Types (client/src/types)**
+  - [x] Tạo file `user.ts` (User profile).
+  - [x] Tạo file `quiz.ts` (Quiz, Question, AnswerOption).
+  - [x] Tạo file `room.ts` (GameSession/Room, Participant, PlayerAnswer, Leaderboard).
 
 ---
 
 ### PHẦN 2: THÀNH PHẦN AUTHENTICATION & ROUTING
-- [ ] **2.1. Thiết kế Repository & Service cho Auth**
-  - [ ] Định nghĩa `IAuthRepository` interface.
-  - [ ] Triển khai `FirebaseAuthRepository` sử dụng Firebase Auth.
-  - [ ] Tạo `authService` điều phối logic đăng nhập, đăng ký, đăng xuất.
-- [ ] **2.2. Viết Custom Hook `useAuth`**
-  - [ ] Quản lý trạng thái đăng nhập toàn cục (`currentUser`, `loading`).
-- [ ] **2.3. Cấu hình React Router & Layout**
-  - [ ] Tạo các trang: `/login`, `/register`, `/dashboard`.
-  - [ ] Thiết lập `ProtectedRoute` để bảo vệ các trang yêu cầu đăng nhập.
-- [ ] **2.4. Phát triển Giao diện Đăng ký / Đăng nhập (Shadcn + Premium CSS)**
-  - [ ] Giao diện Glassmorphism cực đẹp, hiệu ứng background gradient chuyển động mượt mà.
+
+- [x] **2.1. Thiết kế Repository & Service cho Auth**
+  - [x] Định nghĩa `IAuthRepository` interface.
+  - [x] Triển khai `FirebaseAuthRepository` sử dụng Firebase Auth.
+  - [x] Tạo `authService` điều phối logic đăng nhập, đăng ký, đăng xuất.
+- [x] **2.2. Viết Custom Hook `useAuth`**
+  - [x] Quản lý trạng thái đăng nhập toàn cục (`currentUser`, `loading`).
+- [x] **2.3. Cấu hình React Router & Layout**
+  - [x] Tạo các trang: `/login`, `/register`, `/dashboard`.
+  - [x] Thiết lập `ProtectedRoute` để bảo vệ các trang yêu cầu đăng nhập.
+- [x] **2.4. Phát triển Giao diện Đăng ký / Đăng nhập (Shadcn + Premium CSS)**
+  - [x] Giao diện Glassmorphism cực đẹp, hiệu ứng background gradient chuyển động mượt mà.
 
 ---
 
 ### PHẦN 3: CRUD QUIZ & CÂU HỎI (DASHBOARD)
+
 - [ ] **3.1. Thiết kế Repository & Service cho Quiz**
   - [ ] Định nghĩa `IQuizRepository` interface.
   - [ ] Triển khai `FirebaseQuizRepository` kết nối Firestore (`quizzes` collection).
@@ -78,6 +81,7 @@ client/src/
 ---
 
 ### PHẦN 4: CHẾ ĐỘ CHƠI LIVE (REAL-TIME GAME SESSION)
+
 - [ ] **4.1. Thiết kế Repository & Service cho Live Game**
   - [ ] Định nghĩa `IRoomRepository` interface.
   - [ ] Triển khai `FirebaseRoomRepository` sử dụng Firestore Real-time Listeners (`onSnapshot`) để lắng nghe sự thay đổi của phòng (`sessions`), danh sách người chơi (`participants`), và câu trả lời (`answers`).
@@ -98,6 +102,7 @@ client/src/
 ---
 
 ### PHẦN 5: CHẾ ĐỘ CHƠI SOLO (TỰ LUYỆN - ASYNC)
+
 - [ ] **5.1. Thiết kế logic Solo Play**
   - [ ] Tạo `useSoloRoom` hook.
   - [ ] Quản lý trạng thái làm bài lưu tạm vào Firestore (hoặc LocalStorage) để hỗ trợ Pause/Resume.
@@ -109,6 +114,7 @@ client/src/
 ---
 
 ### PHẦN 6: LỊCH SỬ CHƠI & BÁO CÁO (REPORTS)
+
 - [ ] **6.1. Trang Lịch sử phiên (Cho Host)**
   - [ ] Hiển thị danh sách các phiên chơi đã tổ chức trong quá khứ.
   - [ ] Chi tiết từng phiên: danh sách người chơi, số câu đúng/sai của từng người, điểm tổng kết.
