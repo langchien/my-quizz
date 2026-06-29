@@ -17,11 +17,11 @@ export function useDashboardActions() {
 
   // Tạo live session và navigate đến host page
   const handleHost = useCallback(
-    async (quizId: string) => {
+    async (quizId: string, quizTitle?: string) => {
       if (!user) return
       setHostingQuizId(quizId)
       try {
-        const { sessionId } = await roomService.createLiveSession(quizId, user.uid)
+        const { sessionId } = await roomService.createLiveSession(quizId, user.uid, quizTitle)
         navigate(`/host/${sessionId}`)
       } catch (err) {
         console.error(err)

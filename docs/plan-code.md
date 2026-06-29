@@ -115,8 +115,9 @@ client/src/
 
 ### PHẦN 6: LỊCH SỬ CHƠI & BÁO CÁO (REPORTS)
 
-- [ ] **6.1. Trang Lịch sử phiên (Cho Host)**
-  - [ ] Hiển thị danh sách các phiên chơi đã tổ chức trong quá khứ.
-  - [ ] Chi tiết từng phiên: danh sách người chơi, số câu đúng/sai của từng người, điểm tổng kết.
-- [ ] **6.2. Trang Lịch sử tự luyện (Cho Player)**
-  - [ ] Hiển thị lịch sử các bài Solo đã hoàn thành (lưu ở LocalStorage hoặc liên kết tài khoản nếu có đăng nhập).
+- [x] **6.1. Trang Lịch sử phiên (Cho Host)**
+  - [x] Hiển thị danh sách các phiên chơi đã tổ chức trong quá khứ.
+  - [x] Chi tiết từng phiên: danh sách người chơi, số câu đúng/sai của từng người, điểm tổng kết.
+- [x] **6.2. Trang Lịch sử tự luyện (Cho Player)**
+  - [x] Hiển thị lịch sử các bài Solo đã hoàn thành (lưu ở LocalStorage hoặc liên kết tài khoản nếu có đăng nhập).
+

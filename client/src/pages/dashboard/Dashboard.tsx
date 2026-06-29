@@ -1,3 +1,4 @@
+import { HistoryTab } from '@/components/HistoryTab'
 import { useTheme } from '@/components/theme-provider'
 import {
   AlertDialog,
@@ -22,7 +23,8 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { useDashboardActions } from '@/hooks/useDashboardActions'
 import type { Quiz } from '@/types/quiz'
-import { BookOpen, Edit, Moon, Play, Plus, Sun, Trash2 } from 'lucide-react'
+import { BookOpen, Clock, Edit, Moon, Play, Plus, Sun, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { useLoaderData, useNavigate } from 'react-router'
 
 export default function Dashboard() {
@@ -35,6 +37,9 @@ export default function Dashboard() {
 
   // Logic tách ra custom hook
   const { handleHost, handleDelete, isRevalidating } = useDashboardActions()
+
+  // Tab state
+  const [activeTab, setActiveTab] = useState<'quizzes' | 'history'>('quizzes')
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')
@@ -74,6 +79,33 @@ export default function Dashboard() {
       </header>
 
       <main className='mx-auto max-w-7xl px-4 py-8'>
+        {/* Tab Navigation */}
+        <div className='mb-8 flex items-center gap-1 border-b border-gray-200 dark:border-slate-800'>
+          <button
+            onClick={() => setActiveTab('quizzes')}
+            className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
+              activeTab === 'quizzes'
+                ? 'border-rose-500 text-rose-600 dark:text-rose-400'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200'
+            }`}
+          >
+            <BookOpen size={16} /> Bộ câu hỏi
+          </button>
+          <button
+            onClick={() => setActiveTab('history')}
+            className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium transition-colors ${
+              activeTab === 'history'
+                ? 'border-rose-500 text-rose-600 dark:text-rose-400'
+                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200'
+            }`}
+          >
+            <Clock size={16} /> Lịch sử
+          </button>
+        </div>
+
+        {/* Tab: Bộ câu hỏi */}
+        {activeTab === 'quizzes' && (
+          <>
         <div className='mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
           <div>
             <h2 className='text-2xl font-semibold text-gray-800 dark:text-slate-100'>
@@ -205,7 +237,7 @@ export default function Dashboard() {
                     <Button
                       size='sm'
                       className='gap-2 border-0 bg-linear-to-r from-orange-500 to-rose-500 text-white hover:from-orange-600 hover:to-rose-600'
-                      onClick={() => handleHost(quiz.id)}
+                      onClick={() => handleHost(quiz.id, quiz.title)}
                     >
                       <Play size={16} /> Host
                     </Button>
@@ -223,6 +255,11 @@ export default function Dashboard() {
             ))}
           </div>
         )}
+          </>
+        )}
+
+        {/* Tab: Lịch sử */}
+        {activeTab === 'history' && <HistoryTab />}
       </main>
     </div>
   )

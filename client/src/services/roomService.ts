@@ -22,6 +22,7 @@ class RoomService {
   async createLiveSession(
     quizId: string,
     hostId: string,
+    quizTitle?: string,
   ): Promise<{ sessionId: string; roomCode: string }> {
     let roomCode = this.generateRoomCode()
     let existingSession = await this.repository.getSessionByCode(roomCode)
@@ -34,6 +35,7 @@ class RoomService {
 
     const sessionId = await this.repository.createSession({
       quizId,
+      quizTitle,
       hostId,
       roomCode,
       status: 'waiting',
@@ -154,6 +156,16 @@ class RoomService {
     callback: (answers: PlayerAnswer[]) => void,
   ) {
     return this.repository.onAnswersChange(sessionId, questionId, callback)
+  }
+
+  // ─── History ────────────────────────────────────
+
+  async getSessionsByHost(hostId: string) {
+    return this.repository.getSessionsByHost(hostId)
+  }
+
+  async getParticipants(sessionId: string) {
+    return this.repository.getParticipants(sessionId)
   }
 }
 

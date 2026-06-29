@@ -183,4 +183,36 @@ export class FirebaseRoomRepository implements IRoomRepository {
       },
     )
   }
+
+  // ─── History queries ───────────────────────────
+
+  async getSessionsByHost(hostId: string): Promise<GameSession[]> {
+    const q = query(
+      collection(db, this.sessionsCol),
+      where('hostId', '==', hostId),
+      where('status', '==', 'finished'),
+    )
+    const querySnapshot = await getDocs(q)
+    const sessions: GameSession[] = []
+    querySnapshot.forEach((docSnap) => {
+      sessions.push(docSnap.data() as GameSession)
+    })
+
+    // Sort by createdAt descending (client-side to avoid composite index)
+    return sessions.sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
+  }
+
+  async getParticipants(sessionId: string): Promise<Participant[]> {
+    const q = query(this.getParticipantsCol(sessionId))
+    const querySnapshot = await getDocs(q)
+    const participants: Participant[] = []
+    querySnapshot.forEach((docSnap) => {
+      participants.push(docSnap.data() as Participant)
+    })
+
+    // Sort by score descending
+    return participants.sort((a, b) => b.score - a.score)
+  }
 }

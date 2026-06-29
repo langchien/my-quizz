@@ -35,4 +35,8 @@ export interface IRoomRepository {
     questionId: string,
     callback: (answers: PlayerAnswer[]) => void,
   ): () => void
+
+  // History queries
+  getSessionsByHost(hostId: string): Promise<GameSession[]>
+  getParticipants(sessionId: string): Promise<Participant[]>
 }

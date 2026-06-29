@@ -4,6 +4,7 @@ export interface GameSession {
   id: string // Firebase Document ID
   roomCode: string // 5-6 digit alphanumeric unique room code
   quizId: string
+  quizTitle?: string // Lưu kèm để hiển thị lịch sử mà không cần query thêm
   hostId: string
   status: RoomStatus
   currentQuestionIndex: number // -1 if not started (waiting lobby)
