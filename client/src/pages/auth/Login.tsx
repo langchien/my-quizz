@@ -1,10 +1,10 @@
 import { useAuth } from '@/hooks/useAuth'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { z } from 'zod'
 import { authService } from '@/services/authService'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Vui lòng nhập Email').email('Địa chỉ email không hợp lệ'),
@@ -16,7 +16,6 @@ type LoginFormValues = z.infer<typeof loginSchema>
 export default function Login() {
   const navigate = useNavigate()
   const { setUser } = useAuth()
-  const [serverError, setServerError] = useState<string | null>(null)
 
   const {
     register,
@@ -28,23 +27,25 @@ export default function Login() {
 
   const onSubmit = async (data: LoginFormValues) => {
     try {
-      setServerError(null)
       const user = await authService.login(data)
       setUser(user)
       navigate('/dashboard')
     } catch (error: any) {
-      setServerError(error.message || 'Đăng nhập thất bại')
+      toast.error(error.message || 'Đăng nhập thất bại', {
+        duration: 6000,
+      })
     }
   }
 
   const handleGoogleLogin = async () => {
     try {
-      setServerError(null)
       const user = await authService.loginWithGoogle()
       setUser(user)
       navigate('/dashboard')
     } catch (error: any) {
-      setServerError(error.message || 'Đăng nhập bằng Google thất bại')
+      toast.error(error.message || 'Đăng nhập bằng Google thất bại', {
+        duration: 6000,
+      })
     }
   }
 
@@ -93,12 +94,6 @@ export default function Login() {
                 <p className='mt-1.5 text-sm text-red-200'>{errors.password.message}</p>
               )}
             </div>
-
-            {serverError && (
-              <div className='rounded-xl border border-red-500/50 bg-red-500/20 p-3 text-center text-sm text-white'>
-                {serverError}
-              </div>
-            )}
 
             <button
               type='submit'

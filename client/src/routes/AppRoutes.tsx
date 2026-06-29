@@ -1,14 +1,29 @@
+import React, { Suspense, useState } from 'react'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useNavigation } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
-import React from 'react'
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
-import Login from '@/pages/auth/Login'
-import Register from '@/pages/auth/Register'
-import Dashboard from '@/pages/dashboard/Dashboard'
-import QuizEditor from '@/pages/dashboard/QuizEditor'
-import LiveHost from '@/pages/host/LiveHost'
-import JoinRoom from '@/pages/player/JoinRoom'
-import LivePlayer from '@/pages/player/LivePlayer'
+import { dashboardLoader, quizEditorLoader } from '@/routes/loaders'
 import ProtectedRoute from '@/routes/ProtectedRoute'
+
+// Error boundaries (small, no need to lazy load)
+import { DashboardError } from '@/components/errors/DashboardError'
+import { QuizEditorError } from '@/components/errors/QuizEditorError'
+import { GameError } from '@/components/errors/GameError'
+import { NotFoundError } from '@/components/errors/NotFoundError'
+
+// Skeletons (small, no need to lazy load)
+import { DashboardSkeleton } from '@/components/skeletons/DashboardSkeleton'
+import { QuizEditorSkeleton } from '@/components/skeletons/QuizEditorSkeleton'
+import { AuthSkeleton } from '@/components/skeletons/AuthSkeleton'
+import { HostSkeleton, PlayerSkeleton, JoinRoomSkeleton } from '@/components/skeletons/GameSkeleton'
+
+// Lazy load route components (code splitting)
+const LazyLogin = React.lazy(() => import('@/pages/auth/Login'))
+const LazyRegister = React.lazy(() => import('@/pages/auth/Register'))
+const LazyDashboard = React.lazy(() => import('@/pages/dashboard/Dashboard'))
+const LazyQuizEditor = React.lazy(() => import('@/pages/dashboard/QuizEditor'))
+const LazyLiveHost = React.lazy(() => import('@/pages/host/LiveHost'))
+const LazyJoinRoom = React.lazy(() => import('@/pages/player/JoinRoom'))
+const LazyLivePlayer = React.lazy(() => import('@/pages/player/LivePlayer'))
 
 // AuthGuard for public routes (redirects to dashboard if already logged in)
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -17,14 +32,35 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
-// Root wrapper that handles initialization loading
+// Root layout — renders child routes
 function RootLayout() {
-  const { initialized } = useAuth()
+  const navigation = useNavigation()
 
-  if (!initialized) {
+  if (navigation.state === 'loading') {
+    const nextPath = navigation.location?.pathname || ''
+
+    if (nextPath === '/dashboard') {
+      return <DashboardSkeleton />
+    }
+    if (nextPath.startsWith('/dashboard/quiz')) {
+      return <QuizEditorSkeleton />
+    }
+    if (nextPath.startsWith('/host/')) {
+      return <HostSkeleton />
+    }
+    if (nextPath.startsWith('/play/')) {
+      return <PlayerSkeleton />
+    }
+    if (nextPath === '/join') {
+      return <JoinRoomSkeleton />
+    }
+    if (nextPath === '/login' || nextPath === '/register') {
+      return <AuthSkeleton />
+    }
+
     return (
-      <div className='flex min-h-screen items-center justify-center bg-gray-50'>
-        <div className='h-12 w-12 animate-spin rounded-full border-4 border-red-500/30 border-t-red-500'></div>
+      <div className='flex min-h-screen items-center justify-center bg-gray-50 dark:bg-slate-950'>
+        <div className='h-12 w-12 animate-spin rounded-full border-4 border-red-500/30 border-t-red-500' />
       </div>
     )
   }
@@ -32,65 +68,146 @@ function RootLayout() {
   return <Outlet />
 }
 
-const router = createBrowserRouter([
-  {
-    element: <RootLayout />,
-    children: [
-      {
-        path: '/login',
-        element: (
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        ),
-      },
-      {
-        path: '/register',
-        element: (
-          <PublicRoute>
-            <Register />
-          </PublicRoute>
-        ),
-      },
-      {
-        element: <ProtectedRoute />,
-        children: [
-          {
-            path: '/dashboard',
-            element: <Dashboard />,
-          },
-          {
-            path: '/dashboard/quiz/new',
-            element: <QuizEditor />,
-          },
-          {
-            path: '/dashboard/quiz/:id/edit',
-            element: <QuizEditor />,
-          },
-          {
-            path: '/host/:sessionId',
-            element: <LiveHost />,
-          },
-          // Additional protected routes will go here
-        ],
-      },
-      {
-        path: '/join',
-        element: <JoinRoom />,
-      },
-      {
-        path: '/play/:sessionId',
-        element: <LivePlayer />,
-      },
-      {
-        // Fallback route
-        path: '*',
-        element: <Navigate to='/dashboard' replace />,
-      },
-    ],
-  },
-])
+function createRouter() {
+  return createBrowserRouter([
+    {
+      element: <RootLayout />,
+      hydrateFallbackElement: <GlobalInitialLoader />,
+      children: [
+        // ─── Public auth routes ─────────────────────────
+        {
+          path: '/login',
+          element: (
+            <PublicRoute>
+              <Suspense fallback={<AuthSkeleton />}>
+                <LazyLogin />
+              </Suspense>
+            </PublicRoute>
+          ),
+        },
+        {
+          path: '/register',
+          element: (
+            <PublicRoute>
+              <Suspense fallback={<AuthSkeleton />}>
+                <LazyRegister />
+              </Suspense>
+            </PublicRoute>
+          ),
+        },
 
+        // ─── Protected routes ───────────────────────────
+        {
+          element: <ProtectedRoute />,
+          children: [
+            {
+              path: '/dashboard',
+              loader: dashboardLoader,
+              element: (
+                <Suspense fallback={<DashboardSkeleton />}>
+                  <LazyDashboard />
+                </Suspense>
+              ),
+              errorElement: <DashboardError />,
+            },
+            {
+              path: '/dashboard/quiz/new',
+              element: (
+                <Suspense fallback={<QuizEditorSkeleton />}>
+                  <LazyQuizEditor />
+                </Suspense>
+              ),
+            },
+            {
+              path: '/dashboard/quiz/:id/edit',
+              loader: quizEditorLoader,
+              element: (
+                <Suspense fallback={<QuizEditorSkeleton />}>
+                  <LazyQuizEditor />
+                </Suspense>
+              ),
+              errorElement: <QuizEditorError />,
+            },
+            {
+              path: '/host/:sessionId',
+              element: (
+                <Suspense fallback={<HostSkeleton />}>
+                  <LazyLiveHost />
+                </Suspense>
+              ),
+              errorElement: <GameError />,
+            },
+          ],
+        },
+
+        // ─── Public game routes ─────────────────────────
+        {
+          path: '/join',
+          element: (
+            <Suspense fallback={<JoinRoomSkeleton />}>
+              <LazyJoinRoom />
+            </Suspense>
+          ),
+        },
+        {
+          path: '/play/:sessionId',
+          element: (
+            <Suspense fallback={<PlayerSkeleton />}>
+              <LazyLivePlayer />
+            </Suspense>
+          ),
+          errorElement: <GameError />,
+        },
+
+        // ─── Fallback ───────────────────────────────────
+        {
+          path: '*',
+          element: <NotFoundError />,
+        },
+      ],
+    },
+  ])
+}
+
+/**
+ * Loader ban đầu cho toàn bộ ứng dụng trước khi Router được khởi tạo hoàn tất.
+ * Kiểm tra pathname hiện tại để hiển thị Skeleton tương ứng ngay lập tức.
+ */
+function GlobalInitialLoader() {
+  const path = window.location.pathname
+
+  if (path === '/dashboard') {
+    return <DashboardSkeleton />
+  }
+  if (path.startsWith('/dashboard/quiz')) {
+    return <QuizEditorSkeleton />
+  }
+  if (path.startsWith('/host/')) {
+    return <HostSkeleton />
+  }
+  if (path.startsWith('/play/')) {
+    return <PlayerSkeleton />
+  }
+  if (path === '/join') {
+    return <JoinRoomSkeleton />
+  }
+  if (path === '/login' || path === '/register') {
+    return <AuthSkeleton />
+  }
+
+  return (
+    <div className='flex min-h-screen items-center justify-center bg-gray-50 dark:bg-slate-950'>
+      <div className='h-12 w-12 animate-spin rounded-full border-4 border-red-500/30 border-t-red-500' />
+    </div>
+  )
+}
+
+/**
+ * Router provider component.
+ * Router được tạo 1 lần duy nhất bên trong useState initializer.
+ * Component này chỉ render SAU khi auth đã initialized (đảm bảo bởi App.tsx).
+ */
 export default function AppRoutes() {
+  const [router] = useState(createRouter)
   return <RouterProvider router={router} />
 }

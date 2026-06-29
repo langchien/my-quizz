@@ -10,159 +10,37 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { useQuizzes } from '@/hooks/useQuizzes'
-import type { AnswerOption, Question } from '@/types/quiz'
+import { useQuizEditor } from '@/hooks/useQuizEditor'
+import type { Quiz } from '@/types/quiz'
 import { ArrowLeft, CheckCircle2, Plus, Save, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-
-// Simple ID generator to avoid adding external dependency just for UI temp IDs
-const generateId = () => Math.random().toString(36).substring(2, 9)
-
-const defaultQuestion = (): Question => ({
-  id: generateId(),
-  type: 'multiple_choice',
-  content: '',
-  timeLimit: 20,
-  points: 1000,
-  options: [
-    { id: generateId(), content: '', isCorrect: true },
-    { id: generateId(), content: '', isCorrect: false },
-    { id: generateId(), content: '', isCorrect: false },
-    { id: generateId(), content: '', isCorrect: false },
-  ],
-})
+import { useLoaderData, useNavigate } from 'react-router'
 
 export default function QuizEditor() {
-  const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { getQuizById, createQuiz, updateQuiz } = useQuizzes()
 
-  const isEditMode = !!id
+  // Data từ quizEditorLoader (null cho create mode)
+  const loaderData = useLoaderData() as { quiz: Quiz | null } | undefined
+  const initialQuiz = loaderData?.quiz ?? null
 
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [isPublished, setIsPublished] = useState(false)
-  const [questions, setQuestions] = useState<Question[]>([defaultQuestion()])
-
-  const [loading, setLoading] = useState(isEditMode)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    if (isEditMode && id) {
-      loadQuiz(id)
-    }
-  }, [id, isEditMode])
-
-  const loadQuiz = async (quizId: string) => {
-    setLoading(true)
-    try {
-      const quiz = await getQuizById(quizId)
-      if (quiz) {
-        setTitle(quiz.title)
-        setDescription(quiz.description || '')
-        setIsPublished(quiz.isPublished)
-        setQuestions(quiz.questions?.length > 0 ? quiz.questions : [defaultQuestion()])
-      } else {
-        setError('Không tìm thấy bài trắc nghiệm')
-      }
-    } catch (err: any) {
-      setError(err.message || 'Lỗi khi tải bài trắc nghiệm')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSave = async () => {
-    // Validate
-    if (!title.trim()) {
-      setError('Vui lòng nhập tiêu đề bài trắc nghiệm')
-      return
-    }
-    for (let i = 0; i < questions.length; i++) {
-      const q = questions[i]
-      if (!q.content.trim()) {
-        setError(`Vui lòng nhập nội dung cho câu hỏi ${i + 1}`)
-        return
-      }
-      const hasCorrect = q.options.some((o) => o.isCorrect)
-      if (!hasCorrect) {
-        setError(`Câu hỏi ${i + 1} phải có ít nhất 1 đáp án đúng`)
-        return
-      }
-      for (let j = 0; j < q.options.length; j++) {
-        if (!q.options[j].content.trim()) {
-          setError(`Vui lòng nhập nội dung cho lựa chọn ${j + 1} của câu hỏi ${i + 1}`)
-          return
-        }
-      }
-    }
-
-    setSaving(true)
-    setError('')
-
-    try {
-      const quizData = {
-        title,
-        description,
-        isPublished,
-        questions,
-      }
-
-      if (isEditMode && id) {
-        await updateQuiz(id, quizData)
-      } else {
-        await createQuiz(quizData)
-      }
-      navigate('/dashboard')
-    } catch (err: any) {
-      setError(err.message || 'Lỗi khi lưu bài trắc nghiệm')
-      setSaving(false)
-    }
-  }
-
-  const addQuestion = () => {
-    setQuestions([...questions, defaultQuestion()])
-  }
-
-  const removeQuestion = (qIndex: number) => {
-    if (questions.length <= 1) {
-      setError('Bài trắc nghiệm phải có ít nhất 1 câu hỏi')
-      return
-    }
-    const newQuestions = [...questions]
-    newQuestions.splice(qIndex, 1)
-    setQuestions(newQuestions)
-  }
-
-  const updateQuestion = (qIndex: number, field: keyof Question, value: any) => {
-    const newQuestions = [...questions]
-    newQuestions[qIndex] = { ...newQuestions[qIndex], [field]: value }
-    setQuestions(newQuestions)
-  }
-
-  const updateOption = (qIndex: number, oIndex: number, field: keyof AnswerOption, value: any) => {
-    const newQuestions = [...questions]
-    const newOptions = [...newQuestions[qIndex].options]
-
-    // If setting a correct answer, uncheck others for multiple choice single answer
-    if (field === 'isCorrect' && value === true) {
-      newOptions.forEach((opt) => (opt.isCorrect = false))
-    }
-
-    newOptions[oIndex] = { ...newOptions[oIndex], [field]: value }
-    newQuestions[qIndex].options = newOptions
-    setQuestions(newQuestions)
-  }
-
-  if (loading) {
-    return (
-      <div className='flex min-h-screen items-center justify-center bg-gray-50 dark:bg-slate-950'>
-        <div className='h-12 w-12 animate-spin rounded-full border-4 border-rose-500/30 border-t-rose-500'></div>
-      </div>
-    )
-  }
+  // Toàn bộ logic form nằm trong custom hook
+  const {
+    title,
+    setTitle,
+    description,
+    setDescription,
+    isPublished,
+    setIsPublished,
+    questions,
+    isEditMode,
+    saving,
+    error,
+    setError,
+    handleSave,
+    addQuestion,
+    removeQuestion,
+    updateQuestion,
+    updateOption,
+  } = useQuizEditor(initialQuiz)
 
   return (
     <div className='min-h-screen bg-gray-50 pb-20 dark:bg-slate-950'>
@@ -360,6 +238,29 @@ export default function QuizEditor() {
           </Button>
         </div>
       </main>
+
+      {saving && (
+        <div className='fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-all duration-300'>
+          <div className='flex flex-col items-center gap-4 rounded-xl bg-white p-8 shadow-2xl dark:bg-slate-900 border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-200'>
+            <div className='relative flex h-16 w-16 items-center justify-center'>
+              {/* Outer rotating ring */}
+              <div className='absolute inset-0 rounded-full border-4 border-rose-500/20 border-t-rose-600 animate-spin' />
+              {/* Inner reverse rotating ring */}
+              <div className='absolute h-10 w-10 rounded-full border-4 border-rose-500/10 border-b-rose-500 animate-spin [animation-duration:1.5s] [animation-direction:reverse]' />
+              {/* Pulsing core dot */}
+              <div className='h-4 w-4 rounded-full bg-rose-600 animate-pulse' />
+            </div>
+            <div className='text-center space-y-1.5'>
+              <p className='text-base font-semibold text-slate-800 dark:text-slate-100'>
+                {isEditMode ? 'Đang cập nhật bộ câu hỏi...' : 'Đang tạo bộ câu hỏi mới...'}
+              </p>
+              <p className='text-xs text-slate-400 dark:text-slate-500'>
+                Vui lòng không đóng trình duyệt hoặc tải lại trang
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

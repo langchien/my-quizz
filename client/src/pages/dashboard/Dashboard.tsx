@@ -20,39 +20,24 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
-import { useQuizzes } from '@/hooks/useQuizzes'
-import { roomService } from '@/services/roomService'
+import { useDashboardActions } from '@/hooks/useDashboardActions'
+import type { Quiz } from '@/types/quiz'
 import { Edit, Moon, Play, Plus, Sun, Trash2 } from 'lucide-react'
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLoaderData, useNavigate } from 'react-router'
 
 export default function Dashboard() {
   const { user, logout } = useAuth()
   const { theme, setTheme } = useTheme()
-  const { quizzes, loading, error, fetchQuizzes, deleteQuiz } = useQuizzes()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    fetchQuizzes()
-  }, [fetchQuizzes])
+  // Data từ dashboardLoader — không cần useEffect!
+  const { quizzes } = useLoaderData() as { quizzes: Quiz[] }
+
+  // Logic tách ra custom hook
+  const { handleHost, handleDelete, isRevalidating } = useDashboardActions()
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')
-  }
-
-  const handleDelete = async (id: string) => {
-    await deleteQuiz(id)
-  }
-
-  const handleHost = async (quizId: string) => {
-    if (!user) return
-    try {
-      const { sessionId } = await roomService.createLiveSession(quizId, user.uid)
-      navigate(`/host/${sessionId}`)
-    } catch (err) {
-      console.error(err)
-      alert('Không thể tạo phòng lúc này')
-    }
   }
 
   return (
@@ -106,13 +91,9 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        {loading ? (
+        {isRevalidating ? (
           <div className='flex items-center justify-center py-20'>
             <div className='h-10 w-10 animate-spin rounded-full border-4 border-rose-500/30 border-t-rose-500'></div>
-          </div>
-        ) : error ? (
-          <div className='rounded-lg border border-red-200 bg-red-50 p-4 text-center text-red-600 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400'>
-            {error}
           </div>
         ) : quizzes.length === 0 ? (
           <div className='rounded-2xl border border-dashed border-gray-300 bg-white py-16 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900'>

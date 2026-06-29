@@ -1,102 +1,35 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { useLiveRoom } from '@/hooks/useLiveRoom'
-import { playSound } from '@/lib/sounds'
-import { quizService } from '@/services/quizService'
-import { roomService } from '@/services/roomService'
-import type { Quiz } from '@/types/quiz'
+import { useHostGameControl } from '@/hooks/useHostGameControl'
 import { Trophy, Users } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router'
 
 export default function LiveHost() {
   const { sessionId } = useParams<{ sessionId: string }>()
   const navigate = useNavigate()
 
-  const [quiz, setQuiz] = useState<Quiz | null>(null)
-  const [timeLeft, setTimeLeft] = useState<number>(0)
-
-  // We need to know current question to listen to answers.
-  // We calculate currentQuestionId dynamically based on session.currentQuestionIndex
-  const [currentQuestionId, setCurrentQuestionId] = useState<string | undefined>(undefined)
-
-  const { session, participants, currentAnswers, loading, error } = useLiveRoom(
-    sessionId,
-    currentQuestionId,
-  )
-
-  useEffect(() => {
-    if (session?.quizId && !quiz) {
-      quizService.getQuizById(session.quizId).then((q) => {
-        if (q) setQuiz(q)
-      })
-    }
-  }, [session?.quizId, quiz])
-
-  useEffect(() => {
-    if (session && quiz && session.currentQuestionIndex >= 0) {
-      const q = quiz.questions[session.currentQuestionIndex]
-      if (q) setCurrentQuestionId(q.id)
-    } else {
-      setCurrentQuestionId(undefined)
-    }
-  }, [session?.currentQuestionIndex, quiz])
-
-  // Timer countdown
-  useEffect(() => {
-    if (session?.status === 'playing' && session.questionActiveUntil) {
-      const interval = setInterval(() => {
-        const now = Date.now()
-        const diff = Math.max(0, session.questionActiveUntil! - now)
-        const seconds = Math.ceil(diff / 1000)
-        setTimeLeft(seconds)
-
-        if (diff <= 0) {
-          clearInterval(interval)
-          playSound('incorrect') // Time up
-          if (sessionId) roomService.showLeaderboard(sessionId)
-        }
-      }, 500)
-      return () => clearInterval(interval)
-    }
-  }, [session?.status, session?.questionActiveUntil, sessionId])
-
-  // Start the game
-  const handleStart = async () => {
-    if (!sessionId || !quiz || quiz.questions.length === 0) return
-    playSound('start')
-    await roomService.startSession(sessionId)
-    // Then immediately jump to first question
-    const timeLimit = quiz.questions[0].timeLimit || 20
-    await roomService.nextQuestion(sessionId, 0, timeLimit)
-  }
-
-  const handleNextQuestion = async () => {
-    if (!sessionId || !quiz || !session) return
-    const nextIdx = session.currentQuestionIndex + 1
-    if (nextIdx >= quiz.questions.length) {
-      await roomService.finishSession(sessionId)
-      playSound('correct')
-    } else {
-      const timeLimit = quiz.questions[nextIdx].timeLimit || 20
-      await roomService.nextQuestion(sessionId, nextIdx, timeLimit)
-      playSound('countdown')
-    }
-  }
+  // Toàn bộ logic game nằm trong custom hook
+  const {
+    quiz,
+    session,
+    participants,
+    currentAnswers,
+    loading,
+    error,
+    timeLeft,
+    currentQuestion,
+    sortedParticipants,
+    isLobby,
+    isPlaying,
+    isLeaderboard,
+    isFinished,
+    handleStart,
+    handleNextQuestion,
+    handleSkipTimer,
+  } = useHostGameControl(sessionId)
 
   if (loading || !session) return <div className='p-8 text-center text-xl'>Đang tải phòng...</div>
   if (error) return <div className='p-8 text-red-500'>{error}</div>
-
-  const isLobby = session.status === 'waiting'
-  const isPlaying = session.status === 'playing'
-  const isLeaderboard = session.status === 'showing_leaderboard'
-  const isFinished = session.status === 'finished'
-
-  const currentQuestion =
-    quiz && session.currentQuestionIndex >= 0 ? quiz.questions[session.currentQuestionIndex] : null
-
-  // Sort participants by score
-  const sortedParticipants = [...participants].sort((a, b) => b.score - a.score)
 
   return (
     <div className='flex min-h-screen flex-col bg-slate-900 font-sans text-white'>
@@ -184,7 +117,7 @@ export default function LiveHost() {
             </div>
 
             <div className='mt-8'>
-              <Button onClick={() => roomService.showLeaderboard(sessionId!)} variant='secondary'>
+              <Button onClick={handleSkipTimer} variant='secondary'>
                 Bỏ qua thời gian
               </Button>
             </div>

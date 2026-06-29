@@ -1,3 +1,6 @@
+import { db } from '@/lib/firebase'
+import type { IQuizRepository } from '@/repositories/IQuizRepository'
+import type { Quiz } from '@/types/quiz'
 import {
   collection,
   deleteDoc,
@@ -9,9 +12,6 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import type { Quiz } from '@/types/quiz'
-import type { IQuizRepository } from '@/repositories/IQuizRepository'
 
 export class FirebaseQuizRepository implements IQuizRepository {
   private collectionName = 'quizzes'
@@ -19,7 +19,6 @@ export class FirebaseQuizRepository implements IQuizRepository {
   async createQuiz(quizData: Omit<Quiz, 'id' | 'createdAt' | 'updatedAt'>): Promise<Quiz> {
     const docRef = doc(collection(db, this.collectionName))
     const now = new Date().toISOString()
-
     const newQuiz: Quiz = {
       ...quizData,
       id: docRef.id,

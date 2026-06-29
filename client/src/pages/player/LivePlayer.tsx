@@ -1,107 +1,27 @@
+import { usePlayerGame } from '@/hooks/usePlayerGame'
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useLiveRoom } from '@/hooks/useLiveRoom'
-import { playSound } from '@/lib/sounds'
-import { quizService } from '@/services/quizService'
-import { roomService } from '@/services/roomService'
-import type { AnswerOption, Quiz } from '@/types/quiz'
-
-const getNow = () => Date.now()
+import { useParams } from 'react-router'
 
 export default function LivePlayer() {
   const { sessionId } = useParams<{ sessionId: string }>()
-  const location = useLocation()
-  const navigate = useNavigate()
 
-  const [participantId, setParticipantId] = useState<string | null>(null)
-  const [quiz, setQuiz] = useState<Quiz | null>(null)
-
-  const [currentQuestionId, setCurrentQuestionId] = useState<string | undefined>(undefined)
-  const [hasAnswered, setHasAnswered] = useState(false)
-  const [lastResult, setLastResult] = useState<{ isCorrect: boolean; points: number } | null>(null)
-
-  const { session, participants, loading, error } = useLiveRoom(sessionId, currentQuestionId)
-
-  // Determine Participant ID
-  useEffect(() => {
-    let pId = location.state?.participantId
-    if (!pId) {
-      pId = localStorage.getItem(`myquizz_participant_${sessionId}`)
-    }
-
-    if (!pId) {
-      navigate('/join')
-    } else {
-      setParticipantId(pId)
-    }
-  }, [sessionId, location.state, navigate])
-
-  const me = useMemo(() => {
-    return participants.find((p) => p.id === participantId)
-  }, [participants, participantId])
-
-  // Fetch Quiz
-  useEffect(() => {
-    if (session?.quizId && !quiz) {
-      quizService.getQuizById(session.quizId).then((q) => {
-        if (q) setQuiz(q)
-      })
-    }
-  }, [session?.quizId, quiz])
-
-  // Reset answered state on new question
-  useEffect(() => {
-    if (session && quiz && session.currentQuestionIndex >= 0) {
-      const q = quiz.questions[session.currentQuestionIndex]
-      if (q) {
-        if (q.id !== currentQuestionId) {
-          setCurrentQuestionId(q.id)
-          setHasAnswered(false)
-          setLastResult(null)
-        }
-      }
-    }
-  }, [session?.currentQuestionIndex, quiz, currentQuestionId])
-
-  const handleAnswer = async (option: AnswerOption) => {
-    if (
-      hasAnswered ||
-      !session ||
-      !quiz ||
-      !currentQuestionId ||
-      !me ||
-      !sessionId ||
-      !session.questionActiveUntil
-    )
-      return
-
-    setHasAnswered(true)
-
-    const timeLimitMs = (quiz.questions[session.currentQuestionIndex].timeLimit || 20) * 1000
-    // Time left is activeUntil - now. So response time is timeLimit - (activeUntil - now)
-    const now = getNow()
-    const responseTimeMs = timeLimitMs - Math.max(0, session.questionActiveUntil - now)
-
-    const isCorrect = option.isCorrect
-
-    if (isCorrect) playSound('correct')
-    else playSound('incorrect')
-
-    const points = roomService.calculateScore(isCorrect, responseTimeMs, timeLimitMs)
-    setLastResult({ isCorrect, points })
-
-    await roomService.submitAnswer(
-      sessionId,
-      me.id,
-      currentQuestionId,
-      option.id,
-      isCorrect,
-      responseTimeMs,
-      timeLimitMs,
-      me.streak,
-    )
-  }
+  // Toàn bộ logic game nằm trong custom hook
+  const {
+    session,
+    participants,
+    me,
+    participantId,
+    loading,
+    error,
+    currentQuestion,
+    hasAnswered,
+    lastResult,
+    isLobby,
+    isPlaying,
+    isLeaderboard,
+    isFinished,
+    handleAnswer,
+  } = usePlayerGame(sessionId)
 
   if (loading || !session || !participantId) {
     return (
@@ -112,14 +32,6 @@ export default function LivePlayer() {
   }
 
   if (error) return <div className='p-8 text-red-500'>{error}</div>
-
-  const isLobby = session.status === 'waiting'
-  const isPlaying = session.status === 'playing'
-  const isLeaderboard = session.status === 'showing_leaderboard'
-  const isFinished = session.status === 'finished'
-
-  const currentQuestion =
-    quiz && session.currentQuestionIndex >= 0 ? quiz.questions[session.currentQuestionIndex] : null
 
   return (
     <div className='flex min-h-screen flex-col bg-slate-100 font-sans'>
@@ -150,7 +62,6 @@ export default function LivePlayer() {
                     onClick={() => handleAnswer(opt)}
                     className={`${colors[i % 4]} flex items-center justify-center rounded-2xl p-4 text-3xl font-bold text-white shadow-xl transition-transform active:scale-95`}
                   >
-                    {/* Optionally hide text and just show colors on mobile if desired, but let's show it for simplicity */}
                     {opt.content}
                   </button>
                 )
@@ -197,7 +108,9 @@ export default function LivePlayer() {
 
             {(() => {
               const rank =
-                participants.sort((a, b) => b.score - a.score).findIndex((p) => p.id === me?.id) + 1
+                [...participants]
+                  .sort((a, b) => b.score - a.score)
+                  .findIndex((p) => p.id === me?.id) + 1
               return <div className='text-3xl font-bold text-purple-600'>Thứ hạng: #{rank}</div>
             })()}
           </div>
