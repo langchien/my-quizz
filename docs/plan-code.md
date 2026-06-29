@@ -65,18 +65,18 @@ client/src/
 
 ### PHẦN 3: CRUD QUIZ & CÂU HỎI (DASHBOARD)
 
-- [ ] **3.1. Thiết kế Repository & Service cho Quiz**
-  - [ ] Định nghĩa `IQuizRepository` interface.
-  - [ ] Triển khai `FirebaseQuizRepository` kết nối Firestore (`quizzes` collection).
-  - [ ] Tạo `quizService` xử lý CRUD nghiệp vụ.
-- [ ] **3.2. Viết Custom Hook `useQuizzes`**
-  - [ ] Quản lý danh sách quiz của user đăng nhập, tải dữ liệu, xử lý lỗi.
-- [ ] **3.3. Phát triển UI Dashboard**
-  - [ ] Giao diện danh sách Quiz với các thẻ (cards) hiển thị số lượng câu hỏi, thời gian, nút bắt đầu Host game (Live hoặc Solo).
-  - [ ] Chức năng xóa quiz với modal confirm của Shadcn UI.
-- [ ] **3.4. Phát triển UI Tạo và Chỉnh sửa Quiz**
-  - [ ] Form nhập thông tin Quiz (Tiêu đề, mô tả).
-  - [ ] UI thêm/sửa/xóa câu hỏi trắc nghiệm: nhập câu hỏi, set thời gian (10s, 20s, 30s...), set điểm, định nghĩa 4 câu trả lời và đánh dấu đáp án đúng.
+- [x] **3.1. Thiết kế Repository & Service cho Quiz**
+  - [x] Định nghĩa `IQuizRepository` interface.
+  - [x] Triển khai `FirebaseQuizRepository` kết nối Firestore (`quizzes` collection).
+  - [x] Tạo `quizService` xử lý CRUD nghiệp vụ.
+- [x] **3.2. Viết Custom Hook `useQuizzes`**
+  - [x] Quản lý danh sách quiz của user đăng nhập, tải dữ liệu, xử lý lỗi.
+- [x] **3.3. Phát triển UI Dashboard**
+  - [x] Giao diện danh sách Quiz với các thẻ (cards) hiển thị số lượng câu hỏi, thời gian, nút bắt đầu Host game (Live hoặc Solo).
+  - [x] Chức năng xóa quiz với modal confirm của Shadcn UI.
+- [x] **3.4. Phát triển UI Tạo và Chỉnh sửa Quiz**
+  - [x] Form nhập thông tin Quiz (Tiêu đề, mô tả).
+  - [x] UI thêm/sửa/xóa câu hỏi trắc nghiệm: nhập câu hỏi, set thời gian (10s, 20s, 30s...), set điểm, định nghĩa 4 câu trả lời và đánh dấu đáp án đúng.
 
 ---
 

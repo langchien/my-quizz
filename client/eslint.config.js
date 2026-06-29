@@ -32,6 +32,7 @@ export default defineConfig([
       // Cảnh báo khi mảng dependencies của useEffect/useCallback bị thiếu biến
       'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': 'warn',
+      'react-hooks/immutability': 'warn'
     },
   },
   

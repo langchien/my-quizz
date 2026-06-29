@@ -1,7 +1,7 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { envConfig } from '../config/env';
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
+import { getFirestore } from 'firebase/firestore'
+import { envConfig } from '../config/env'
 
 const firebaseConfig = {
   apiKey: envConfig.VITE_FIREBASE_API_KEY,
@@ -10,13 +10,13 @@ const firebaseConfig = {
   storageBucket: envConfig.VITE_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: envConfig.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: envConfig.VITE_FIREBASE_APP_ID,
-};
+}
 
 // Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig)
 
 // Initialize Services
-export const auth = getAuth(firebaseApp);
-export const db = getFirestore(firebaseApp);
+export const auth = getAuth(firebaseApp)
+export const db = getFirestore(firebaseApp)
 
-export { firebaseApp };
+export { firebaseApp }
