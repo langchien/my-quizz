@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
  */
 export function NotFoundError() {
   const navigate = useNavigate()
+  console.log('=== NotFoundError rendered at ===', window.location.pathname)
 
   return (
     <div className='flex min-h-screen items-center justify-center bg-gray-50 dark:bg-slate-950'>

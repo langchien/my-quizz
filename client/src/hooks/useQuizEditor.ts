@@ -151,6 +151,21 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
     [],
   )
 
+  // Import questions
+  const importQuestions = useCallback((newQuestions: Question[]) => {
+    setQuestions((prev) => {
+      const isFirstQuestionEmpty =
+        prev.length === 1 &&
+        prev[0].content.trim() === '' &&
+        prev[0].options.every((o) => o.content.trim() === '')
+
+      if (isFirstQuestionEmpty) {
+        return newQuestions
+      }
+      return [...prev, ...newQuestions]
+    })
+  }, [])
+
   return {
     // Form state
     title,
@@ -173,5 +188,6 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
     removeQuestion,
     updateQuestion,
     updateOption,
+    importQuestions,
   }
 }

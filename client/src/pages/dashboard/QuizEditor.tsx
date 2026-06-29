@@ -12,8 +12,10 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { useQuizEditor } from '@/hooks/useQuizEditor'
 import type { Quiz } from '@/types/quiz'
-import { ArrowLeft, CheckCircle2, Plus, Save, Trash2 } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Plus, Save, Trash2, FileJson } from 'lucide-react'
 import { useLoaderData, useNavigate } from 'react-router'
+import { useState } from 'react'
+import { ImportQuizDialog } from '@/components/ImportQuizDialog'
 
 export default function QuizEditor() {
   const navigate = useNavigate()
@@ -40,7 +42,10 @@ export default function QuizEditor() {
     removeQuestion,
     updateQuestion,
     updateOption,
+    importQuestions,
   } = useQuizEditor(initialQuiz)
+
+  const [isImportOpen, setIsImportOpen] = useState(false)
 
   return (
     <div className='min-h-screen bg-gray-50 pb-20 dark:bg-slate-950'>
@@ -229,13 +234,22 @@ export default function QuizEditor() {
             </Card>
           ))}
 
-          <Button
-            onClick={addQuestion}
-            variant='outline'
-            className='w-full gap-2 border-2 border-dashed border-gray-300 py-8 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-gray-100'
-          >
-            <Plus size={20} /> Thêm câu hỏi
-          </Button>
+          <div className='flex gap-4 w-full flex-col sm:flex-row'>
+            <Button
+              onClick={addQuestion}
+              variant='outline'
+              className='flex-1 gap-2 border-2 border-dashed border-gray-300 py-8 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-gray-100'
+            >
+              <Plus size={20} /> Thêm câu hỏi
+            </Button>
+            <Button
+              onClick={() => setIsImportOpen(true)}
+              variant='outline'
+              className='flex-1 gap-2 border-2 border-dashed border-gray-300 py-8 text-gray-500 hover:bg-gray-50 hover:text-gray-900 dark:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-gray-100'
+            >
+              <FileJson size={20} /> Import câu hỏi (JSON)
+            </Button>
+          </div>
         </div>
       </main>
 
@@ -261,6 +275,13 @@ export default function QuizEditor() {
           </div>
         </div>
       )}
+
+      <ImportQuizDialog
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        onImport={(parsedData) => importQuestions(parsedData.questions)}
+        mode="questions"
+      />
     </div>
   )
 }

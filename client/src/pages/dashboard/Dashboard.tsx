@@ -11,7 +11,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import {
   Card,
   CardContent,
@@ -23,9 +24,10 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { useDashboardActions } from '@/hooks/useDashboardActions'
 import type { Quiz } from '@/types/quiz'
-import { BookOpen, Clock, Edit, Moon, Play, Plus, Sun, Trash2 } from 'lucide-react'
+import { BookOpen, Clock, Edit, Moon, Play, Plus, Sun, Trash2, FileJson } from 'lucide-react'
 import { useState } from 'react'
-import { useLoaderData, useNavigate } from 'react-router'
+import { Link, useLoaderData, useNavigate } from 'react-router'
+import { ImportQuizDialog } from '@/components/ImportQuizDialog'
 
 export default function Dashboard() {
   const { user, logout } = useAuth()
@@ -36,10 +38,11 @@ export default function Dashboard() {
   const { quizzes } = useLoaderData() as { quizzes: Quiz[] }
 
   // Logic tách ra custom hook
-  const { handleHost, handleDelete, isRevalidating } = useDashboardActions()
+  const { handleHost, handleDelete, handleImportQuiz, importing, isRevalidating } = useDashboardActions()
 
   // Tab state
   const [activeTab, setActiveTab] = useState<'quizzes' | 'history'>('quizzes')
+  const [isImportOpen, setIsImportOpen] = useState(false)
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')
@@ -115,12 +118,21 @@ export default function Dashboard() {
               Quản lý và tổ chức các bài trắc nghiệm của bạn.
             </p>
           </div>
-          <Button
-            onClick={() => navigate('/dashboard/quiz/new')}
-            className='gap-2 bg-rose-600 text-white hover:bg-rose-700'
-          >
-            <Plus size={16} /> Tạo Quiz mới
-          </Button>
+          <div className='flex gap-2 w-full sm:w-auto'>
+            <Button
+              onClick={() => setIsImportOpen(true)}
+              variant='outline'
+              className='gap-2 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 w-full sm:w-auto'
+            >
+              <FileJson size={16} /> Import từ JSON
+            </Button>
+            <Button
+              onClick={() => navigate('/dashboard/quiz/new')}
+              className='gap-2 bg-rose-600 text-white hover:bg-rose-700 w-full sm:w-auto'
+            >
+              <Plus size={16} /> Tạo Quiz mới
+            </Button>
+          </div>
         </div>
 
         {isRevalidating ? (
@@ -138,12 +150,21 @@ export default function Dashboard() {
             <p className='mb-6 text-gray-500 dark:text-gray-400'>
               Hãy tạo bộ câu hỏi đầu tiên của bạn để bắt đầu trò chơi!
             </p>
-            <Button
-              onClick={() => navigate('/dashboard/quiz/new')}
-              className='bg-rose-600 text-white hover:bg-rose-700'
-            >
-              Bắt đầu tạo Quiz
-            </Button>
+            <div className='flex items-center justify-center gap-4'>
+              <Button
+                onClick={() => navigate('/dashboard/quiz/new')}
+                className='bg-rose-600 text-white hover:bg-rose-700'
+              >
+                Bắt đầu tạo Quiz
+              </Button>
+              <Button
+                onClick={() => setIsImportOpen(true)}
+                variant='outline'
+                className='border-gray-300 text-gray-700 dark:border-slate-700 dark:text-slate-300'
+              >
+                Import từ JSON
+              </Button>
+            </div>
           </div>
         ) : (
           <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
@@ -241,14 +262,15 @@ export default function Dashboard() {
                     >
                       <Play size={16} /> Host
                     </Button>
-                    <Button
-                      size='sm'
-                      variant='outline'
-                      className='gap-2 border-violet-500/30 text-violet-600 hover:bg-violet-50 hover:text-violet-700 dark:text-violet-400 dark:hover:bg-violet-950'
-                      onClick={() => navigate(`/solo/${quiz.id}`)}
+                    <Link
+                      to={`/solo/${quiz.id}`}
+                      className={cn(
+                        buttonVariants({ variant: 'outline', size: 'sm' }),
+                        'gap-2 border-violet-500/30 text-violet-600 hover:bg-violet-50 hover:text-violet-700 dark:text-violet-400 dark:hover:bg-violet-950'
+                      )}
                     >
                       <BookOpen size={16} /> Tự luyện
-                    </Button>
+                    </Link>
                   </div>
                 </CardFooter>
               </Card>
@@ -261,6 +283,33 @@ export default function Dashboard() {
         {/* Tab: Lịch sử */}
         {activeTab === 'history' && <HistoryTab />}
       </main>
+
+      <ImportQuizDialog
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        onImport={handleImportQuiz}
+        mode="quiz"
+      />
+
+      {importing && (
+        <div className='fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-all duration-300'>
+          <div className='flex flex-col items-center gap-4 rounded-xl bg-white p-8 shadow-2xl dark:bg-slate-900 border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-200'>
+            <div className='relative flex h-16 w-16 items-center justify-center'>
+              <div className='absolute inset-0 rounded-full border-4 border-rose-500/20 border-t-rose-600 animate-spin' />
+              <div className='absolute h-10 w-10 rounded-full border-4 border-rose-500/10 border-b-rose-500 animate-spin [animation-duration:1.5s] [animation-direction:reverse]' />
+              <div className='h-4 w-4 rounded-full bg-rose-600 animate-pulse' />
+            </div>
+            <div className='text-center space-y-1.5'>
+              <p className='text-base font-semibold text-slate-800 dark:text-slate-100'>
+                Đang import bộ câu hỏi mới...
+              </p>
+              <p className='text-xs text-slate-400 dark:text-slate-500'>
+                Vui lòng không đóng trình duyệt hoặc tải lại trang
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

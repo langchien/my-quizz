@@ -38,14 +38,21 @@ export async function quizEditorLoader({ params }: LoaderFunctionArgs) {
  */
 export async function soloLoader({ params }: LoaderFunctionArgs) {
   const { quizId } = params
+  console.log('=== soloLoader: quizId ===', quizId)
   if (!quizId) {
     throw new Response('Thiếu mã quiz', { status: 400 })
   }
 
-  const quiz = await quizService.getQuizById(quizId)
-  if (!quiz) {
-    throw new Response('Không tìm thấy bộ câu hỏi', { status: 404 })
+  try {
+    const quiz = await quizService.getQuizById(quizId)
+    console.log('=== soloLoader: quiz found ===', quiz)
+    if (!quiz) {
+      console.warn('=== soloLoader: quiz not found in firestore, throwing 404 ===')
+      throw new Response('Không tìm thấy bộ câu hỏi', { status: 404 })
+    }
+    return quiz
+  } catch (err) {
+    console.error('=== soloLoader: error ===', err)
+    throw err
   }
-
-  return quiz
 }
