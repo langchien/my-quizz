@@ -70,3 +70,23 @@ export function JoinRoomSkeleton() {
     </div>
   )
 }
+
+/**
+ * Skeleton loading cho trang SoloPlay.
+ */
+export function SoloSkeleton() {
+  return (
+    <div className='flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950'>
+      <div className='w-full max-w-lg text-center'>
+        <div className='mx-auto mb-8 h-24 w-24 animate-pulse rounded-full bg-slate-800' />
+        <div className='mx-auto mb-4 h-10 w-3/4 animate-pulse rounded bg-slate-800' />
+        <div className='mx-auto mb-8 h-6 w-1/2 animate-pulse rounded bg-slate-800/60' />
+        <div className='mx-auto mb-10 flex max-w-xs justify-center gap-8'>
+          <div className='h-16 w-20 animate-pulse rounded bg-slate-800' />
+          <div className='h-16 w-20 animate-pulse rounded bg-slate-800' />
+        </div>
+        <div className='mx-auto h-14 w-full max-w-sm animate-pulse rounded-lg bg-slate-800' />
+      </div>
+    </div>
+  )
+}

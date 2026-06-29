@@ -34,3 +34,37 @@ export interface PlayerAnswer {
   responseTimeMs: number // Response time in milliseconds
   submittedAt: string // ISO string
 }
+
+// ─── Solo Mode Types ─────────────────────────
+
+export interface SoloAnswer {
+  questionId: string
+  selectedOptionId: string
+  isCorrect: boolean
+  pointsEarned: number
+  responseTimeMs: number
+}
+
+export interface SoloProgress {
+  quizId: string
+  currentQuestionIndex: number
+  answers: SoloAnswer[]
+  score: number
+  streak: number
+  startedAt: string // ISO string
+  isPaused: boolean
+}
+
+export interface SoloResult {
+  id?: string // Firestore doc ID (nếu lưu cloud)
+  quizId: string
+  quizTitle: string
+  userId?: string // undefined nếu guest
+  totalQuestions: number
+  correctCount: number
+  score: number
+  maxPossibleScore: number
+  answers: SoloAnswer[]
+  redemptionAnswers?: SoloAnswer[] // Câu làm lại
+  completedAt: string // ISO string
+}

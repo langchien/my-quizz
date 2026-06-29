@@ -22,7 +22,7 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { useDashboardActions } from '@/hooks/useDashboardActions'
 import type { Quiz } from '@/types/quiz'
-import { Edit, Moon, Play, Plus, Sun, Trash2 } from 'lucide-react'
+import { BookOpen, Edit, Moon, Play, Plus, Sun, Trash2 } from 'lucide-react'
 import { useLoaderData, useNavigate } from 'react-router'
 
 export default function Dashboard() {
@@ -201,13 +201,23 @@ export default function Dashboard() {
                     </AlertDialog>
                   </div>
 
-                  <Button
-                    size='sm'
-                    className='gap-2 border-0 bg-linear-to-r from-orange-500 to-rose-500 text-white hover:from-orange-600 hover:to-rose-600'
-                    onClick={() => handleHost(quiz.id)}
-                  >
-                    <Play size={16} /> Host
-                  </Button>
+                  <div className='flex gap-2'>
+                    <Button
+                      size='sm'
+                      className='gap-2 border-0 bg-linear-to-r from-orange-500 to-rose-500 text-white hover:from-orange-600 hover:to-rose-600'
+                      onClick={() => handleHost(quiz.id)}
+                    >
+                      <Play size={16} /> Host
+                    </Button>
+                    <Button
+                      size='sm'
+                      variant='outline'
+                      className='gap-2 border-violet-500/30 text-violet-600 hover:bg-violet-50 hover:text-violet-700 dark:text-violet-400 dark:hover:bg-violet-950'
+                      onClick={() => navigate(`/solo/${quiz.id}`)}
+                    >
+                      <BookOpen size={16} /> Tự luyện
+                    </Button>
+                  </div>
                 </CardFooter>
               </Card>
             ))}

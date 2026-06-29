@@ -31,3 +31,21 @@ export async function quizEditorLoader({ params }: LoaderFunctionArgs) {
 
   return { quiz }
 }
+
+/**
+ * Loader cho trang SoloPlay.
+ * Lấy quiz theo quizId từ URL params (public, không cần auth).
+ */
+export async function soloLoader({ params }: LoaderFunctionArgs) {
+  const { quizId } = params
+  if (!quizId) {
+    throw new Response('Thiếu mã quiz', { status: 400 })
+  }
+
+  const quiz = await quizService.getQuizById(quizId)
+  if (!quiz) {
+    throw new Response('Không tìm thấy bộ câu hỏi', { status: 404 })
+  }
+
+  return quiz
+}

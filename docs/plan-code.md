@@ -103,13 +103,13 @@ client/src/
 
 ### PHẦN 5: CHẾ ĐỘ CHƠI SOLO (TỰ LUYỆN - ASYNC)
 
-- [ ] **5.1. Thiết kế logic Solo Play**
-  - [ ] Tạo `useSoloRoom` hook.
-  - [ ] Quản lý trạng thái làm bài lưu tạm vào Firestore (hoặc LocalStorage) để hỗ trợ Pause/Resume.
-- [ ] **5.2. Tính năng Redemption (Cứu mạng)**
-  - [ ] Ở cuối game Solo, lọc ra các câu trả lời sai và hiển thị cho người chơi làm lại 1-2 câu để cải thiện điểm số.
-- [ ] **5.3. Tính năng Review Flashcards**
-  - [ ] Sau khi kết thúc bài Solo, cho phép lướt qua các thẻ flashcard để xem câu hỏi, đáp án đã chọn và đáp án đúng kèm giải thích lý thuyết.
+- [x] **5.1. Thiết kế logic Solo Play**
+  - [x] Tạo `useSoloRoom` hook.
+  - [x] Quản lý trạng thái làm bài lưu tạm vào Firestore (hoặc LocalStorage) để hỗ trợ Pause/Resume.
+- [x] **5.2. Tính năng Redemption (Cứu mạng)**
+  - [x] Ở cuối game Solo, lọc ra các câu trả lời sai và hiển thị cho người chơi làm lại 1-2 câu để cải thiện điểm số.
+- [x] **5.3. Tính năng Review Flashcards**
+  - [x] Sau khi kết thúc bài Solo, cho phép lướt qua các thẻ flashcard để xem câu hỏi, đáp án đã chọn và đáp án đúng kèm giải thích lý thuyết.
 
 ---
 
