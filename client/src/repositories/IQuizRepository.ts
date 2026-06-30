@@ -6,4 +6,6 @@ export interface IQuizRepository {
   getQuizById(id: string): Promise<Quiz | null>
   updateQuiz(id: string, data: Partial<Omit<Quiz, 'id' | 'createdAt'>>): Promise<Quiz>
   deleteQuiz(id: string): Promise<void>
+  searchPublicQuizzes(keyword?: string, category?: string, difficulty?: string): Promise<Quiz[]>
+  incrementPlayCount(quizId: string): Promise<void>
 }

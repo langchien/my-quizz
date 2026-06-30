@@ -107,7 +107,7 @@ export function HistoryTab() {
 
 // ─── Live Session Card (Accordion) ──────────────
 
-function LiveSessionCard({
+export function LiveSessionCard({
   session,
   isExpanded,
   participants,
@@ -215,7 +215,7 @@ function LiveSessionCard({
 
 // ─── Solo Result Card ────────────────────────────
 
-function SoloResultCard({ result }: { result: SoloResult }) {
+export function SoloResultCard({ result }: { result: SoloResult }) {
   const dateStr = new Date(result.completedAt).toLocaleDateString('vi-VN', {
     day: '2-digit',
     month: '2-digit',

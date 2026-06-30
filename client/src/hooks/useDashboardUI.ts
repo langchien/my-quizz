@@ -7,7 +7,7 @@ import { useCallback, useState } from 'react'
  */
 export function useDashboardUI() {
   const { theme, setTheme } = useTheme()
-  const [activeTab, setActiveTab] = useState<'quizzes' | 'history'>('quizzes')
+  const [activeTab, setActiveTab] = useState<'quizzes' | 'history' | 'explore'>('quizzes')
   const [isImportOpen, setIsImportOpen] = useState(false)
 
   const toggleTheme = useCallback(() => {

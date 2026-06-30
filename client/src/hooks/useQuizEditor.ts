@@ -1,6 +1,6 @@
 import { useAuth } from '@/hooks/useAuth'
 import { quizService } from '@/services/quizService'
-import type { AnswerOption, Question, Quiz } from '@/types/quiz'
+import type { AnswerOption, Question, Quiz, QuizDifficulty } from '@/types/quiz'
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
@@ -37,6 +37,8 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
   const [title, setTitle] = useState(initialQuiz?.title || '')
   const [description, setDescription] = useState(initialQuiz?.description || '')
   const [isPublished, setIsPublished] = useState(initialQuiz?.isPublished || false)
+  const [category, setCategory] = useState(initialQuiz?.category || '')
+  const [difficulty, setDifficulty] = useState<QuizDifficulty | ''>(initialQuiz?.difficulty || '')
   const [questions, setQuestions] = useState<Question[]>(
     initialQuiz?.questions?.length ? initialQuiz.questions : [defaultQuestion()],
   )
@@ -78,6 +80,9 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
         description,
         isPublished,
         questions,
+        playCount: initialQuiz?.playCount ?? 0,
+        ...(category ? { category } : {}),
+        ...(difficulty ? { difficulty } : {}),
       }
 
       if (isEditMode && initialQuiz) {
@@ -96,7 +101,18 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
       setError(err.message || 'Lỗi khi lưu bài trắc nghiệm')
       setSaving(false)
     }
-  }, [title, description, isPublished, questions, isEditMode, initialQuiz, user, navigate])
+  }, [
+    title,
+    description,
+    isPublished,
+    questions,
+    category,
+    difficulty,
+    isEditMode,
+    initialQuiz,
+    user,
+    navigate,
+  ])
 
   // Add new question
   const addQuestion = useCallback(() => {
@@ -171,6 +187,10 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
     setDescription,
     isPublished,
     setIsPublished,
+    category,
+    setCategory,
+    difficulty,
+    setDifficulty,
     questions,
 
     // Status

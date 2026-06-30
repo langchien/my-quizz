@@ -1,5 +1,6 @@
 import { FirebaseRoomRepository } from '@/repositories/FirebaseRoomRepository'
 import type { IRoomRepository } from '@/repositories/IRoomRepository'
+import { quizService } from '@/services/quizService'
 import type { GameSession, Participant, PlayerAnswer } from '@/types/room'
 
 class RoomService {
@@ -43,6 +44,9 @@ class RoomService {
       questionActiveUntil: null,
       mode: 'live',
     })
+
+    // Tự động tăng lượt chơi (fire-and-forget)
+    quizService.incrementPlayCount(quizId).catch(() => {})
 
     return { sessionId, roomCode }
   }

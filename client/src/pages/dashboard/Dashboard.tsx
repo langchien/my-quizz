@@ -1,7 +1,9 @@
+import { ActivityTabs } from '@/components/ActivityTabs'
 import { Header } from '@/components/Header'
-import { HistoryTab } from '@/components/HistoryTab'
 import { ImportQuizDialog } from '@/components/ImportQuizDialog'
 import { LoadingOverlay } from '@/components/LoadingOverlay'
+import { QuizPreviewModal } from '@/components/QuizPreviewModal'
+import { QuizSearch } from '@/components/QuizSearch'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,11 +28,13 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Spinner } from '@/components/ui/spinner'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { DIFFICULTY_LABELS } from '@/config/quizCategories'
 import { useDashboardActions } from '@/hooks/useDashboardActions'
 import { useDashboardUI } from '@/hooks/useDashboardUI'
 import { cn } from '@/lib/utils'
 import type { Quiz } from '@/types/quiz'
-import { BookOpen, Clock, Edit, FileJson, Play, Plus, Trash2 } from 'lucide-react'
+import { BookOpen, Compass, Edit, FileJson, Play, Plus, SquareActivity, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import { Link, useLoaderData } from 'react-router'
 
 export default function Dashboard() {
@@ -44,15 +48,18 @@ export default function Dashboard() {
   const { activeTab, setActiveTab, isImportOpen, openImportDialog, closeImportDialog } =
     useDashboardUI()
 
+  // Quiz Preview Modal state
+  const [previewQuiz, setPreviewQuiz] = useState<Quiz | null>(null)
+
   return (
     <div className='min-h-screen bg-background transition-colors duration-300'>
       <Header />
 
       <main className='mx-auto max-w-7xl px-4 py-8'>
-        {/* Tab Navigation — shadcn Tabs */}
+        {/* Tab Navigation — 3 tabs: Bộ câu hỏi, Hoạt động, Khám phá */}
         <Tabs
           value={activeTab}
-          onValueChange={(v) => setActiveTab(v as 'quizzes' | 'history')}
+          onValueChange={(v) => setActiveTab(v as 'quizzes' | 'history' | 'explore')}
           className='mb-8'
         >
           <TabsList variant='line' className='border-b border-border'>
@@ -60,7 +67,10 @@ export default function Dashboard() {
               <BookOpen data-icon='inline-start' /> Bộ câu hỏi
             </TabsTrigger>
             <TabsTrigger value='history' className='gap-2'>
-              <Clock data-icon='inline-start' /> Lịch sử
+              <SquareActivity data-icon='inline-start' /> Hoạt động
+            </TabsTrigger>
+            <TabsTrigger value='explore' className='gap-2'>
+              <Compass data-icon='inline-start' /> Khám phá
             </TabsTrigger>
           </TabsList>
 
@@ -119,7 +129,8 @@ export default function Dashboard() {
                 {quizzes.map((quiz) => (
                   <Card
                     key={quiz.id}
-                    className='flex flex-col border-border shadow-sm transition-shadow hover:shadow-md'
+                    className='flex cursor-pointer flex-col border-border shadow-sm transition-shadow hover:shadow-md'
+                    onClick={() => setPreviewQuiz(quiz)}
                   >
                     <CardHeader>
                       <div className='flex items-start justify-between gap-2'>
@@ -146,15 +157,45 @@ export default function Dashboard() {
                         </div>
                         <Separator orientation='vertical' className='h-8' />
                         <div className='flex flex-col'>
+                          <span className='font-medium text-foreground'>{quiz.playCount || 0}</span>
+                          <span className='text-xs'>Lượt chơi</span>
+                        </div>
+                        <Separator orientation='vertical' className='h-8' />
+                        <div className='flex flex-col'>
                           <span className='font-medium text-foreground'>
                             {new Date(quiz.updatedAt).toLocaleDateString('vi-VN')}
                           </span>
                           <span className='text-xs'>Cập nhật</span>
                         </div>
                       </div>
+
+                      {/* Badges: category + difficulty */}
+                      {(quiz.category || quiz.difficulty) && (
+                        <div className='mt-3 flex flex-wrap gap-1.5'>
+                          {quiz.category && (
+                            <Badge variant='outline' className='text-xs'>
+                              {quiz.category}
+                            </Badge>
+                          )}
+                          {quiz.difficulty && (
+                            <Badge
+                              variant={
+                                quiz.difficulty === 'easy'
+                                  ? 'success'
+                                  : quiz.difficulty === 'hard'
+                                    ? 'destructive'
+                                    : 'secondary'
+                              }
+                              className='text-xs'
+                            >
+                              {DIFFICULTY_LABELS[quiz.difficulty]}
+                            </Badge>
+                          )}
+                        </div>
+                      )}
                     </CardContent>
                     <CardFooter className='flex justify-between gap-2 border-t border-border bg-muted/30 p-4'>
-                      <div className='flex gap-2'>
+                      <div className='flex gap-2' onClick={(e) => e.stopPropagation()}>
                         <Link
                           to={`/dashboard/quiz/${quiz.id}/edit`}
                           className={cn(
@@ -197,7 +238,7 @@ export default function Dashboard() {
                         </AlertDialog>
                       </div>
 
-                      <div className='flex gap-2'>
+                      <div className='flex gap-2' onClick={(e) => e.stopPropagation()}>
                         <Button
                           variant='gradient-orange'
                           size='sm'
@@ -223,12 +264,33 @@ export default function Dashboard() {
             )}
           </TabsContent>
 
-          {/* Tab: Lịch sử */}
+          {/* Tab: Hoạt động (thay thế tab Lịch sử cũ) */}
           <TabsContent value='history' className='mt-6'>
-            <HistoryTab />
+            <ActivityTabs quizzes={quizzes} />
+          </TabsContent>
+
+          {/* Tab: Khám phá (tìm kiếm quiz công khai) */}
+          <TabsContent value='explore' className='mt-6'>
+            <div className='mb-6'>
+              <h2 className='text-2xl font-semibold text-foreground'>Khám phá Quiz</h2>
+              <p className='mt-1 text-sm text-muted-foreground'>
+                Tìm kiếm và chơi thử các bộ câu hỏi từ cộng đồng.
+              </p>
+            </div>
+            <QuizSearch />
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Quiz Preview Modal */}
+      <QuizPreviewModal
+        quiz={previewQuiz}
+        open={!!previewQuiz}
+        onOpenChange={(open) => {
+          if (!open) setPreviewQuiz(null)
+        }}
+        onHostLive={(quizId, title) => handleHost(quizId, title)}
+      />
 
       <ImportQuizDialog
         isOpen={isImportOpen}

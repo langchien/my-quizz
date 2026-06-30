@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  increment,
   query,
   setDoc,
   updateDoc,
@@ -24,6 +25,7 @@ export class FirebaseQuizRepository implements IQuizRepository {
       id: docRef.id,
       createdAt: now,
       updatedAt: now,
+      playCount: quizData.playCount ?? 0,
     }
 
     await setDoc(docRef, newQuiz)
@@ -35,7 +37,7 @@ export class FirebaseQuizRepository implements IQuizRepository {
     const querySnapshot = await getDocs(q)
     const quizzes: Quiz[] = []
     querySnapshot.forEach((doc) => {
-      quizzes.push(doc.data() as Quiz)
+      quizzes.push({ playCount: 0, ...doc.data() } as Quiz)
     })
 
     // Sort descending by createdAt in client to avoid requiring a composite index immediately in Firestore
@@ -46,7 +48,7 @@ export class FirebaseQuizRepository implements IQuizRepository {
     const docRef = doc(db, this.collectionName, id)
     const docSnap = await getDoc(docRef)
     if (docSnap.exists()) {
-      return docSnap.data() as Quiz
+      return { playCount: 0, ...docSnap.data() } as Quiz
     }
     return null
   }
@@ -64,11 +66,53 @@ export class FirebaseQuizRepository implements IQuizRepository {
 
     // Return the fully updated quiz
     const updatedSnap = await getDoc(docRef)
-    return updatedSnap.data() as Quiz
+    return { playCount: 0, ...updatedSnap.data() } as Quiz
   }
 
   async deleteQuiz(id: string): Promise<void> {
     const docRef = doc(db, this.collectionName, id)
     await deleteDoc(docRef)
+  }
+
+  async searchPublicQuizzes(
+    keyword?: string,
+    category?: string,
+    difficulty?: string,
+  ): Promise<Quiz[]> {
+    const q = query(collection(db, this.collectionName), where('isPublished', '==', true))
+    const querySnapshot = await getDocs(q)
+
+    let results: Quiz[] = []
+    querySnapshot.forEach((doc) => {
+      results.push({ playCount: 0, ...doc.data() } as Quiz)
+    })
+
+    // Client-side filtering (Firestore free tier doesn't support full-text search)
+    if (keyword) {
+      const lower = keyword.toLowerCase()
+      results = results.filter(
+        (quiz) =>
+          quiz.title.toLowerCase().includes(lower) ||
+          quiz.description?.toLowerCase().includes(lower),
+      )
+    }
+
+    if (category) {
+      results = results.filter((quiz) => quiz.category === category)
+    }
+
+    if (difficulty) {
+      results = results.filter((quiz) => quiz.difficulty === difficulty)
+    }
+
+    // Sort by playCount descending (most popular first)
+    return results.sort((a, b) => (b.playCount || 0) - (a.playCount || 0))
+  }
+
+  async incrementPlayCount(quizId: string): Promise<void> {
+    const docRef = doc(db, this.collectionName, quizId)
+    await updateDoc(docRef, {
+      playCount: increment(1),
+    })
   }
 }

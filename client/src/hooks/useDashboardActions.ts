@@ -70,6 +70,7 @@ export function useDashboardActions() {
           questions: parsedData.questions,
           creatorId: user.uid,
           isPublished: false, // Mặc định lưu nháp
+          playCount: 0,
         })
         revalidator.revalidate()
         toast.success('Import bộ câu hỏi thành công!')

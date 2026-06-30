@@ -76,7 +76,7 @@ export default function LivePlayer() {
                     key={opt.id}
                     onClick={() => handleAnswer(opt)}
                     className={cn(
-                      'h-full flex items-center justify-center rounded-2xl p-4 text-3xl font-bold text-white shadow-xl transition-transform active:scale-95 whitespace-normal break-words',
+                      'flex h-full items-center justify-center rounded-2xl p-4 text-3xl font-bold break-words whitespace-normal text-white shadow-xl transition-transform active:scale-95',
                       bgColor,
                     )}
                   >

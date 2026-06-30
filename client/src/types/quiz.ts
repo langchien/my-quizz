@@ -13,6 +13,8 @@ export interface Question {
   points: number // max points for this question (e.g. 1000)
 }
 
+export type QuizDifficulty = 'easy' | 'medium' | 'hard'
+
 export interface Quiz {
   id: string
   title: string
@@ -22,4 +24,8 @@ export interface Quiz {
   createdAt: string // ISO Date string
   updatedAt: string // ISO Date string
   isPublished: boolean
+  thumbnail?: string // URL ảnh bìa (tùy chọn)
+  playCount: number // Lượt chơi (mặc định 0)
+  difficulty?: QuizDifficulty // Độ khó
+  category?: string // Danh mục (Toán, Khoa học, Lịch sử...)
 }

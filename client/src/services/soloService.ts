@@ -1,5 +1,6 @@
 import { FirebaseSoloRepository } from '@/repositories/FirebaseSoloRepository'
 import type { ISoloRepository } from '@/repositories/ISoloRepository'
+import { quizService } from '@/services/quizService'
 import type { SoloAnswer, SoloProgress, SoloResult } from '@/types/room'
 
 const STORAGE_PREFIX = 'myquizz_solo_'
@@ -32,6 +33,10 @@ class SoloService {
       isPaused: false,
     }
     localStorage.setItem(this.getStorageKey(quizId), JSON.stringify(progress))
+
+    // Tự động tăng lượt chơi (fire-and-forget)
+    quizService.incrementPlayCount(quizId).catch(() => {})
+
     return progress
   }
 

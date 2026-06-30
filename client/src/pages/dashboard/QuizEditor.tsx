@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { DIFFICULTY_LABELS, QUIZ_CATEGORIES } from '@/config/quizCategories'
 import { useQuizEditor } from '@/hooks/useQuizEditor'
 import { cn } from '@/lib/utils'
 import type { Quiz } from '@/types/quiz'
@@ -43,6 +44,10 @@ export default function QuizEditor() {
     setDescription,
     isPublished,
     setIsPublished,
+    category,
+    setCategory,
+    difficulty,
+    setDifficulty,
     questions,
     isEditMode,
     saving,
@@ -140,6 +145,38 @@ export default function QuizEditor() {
                   rows={3}
                 />
               </Field>
+              <div className='flex gap-4'>
+                <Field className='flex-1'>
+                  <Label>Danh mục</Label>
+                  <Select value={category} onValueChange={setCategory}>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Chọn danh mục' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {QUIZ_CATEGORIES.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+                <Field className='flex-1'>
+                  <Label>Độ khó</Label>
+                  <Select value={difficulty} onValueChange={(v) => setDifficulty(v as any)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Chọn độ khó' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(DIFFICULTY_LABELS).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+              </div>
             </div>
           </CardContent>
         </Card>
