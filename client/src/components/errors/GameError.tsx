@@ -9,9 +9,7 @@ export function GameError() {
   const error = useRouteError()
   const navigate = useNavigate()
 
-  const message = error instanceof Error
-    ? error.message
-    : 'Đã xảy ra lỗi khi tải trò chơi'
+  const message = error instanceof Error ? error.message : 'Đã xảy ra lỗi khi tải trò chơi'
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-slate-900 text-white'>

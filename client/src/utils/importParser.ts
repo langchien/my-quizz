@@ -47,7 +47,9 @@ export function parseQuizJson(jsonString: string): ParsedQuiz {
       if (data.question || data.content) {
         rawQuestions = [data]
       } else {
-        throw new Error("Không tìm thấy danh sách câu hỏi. JSON cần có thuộc tính 'questions' hoặc là một Mảng câu hỏi.")
+        throw new Error(
+          "Không tìm thấy danh sách câu hỏi. JSON cần có thuộc tính 'questions' hoặc là một Mảng câu hỏi.",
+        )
       }
     }
   }
@@ -61,7 +63,9 @@ export function parseQuizJson(jsonString: string): ParsedQuiz {
     const content = (q.content || q.question || '').trim()
 
     if (!content) {
-      throw new Error(`Câu hỏi số ${questionNum} bị trống nội dung (thiếu trường 'question' hoặc 'content').`)
+      throw new Error(
+        `Câu hỏi số ${questionNum} bị trống nội dung (thiếu trường 'question' hoặc 'content').`,
+      )
     }
 
     const type = q.type === 'multiple_choice' ? 'multiple_choice' : 'multiple_choice' // Tương lai hỗ trợ thêm loại khác
@@ -74,7 +78,9 @@ export function parseQuizJson(jsonString: string): ParsedQuiz {
     const rawOptions = q.options || q.answers
 
     if (!rawOptions) {
-      throw new Error(`Câu hỏi ${questionNum} ("${content.substring(0, 30)}...") không có danh sách câu trả lời.`)
+      throw new Error(
+        `Câu hỏi ${questionNum} ("${content.substring(0, 30)}...") không có danh sách câu trả lời.`,
+      )
     }
 
     if (Array.isArray(rawOptions)) {
@@ -91,7 +97,7 @@ export function parseQuizJson(jsonString: string): ParsedQuiz {
             isCorrect: !!opt.isCorrect,
           }
         })
-      } 
+      }
       // Trường hợp 2: answers là mảng các chuỗi thô (Tối giản A hoặc B)
       else if (rawOptions.length > 0 && typeof rawOptions[0] === 'string') {
         const stringOptions = rawOptions as string[]
@@ -104,14 +110,16 @@ export function parseQuizJson(jsonString: string): ParsedQuiz {
         if (typeof q.correctIndex === 'number') {
           const correctIdx = q.correctIndex
           if (correctIdx < 0 || correctIdx >= stringOptions.length) {
-            throw new Error(`correctIndex (${correctIdx}) của Câu hỏi ${questionNum} vượt quá phạm vi số lượng đáp án.`)
+            throw new Error(
+              `correctIndex (${correctIdx}) của Câu hỏi ${questionNum} vượt quá phạm vi số lượng đáp án.`,
+            )
           }
           options = stringOptions.map((ans, optIdx) => ({
             id: generateId(),
             content: ans.trim(),
             isCorrect: optIdx === correctIdx,
           }))
-        } 
+        }
         // Dạng B: Sử dụng correctAnswer bằng chữ
         else if (typeof q.correctAnswer === 'string') {
           const correctAnswerText = q.correctAnswer.trim().toLowerCase()
@@ -121,12 +129,14 @@ export function parseQuizJson(jsonString: string): ParsedQuiz {
             isCorrect: ans.trim().toLowerCase() === correctAnswerText,
           }))
         } else {
-          throw new Error(`Câu hỏi ${questionNum} thiếu thông tin đáp án đúng (cần 'correctIndex' hoặc 'correctAnswer').`)
+          throw new Error(
+            `Câu hỏi ${questionNum} thiếu thông tin đáp án đúng (cần 'correctIndex' hoặc 'correctAnswer').`,
+          )
         }
       } else {
         throw new Error(`Định dạng đáp án của Câu hỏi ${questionNum} không hợp lệ.`)
       }
-    } 
+    }
     // Trường hợp 3: answers là Object dạng nhãn A, B, C, D (Tối giản C)
     else if (typeof rawOptions === 'object' && rawOptions !== null) {
       const keys = Object.keys(rawOptions)
@@ -135,7 +145,9 @@ export function parseQuizJson(jsonString: string): ParsedQuiz {
       }
 
       if (typeof q.correctAnswer !== 'string') {
-        throw new Error(`Câu hỏi ${questionNum} thiếu đáp án đúng 'correctAnswer' (ví dụ: "A", "B", "C"...).`)
+        throw new Error(
+          `Câu hỏi ${questionNum} thiếu đáp án đúng 'correctAnswer' (ví dụ: "A", "B", "C"...).`,
+        )
       }
 
       const correctAnswerKey = q.correctAnswer.trim().toUpperCase()
@@ -154,7 +166,9 @@ export function parseQuizJson(jsonString: string): ParsedQuiz {
     // Kiểm tra tính hợp lệ sau khi parse options
     const correctCount = options.filter((o) => o.isCorrect).length
     if (correctCount === 0) {
-      throw new Error(`Câu hỏi ${questionNum} ("${content.substring(0, 30)}...") không có đáp án đúng nào được chọn.`)
+      throw new Error(
+        `Câu hỏi ${questionNum} ("${content.substring(0, 30)}...") không có đáp án đúng nào được chọn.`,
+      )
     }
 
     return {

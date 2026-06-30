@@ -8,9 +8,10 @@
     "build": "tsc -b && vite build",
     "lint:all": "eslint .",
     "lint": "eslint --quiet",
-    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "format": "npm run organize && prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "organize": "npx organize-imports-cli src"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.9",

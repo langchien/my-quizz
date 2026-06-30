@@ -1,20 +1,25 @@
-import React, { Suspense, useState } from 'react'
-import { createBrowserRouter, Navigate, Outlet, RouterProvider, useNavigation } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { dashboardLoader, quizEditorLoader, soloLoader } from '@/routes/loaders'
 import ProtectedRoute from '@/routes/ProtectedRoute'
+import React, { Suspense, useState } from 'react'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useNavigation } from 'react-router'
 
 // Error boundaries (small, no need to lazy load)
 import { DashboardError } from '@/components/errors/DashboardError'
-import { QuizEditorError } from '@/components/errors/QuizEditorError'
 import { GameError } from '@/components/errors/GameError'
 import { NotFoundError } from '@/components/errors/NotFoundError'
+import { QuizEditorError } from '@/components/errors/QuizEditorError'
 
 // Skeletons (small, no need to lazy load)
-import { DashboardSkeleton } from '@/components/skeletons/DashboardSkeleton'
-import { QuizEditorSkeleton } from '@/components/skeletons/QuizEditorSkeleton'
 import { AuthSkeleton } from '@/components/skeletons/AuthSkeleton'
-import { HostSkeleton, PlayerSkeleton, JoinRoomSkeleton, SoloSkeleton } from '@/components/skeletons/GameSkeleton'
+import { DashboardSkeleton } from '@/components/skeletons/DashboardSkeleton'
+import {
+  HostSkeleton,
+  JoinRoomSkeleton,
+  PlayerSkeleton,
+  SoloSkeleton,
+} from '@/components/skeletons/GameSkeleton'
+import { QuizEditorSkeleton } from '@/components/skeletons/QuizEditorSkeleton'
 
 // Lazy load route components (code splitting)
 const LazyLogin = React.lazy(() => import('@/pages/auth/Login'))

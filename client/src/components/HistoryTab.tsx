@@ -1,14 +1,6 @@
 import { useHistory } from '@/hooks/useHistory'
-import {
-  BookOpen,
-  ChevronDown,
-  ChevronRight,
-  Clock,
-  Loader2,
-  Trophy,
-  Users,
-} from 'lucide-react'
 import type { GameSession, Participant, SoloResult } from '@/types/room'
+import { BookOpen, ChevronDown, ChevronRight, Clock, Loader2, Trophy, Users } from 'lucide-react'
 
 /**
  * Component hiển thị lịch sử chơi.
@@ -267,9 +259,7 @@ function SoloResultCard({ result }: { result: SoloResult }) {
 
       {/* Info */}
       <div className='min-w-0 flex-1'>
-        <h4 className='truncate font-semibold text-gray-900 dark:text-white'>
-          {result.quizTitle}
-        </h4>
+        <h4 className='truncate font-semibold text-gray-900 dark:text-white'>{result.quizTitle}</h4>
         <div className='mt-0.5 flex items-center gap-3 text-sm text-gray-500 dark:text-slate-400'>
           <span className='flex items-center gap-1'>
             <Clock size={14} /> {dateStr}

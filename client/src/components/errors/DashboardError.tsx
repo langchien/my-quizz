@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, ArrowLeft, RefreshCw } from 'lucide-react'
-import { useNavigate, useRouteError, isRouteErrorResponse } from 'react-router'
+import { isRouteErrorResponse, useNavigate, useRouteError } from 'react-router'
 
 /**
  * Error boundary cho trang Dashboard.
@@ -27,18 +27,10 @@ export function DashboardError() {
         </h2>
         <p className='mb-6 text-sm text-gray-500 dark:text-gray-400'>{message}</p>
         <div className='flex justify-center gap-3'>
-          <Button
-            variant='outline'
-            onClick={() => navigate('/dashboard')}
-            className='gap-2'
-          >
+          <Button variant='outline' onClick={() => navigate('/dashboard')} className='gap-2'>
             <RefreshCw size={16} /> Thử lại
           </Button>
-          <Button
-            variant='outline'
-            onClick={() => navigate('/login')}
-            className='gap-2'
-          >
+          <Button variant='outline' onClick={() => navigate('/login')} className='gap-2'>
             <ArrowLeft size={16} /> Đăng nhập lại
           </Button>
         </div>

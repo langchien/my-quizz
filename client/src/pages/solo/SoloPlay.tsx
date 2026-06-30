@@ -81,15 +81,11 @@ export default function SoloPlay() {
             </div>
 
             <h1 className='mb-3 text-4xl font-black tracking-tight'>{quiz.title}</h1>
-            {quiz.description && (
-              <p className='mb-6 text-lg text-slate-400'>{quiz.description}</p>
-            )}
+            {quiz.description && <p className='mb-6 text-lg text-slate-400'>{quiz.description}</p>}
 
             <div className='mx-auto mb-10 flex max-w-xs justify-center gap-8'>
               <div className='text-center'>
-                <div className='text-3xl font-black text-violet-400'>
-                  {quiz.questions.length}
-                </div>
+                <div className='text-3xl font-black text-violet-400'>{quiz.questions.length}</div>
                 <div className='text-sm text-slate-500'>Câu hỏi</div>
               </div>
               <div className='h-12 w-px bg-slate-700' />
@@ -443,8 +439,7 @@ export default function SoloPlay() {
                       let className =
                         'flex items-center gap-3 rounded-xl border-2 p-4 text-left transition-all'
                       if (isCorrectOpt) {
-                        className +=
-                          ' border-emerald-500 bg-emerald-500/10 text-emerald-300'
+                        className += ' border-emerald-500 bg-emerald-500/10 text-emerald-300'
                       } else if (isSelected && !isCorrectOpt) {
                         className += ' border-red-500 bg-red-500/10 text-red-300'
                       } else {

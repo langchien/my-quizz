@@ -19,7 +19,10 @@ export function NotFoundError() {
         <p className='mb-6 text-gray-500 dark:text-gray-400'>
           Trang bạn đang tìm không tồn tại hoặc đã bị di chuyển.
         </p>
-        <Button onClick={() => navigate('/dashboard')} className='gap-2 bg-rose-600 text-white hover:bg-rose-700'>
+        <Button
+          onClick={() => navigate('/dashboard')}
+          className='gap-2 bg-rose-600 text-white hover:bg-rose-700'
+        >
           <Home size={16} /> Về trang chủ
         </Button>
       </div>

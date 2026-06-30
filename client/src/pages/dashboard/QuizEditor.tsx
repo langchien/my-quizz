@@ -1,3 +1,4 @@
+import { ImportQuizDialog } from '@/components/ImportQuizDialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -12,10 +13,9 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { useQuizEditor } from '@/hooks/useQuizEditor'
 import type { Quiz } from '@/types/quiz'
-import { ArrowLeft, CheckCircle2, Plus, Save, Trash2, FileJson } from 'lucide-react'
-import { useLoaderData, useNavigate } from 'react-router'
+import { ArrowLeft, CheckCircle2, FileJson, Plus, Save, Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { ImportQuizDialog } from '@/components/ImportQuizDialog'
+import { useLoaderData, useNavigate } from 'react-router'
 
 export default function QuizEditor() {
   const navigate = useNavigate()
@@ -234,7 +234,7 @@ export default function QuizEditor() {
             </Card>
           ))}
 
-          <div className='flex gap-4 w-full flex-col sm:flex-row'>
+          <div className='flex w-full flex-col gap-4 sm:flex-row'>
             <Button
               onClick={addQuestion}
               variant='outline'
@@ -255,16 +255,16 @@ export default function QuizEditor() {
 
       {saving && (
         <div className='fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-all duration-300'>
-          <div className='flex flex-col items-center gap-4 rounded-xl bg-white p-8 shadow-2xl dark:bg-slate-900 border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-200'>
+          <div className='flex animate-in flex-col items-center gap-4 rounded-xl border border-slate-100 bg-white p-8 shadow-2xl duration-200 zoom-in-95 fade-in dark:border-slate-800 dark:bg-slate-900'>
             <div className='relative flex h-16 w-16 items-center justify-center'>
               {/* Outer rotating ring */}
-              <div className='absolute inset-0 rounded-full border-4 border-rose-500/20 border-t-rose-600 animate-spin' />
+              <div className='absolute inset-0 animate-spin rounded-full border-4 border-rose-500/20 border-t-rose-600' />
               {/* Inner reverse rotating ring */}
-              <div className='absolute h-10 w-10 rounded-full border-4 border-rose-500/10 border-b-rose-500 animate-spin [animation-duration:1.5s] [animation-direction:reverse]' />
+              <div className='absolute h-10 w-10 animate-spin rounded-full border-4 border-rose-500/10 border-b-rose-500 [animation-direction:reverse] [animation-duration:1.5s]' />
               {/* Pulsing core dot */}
-              <div className='h-4 w-4 rounded-full bg-rose-600 animate-pulse' />
+              <div className='h-4 w-4 animate-pulse rounded-full bg-rose-600' />
             </div>
-            <div className='text-center space-y-1.5'>
+            <div className='space-y-1.5 text-center'>
               <p className='text-base font-semibold text-slate-800 dark:text-slate-100'>
                 {isEditMode ? 'Đang cập nhật bộ câu hỏi...' : 'Đang tạo bộ câu hỏi mới...'}
               </p>
@@ -280,7 +280,7 @@ export default function QuizEditor() {
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
         onImport={(parsedData) => importQuestions(parsedData.questions)}
-        mode="questions"
+        mode='questions'
       />
     </div>
   )

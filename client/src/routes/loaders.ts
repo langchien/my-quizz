@@ -1,6 +1,6 @@
-import { redirect, type LoaderFunctionArgs } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import { quizService } from '@/services/quizService'
+import { redirect, type LoaderFunctionArgs } from 'react-router'
 
 /**
  * Loader cho trang Dashboard.

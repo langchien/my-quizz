@@ -1,23 +1,22 @@
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signInWithRedirect,
-  signInWithPopup,
-  getRedirectResult,
-  signOut,
-  updateProfile,
-  type User as FirebaseUser,
-} from 'firebase/auth'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { auth, db } from '@/lib/firebase'
-import { type User } from '@/types/user'
 import type {
   IAuthRepository,
   LoginCredentials,
   RegisterCredentials,
 } from '@/repositories/IAuthRepository'
+import { type User } from '@/types/user'
+import {
+  createUserWithEmailAndPassword,
+  getRedirectResult,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+  type User as FirebaseUser,
+} from 'firebase/auth'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 export class FirebaseAuthRepository implements IAuthRepository {
   constructor() {
@@ -179,7 +178,9 @@ export class FirebaseAuthRepository implements IAuthRepository {
         case 'auth/user-disabled':
           throw new Error('Tài khoản này đã bị tạm khóa hoặc vô hiệu hóa.')
         case 'auth/too-many-requests':
-          throw new Error('Tài khoản tạm thời bị khóa do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau.')
+          throw new Error(
+            'Tài khoản tạm thời bị khóa do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau.',
+          )
         case 'auth/network-request-failed':
           throw new Error('Lỗi kết nối mạng. Vui lòng kiểm tra kết nối internet.')
         default:

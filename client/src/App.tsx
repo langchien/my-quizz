@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import AppRoutes from '@/routes/AppRoutes'
+import { useEffect } from 'react'
 
 /**
  * App root component.
@@ -35,4 +35,3 @@ export function App() {
 }
 
 export default App
-

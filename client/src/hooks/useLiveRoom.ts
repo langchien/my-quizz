@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
 import { roomService } from '@/services/roomService'
 import type { GameSession, Participant, PlayerAnswer } from '@/types/room'
+import { useEffect, useState } from 'react'
 
 export function useLiveRoom(sessionId: string | undefined, currentQuestionId?: string) {
   const [session, setSession] = useState<GameSession | null>(null)

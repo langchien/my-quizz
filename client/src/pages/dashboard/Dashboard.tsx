@@ -1,4 +1,5 @@
 import { HistoryTab } from '@/components/HistoryTab'
+import { ImportQuizDialog } from '@/components/ImportQuizDialog'
 import { useTheme } from '@/components/theme-provider'
 import {
   AlertDialog,
@@ -12,7 +13,6 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import {
   Card,
   CardContent,
@@ -23,11 +23,11 @@ import {
 } from '@/components/ui/card'
 import { useAuth } from '@/hooks/useAuth'
 import { useDashboardActions } from '@/hooks/useDashboardActions'
+import { cn } from '@/lib/utils'
 import type { Quiz } from '@/types/quiz'
-import { BookOpen, Clock, Edit, Moon, Play, Plus, Sun, Trash2, FileJson } from 'lucide-react'
+import { BookOpen, Clock, Edit, FileJson, Moon, Play, Plus, Sun, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useLoaderData, useNavigate } from 'react-router'
-import { ImportQuizDialog } from '@/components/ImportQuizDialog'
 
 export default function Dashboard() {
   const { user, logout } = useAuth()
@@ -38,7 +38,8 @@ export default function Dashboard() {
   const { quizzes } = useLoaderData() as { quizzes: Quiz[] }
 
   // Logic tách ra custom hook
-  const { handleHost, handleDelete, handleImportQuiz, importing, isRevalidating } = useDashboardActions()
+  const { handleHost, handleDelete, handleImportQuiz, importing, isRevalidating } =
+    useDashboardActions()
 
   // Tab state
   const [activeTab, setActiveTab] = useState<'quizzes' | 'history'>('quizzes')
@@ -109,174 +110,174 @@ export default function Dashboard() {
         {/* Tab: Bộ câu hỏi */}
         {activeTab === 'quizzes' && (
           <>
-        <div className='mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-          <div>
-            <h2 className='text-2xl font-semibold text-gray-800 dark:text-slate-100'>
-              Bộ câu hỏi của tôi
-            </h2>
-            <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
-              Quản lý và tổ chức các bài trắc nghiệm của bạn.
-            </p>
-          </div>
-          <div className='flex gap-2 w-full sm:w-auto'>
-            <Button
-              onClick={() => setIsImportOpen(true)}
-              variant='outline'
-              className='gap-2 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 w-full sm:w-auto'
-            >
-              <FileJson size={16} /> Import từ JSON
-            </Button>
-            <Button
-              onClick={() => navigate('/dashboard/quiz/new')}
-              className='gap-2 bg-rose-600 text-white hover:bg-rose-700 w-full sm:w-auto'
-            >
-              <Plus size={16} /> Tạo Quiz mới
-            </Button>
-          </div>
-        </div>
-
-        {isRevalidating ? (
-          <div className='flex items-center justify-center py-20'>
-            <div className='h-10 w-10 animate-spin rounded-full border-4 border-rose-500/30 border-t-rose-500'></div>
-          </div>
-        ) : quizzes.length === 0 ? (
-          <div className='rounded-2xl border border-dashed border-gray-300 bg-white py-16 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900'>
-            <div className='mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-rose-100 text-rose-500 dark:bg-rose-950/50'>
-              <Plus size={32} />
+            <div className='mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+              <div>
+                <h2 className='text-2xl font-semibold text-gray-800 dark:text-slate-100'>
+                  Bộ câu hỏi của tôi
+                </h2>
+                <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                  Quản lý và tổ chức các bài trắc nghiệm của bạn.
+                </p>
+              </div>
+              <div className='flex w-full gap-2 sm:w-auto'>
+                <Button
+                  onClick={() => setIsImportOpen(true)}
+                  variant='outline'
+                  className='w-full gap-2 border-slate-200 text-slate-700 sm:w-auto dark:border-slate-800 dark:text-slate-300'
+                >
+                  <FileJson size={16} /> Import từ JSON
+                </Button>
+                <Button
+                  onClick={() => navigate('/dashboard/quiz/new')}
+                  className='w-full gap-2 bg-rose-600 text-white hover:bg-rose-700 sm:w-auto'
+                >
+                  <Plus size={16} /> Tạo Quiz mới
+                </Button>
+              </div>
             </div>
-            <h3 className='mb-2 text-xl font-medium text-gray-800 dark:text-slate-200'>
-              Bạn chưa có bộ câu hỏi nào
-            </h3>
-            <p className='mb-6 text-gray-500 dark:text-gray-400'>
-              Hãy tạo bộ câu hỏi đầu tiên của bạn để bắt đầu trò chơi!
-            </p>
-            <div className='flex items-center justify-center gap-4'>
-              <Button
-                onClick={() => navigate('/dashboard/quiz/new')}
-                className='bg-rose-600 text-white hover:bg-rose-700'
-              >
-                Bắt đầu tạo Quiz
-              </Button>
-              <Button
-                onClick={() => setIsImportOpen(true)}
-                variant='outline'
-                className='border-gray-300 text-gray-700 dark:border-slate-700 dark:text-slate-300'
-              >
-                Import từ JSON
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
-            {quizzes.map((quiz) => (
-              <Card
-                key={quiz.id}
-                className='flex flex-col border-gray-200 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800'
-              >
-                <CardHeader>
-                  <div className='flex items-start justify-between gap-2'>
-                    <CardTitle className='line-clamp-1 flex-1 text-xl' title={quiz.title}>
-                      {quiz.title}
-                    </CardTitle>
-                    {quiz.isPublished ? (
-                      <span className='inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset dark:bg-green-900/30 dark:text-green-400'>
-                        Công khai
-                      </span>
-                    ) : (
-                      <span className='inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset dark:bg-slate-800 dark:text-slate-300'>
-                        Bản nháp
-                      </span>
-                    )}
-                  </div>
-                  <CardDescription className='mt-2 line-clamp-2'>
-                    {quiz.description || 'Không có mô tả'}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className='flex-1'>
-                  <div className='flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400'>
-                    <div className='flex flex-col'>
-                      <span className='font-medium text-gray-900 dark:text-gray-100'>
-                        {quiz.questions?.length || 0}
-                      </span>
-                      <span className='text-xs'>Câu hỏi</span>
-                    </div>
-                    <div className='h-8 w-px bg-gray-200 dark:bg-slate-700'></div>
-                    <div className='flex flex-col'>
-                      <span className='font-medium text-gray-900 dark:text-gray-100'>
-                        {new Date(quiz.updatedAt).toLocaleDateString('vi-VN')}
-                      </span>
-                      <span className='text-xs'>Cập nhật</span>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter className='flex justify-between gap-2 border-t border-gray-100 bg-gray-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/30'>
-                  <div className='flex gap-2'>
-                    <Button
-                      variant='outline'
-                      size='sm'
-                      className='gap-1 px-2 text-slate-600 dark:text-slate-300'
-                      onClick={() => navigate(`/dashboard/quiz/${quiz.id}/edit`)}
-                    >
-                      <Edit size={16} /> <span className='hidden sm:inline'>Sửa</span>
-                    </Button>
 
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
+            {isRevalidating ? (
+              <div className='flex items-center justify-center py-20'>
+                <div className='h-10 w-10 animate-spin rounded-full border-4 border-rose-500/30 border-t-rose-500'></div>
+              </div>
+            ) : quizzes.length === 0 ? (
+              <div className='rounded-2xl border border-dashed border-gray-300 bg-white py-16 text-center shadow-sm dark:border-slate-700 dark:bg-slate-900'>
+                <div className='mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-rose-100 text-rose-500 dark:bg-rose-950/50'>
+                  <Plus size={32} />
+                </div>
+                <h3 className='mb-2 text-xl font-medium text-gray-800 dark:text-slate-200'>
+                  Bạn chưa có bộ câu hỏi nào
+                </h3>
+                <p className='mb-6 text-gray-500 dark:text-gray-400'>
+                  Hãy tạo bộ câu hỏi đầu tiên của bạn để bắt đầu trò chơi!
+                </p>
+                <div className='flex items-center justify-center gap-4'>
+                  <Button
+                    onClick={() => navigate('/dashboard/quiz/new')}
+                    className='bg-rose-600 text-white hover:bg-rose-700'
+                  >
+                    Bắt đầu tạo Quiz
+                  </Button>
+                  <Button
+                    onClick={() => setIsImportOpen(true)}
+                    variant='outline'
+                    className='border-gray-300 text-gray-700 dark:border-slate-700 dark:text-slate-300'
+                  >
+                    Import từ JSON
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
+                {quizzes.map((quiz) => (
+                  <Card
+                    key={quiz.id}
+                    className='flex flex-col border-gray-200 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800'
+                  >
+                    <CardHeader>
+                      <div className='flex items-start justify-between gap-2'>
+                        <CardTitle className='line-clamp-1 flex-1 text-xl' title={quiz.title}>
+                          {quiz.title}
+                        </CardTitle>
+                        {quiz.isPublished ? (
+                          <span className='inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-green-600/20 ring-inset dark:bg-green-900/30 dark:text-green-400'>
+                            Công khai
+                          </span>
+                        ) : (
+                          <span className='inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset dark:bg-slate-800 dark:text-slate-300'>
+                            Bản nháp
+                          </span>
+                        )}
+                      </div>
+                      <CardDescription className='mt-2 line-clamp-2'>
+                        {quiz.description || 'Không có mô tả'}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className='flex-1'>
+                      <div className='flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400'>
+                        <div className='flex flex-col'>
+                          <span className='font-medium text-gray-900 dark:text-gray-100'>
+                            {quiz.questions?.length || 0}
+                          </span>
+                          <span className='text-xs'>Câu hỏi</span>
+                        </div>
+                        <div className='h-8 w-px bg-gray-200 dark:bg-slate-700'></div>
+                        <div className='flex flex-col'>
+                          <span className='font-medium text-gray-900 dark:text-gray-100'>
+                            {new Date(quiz.updatedAt).toLocaleDateString('vi-VN')}
+                          </span>
+                          <span className='text-xs'>Cập nhật</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter className='flex justify-between gap-2 border-t border-gray-100 bg-gray-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/30'>
+                      <div className='flex gap-2'>
                         <Button
                           variant='outline'
                           size='sm'
-                          className='gap-1 px-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950'
+                          className='gap-1 px-2 text-slate-600 dark:text-slate-300'
+                          onClick={() => navigate(`/dashboard/quiz/${quiz.id}/edit`)}
                         >
-                          <Trash2 size={16} /> <span className='hidden sm:inline'>Xóa</span>
+                          <Edit size={16} /> <span className='hidden sm:inline'>Sửa</span>
                         </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Bạn có chắc chắn muốn xóa?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Hành động này không thể hoàn tác. Bộ câu hỏi{' '}
-                            <span className='font-semibold text-gray-900 dark:text-white'>
-                              "{quiz.title}"
-                            </span>{' '}
-                            sẽ bị xóa vĩnh viễn khỏi hệ thống.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Hủy</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDelete(quiz.id)}
-                            className='bg-red-600 text-white hover:bg-red-700'
-                          >
-                            Xóa vĩnh viễn
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
 
-                  <div className='flex gap-2'>
-                    <Button
-                      size='sm'
-                      className='gap-2 border-0 bg-linear-to-r from-orange-500 to-rose-500 text-white hover:from-orange-600 hover:to-rose-600'
-                      onClick={() => handleHost(quiz.id, quiz.title)}
-                    >
-                      <Play size={16} /> Host
-                    </Button>
-                    <Link
-                      to={`/solo/${quiz.id}`}
-                      className={cn(
-                        buttonVariants({ variant: 'outline', size: 'sm' }),
-                        'gap-2 border-violet-500/30 text-violet-600 hover:bg-violet-50 hover:text-violet-700 dark:text-violet-400 dark:hover:bg-violet-950'
-                      )}
-                    >
-                      <BookOpen size={16} /> Tự luyện
-                    </Link>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        )}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              className='gap-1 px-2 text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950'
+                            >
+                              <Trash2 size={16} /> <span className='hidden sm:inline'>Xóa</span>
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Bạn có chắc chắn muốn xóa?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Hành động này không thể hoàn tác. Bộ câu hỏi{' '}
+                                <span className='font-semibold text-gray-900 dark:text-white'>
+                                  "{quiz.title}"
+                                </span>{' '}
+                                sẽ bị xóa vĩnh viễn khỏi hệ thống.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Hủy</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(quiz.id)}
+                                className='bg-red-600 text-white hover:bg-red-700'
+                              >
+                                Xóa vĩnh viễn
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+
+                      <div className='flex gap-2'>
+                        <Button
+                          size='sm'
+                          className='gap-2 border-0 bg-linear-to-r from-orange-500 to-rose-500 text-white hover:from-orange-600 hover:to-rose-600'
+                          onClick={() => handleHost(quiz.id, quiz.title)}
+                        >
+                          <Play size={16} /> Host
+                        </Button>
+                        <Link
+                          to={`/solo/${quiz.id}`}
+                          className={cn(
+                            buttonVariants({ variant: 'outline', size: 'sm' }),
+                            'gap-2 border-violet-500/30 text-violet-600 hover:bg-violet-50 hover:text-violet-700 dark:text-violet-400 dark:hover:bg-violet-950',
+                          )}
+                        >
+                          <BookOpen size={16} /> Tự luyện
+                        </Link>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            )}
           </>
         )}
 
@@ -288,18 +289,18 @@ export default function Dashboard() {
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
         onImport={handleImportQuiz}
-        mode="quiz"
+        mode='quiz'
       />
 
       {importing && (
         <div className='fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-all duration-300'>
-          <div className='flex flex-col items-center gap-4 rounded-xl bg-white p-8 shadow-2xl dark:bg-slate-900 border border-slate-100 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-200'>
+          <div className='flex animate-in flex-col items-center gap-4 rounded-xl border border-slate-100 bg-white p-8 shadow-2xl duration-200 zoom-in-95 fade-in dark:border-slate-800 dark:bg-slate-900'>
             <div className='relative flex h-16 w-16 items-center justify-center'>
-              <div className='absolute inset-0 rounded-full border-4 border-rose-500/20 border-t-rose-600 animate-spin' />
-              <div className='absolute h-10 w-10 rounded-full border-4 border-rose-500/10 border-b-rose-500 animate-spin [animation-duration:1.5s] [animation-direction:reverse]' />
-              <div className='h-4 w-4 rounded-full bg-rose-600 animate-pulse' />
+              <div className='absolute inset-0 animate-spin rounded-full border-4 border-rose-500/20 border-t-rose-600' />
+              <div className='absolute h-10 w-10 animate-spin rounded-full border-4 border-rose-500/10 border-b-rose-500 [animation-direction:reverse] [animation-duration:1.5s]' />
+              <div className='h-4 w-4 animate-pulse rounded-full bg-rose-600' />
             </div>
-            <div className='text-center space-y-1.5'>
+            <div className='space-y-1.5 text-center'>
               <p className='text-base font-semibold text-slate-800 dark:text-slate-100'>
                 Đang import bộ câu hỏi mới...
               </p>

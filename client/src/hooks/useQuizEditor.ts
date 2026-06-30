@@ -1,9 +1,9 @@
-import { useCallback, useState } from 'react'
-import { useNavigate } from 'react-router'
-import { toast } from 'sonner'
 import { useAuth } from '@/hooks/useAuth'
 import { quizService } from '@/services/quizService'
 import type { AnswerOption, Question, Quiz } from '@/types/quiz'
+import { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { toast } from 'sonner'
 
 // Simple ID generator to avoid adding external dependency just for UI temp IDs
 const generateId = () => Math.random().toString(36).substring(2, 9)
@@ -120,16 +120,13 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
   )
 
   // Update a question field
-  const updateQuestion = useCallback(
-    (qIndex: number, field: keyof Question, value: any) => {
-      setQuestions((prev) => {
-        const next = [...prev]
-        next[qIndex] = { ...next[qIndex], [field]: value }
-        return next
-      })
-    },
-    [],
-  )
+  const updateQuestion = useCallback((qIndex: number, field: keyof Question, value: any) => {
+    setQuestions((prev) => {
+      const next = [...prev]
+      next[qIndex] = { ...next[qIndex], [field]: value }
+      return next
+    })
+  }, [])
 
   // Update an answer option field
   const updateOption = useCallback(

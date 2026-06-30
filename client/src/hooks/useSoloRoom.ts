@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { playSound } from '@/lib/sounds'
 import { soloService } from '@/services/soloService'
 import type { AnswerOption, Question, Quiz } from '@/types/quiz'
 import type { SoloAnswer, SoloProgress, SoloResult } from '@/types/room'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 export type SoloPhase = 'intro' | 'playing' | 'feedback' | 'redemption' | 'review' | 'finished'
 
@@ -278,15 +278,17 @@ export function useSoloRoom(quiz: Quiz | null, userId?: string) {
 
   const allFlashcards: FlashcardItem[] = useMemo(() => {
     if (!quiz || !soloResult) return []
-    return soloResult.answers.map((answer) => {
-      const question = quiz.questions.find((q) => q.id === answer.questionId)
-      return {
-        question: question!,
-        selectedOptionId: answer.selectedOptionId,
-        isCorrect: answer.isCorrect,
-        pointsEarned: answer.pointsEarned,
-      }
-    }).filter((item) => item.question !== undefined)
+    return soloResult.answers
+      .map((answer) => {
+        const question = quiz.questions.find((q) => q.id === answer.questionId)
+        return {
+          question: question!,
+          selectedOptionId: answer.selectedOptionId,
+          isCorrect: answer.isCorrect,
+          pointsEarned: answer.pointsEarned,
+        }
+      })
+      .filter((item) => item.question !== undefined)
   }, [quiz, soloResult])
 
   const handleShowReview = useCallback(() => {

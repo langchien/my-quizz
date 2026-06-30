@@ -1,3 +1,6 @@
+import { db } from '@/lib/firebase'
+import type { IRoomRepository } from '@/repositories/IRoomRepository'
+import type { GameSession, Participant, PlayerAnswer, RoomStatus } from '@/types/room'
 import {
   collection,
   doc,
@@ -10,9 +13,6 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import type { GameSession, Participant, PlayerAnswer, RoomStatus } from '@/types/room'
-import type { IRoomRepository } from '@/repositories/IRoomRepository'
 
 export class FirebaseRoomRepository implements IRoomRepository {
   private sessionsCol = 'sessions'

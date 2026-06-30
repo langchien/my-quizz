@@ -1,7 +1,7 @@
-import { collection, doc, getDocs, query, setDoc, where, orderBy } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
-import type { SoloResult } from '@/types/room'
 import type { ISoloRepository } from '@/repositories/ISoloRepository'
+import type { SoloResult } from '@/types/room'
+import { collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore'
 
 export class FirebaseSoloRepository implements ISoloRepository {
   private collectionName = 'solo_results'
@@ -17,10 +17,7 @@ export class FirebaseSoloRepository implements ISoloRepository {
   }
 
   async getResultsByUser(userId: string): Promise<SoloResult[]> {
-    const q = query(
-      collection(db, this.collectionName),
-      where('userId', '==', userId),
-    )
+    const q = query(collection(db, this.collectionName), where('userId', '==', userId))
     const querySnapshot = await getDocs(q)
     const results: SoloResult[] = []
     querySnapshot.forEach((docSnap) => {

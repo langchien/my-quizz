@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, ArrowLeft } from 'lucide-react'
-import { useNavigate, useRouteError, isRouteErrorResponse } from 'react-router'
+import { isRouteErrorResponse, useNavigate, useRouteError } from 'react-router'
 
 /**
  * Error boundary cho trang QuizEditor.
@@ -28,7 +28,10 @@ export function QuizEditorError() {
               ? error.message
               : 'Đã xảy ra lỗi không xác định khi tải bộ câu hỏi.'}
         </p>
-        <Button onClick={() => navigate('/dashboard')} className='gap-2 bg-rose-600 text-white hover:bg-rose-700'>
+        <Button
+          onClick={() => navigate('/dashboard')}
+          className='gap-2 bg-rose-600 text-white hover:bg-rose-700'
+        >
           <ArrowLeft size={16} /> Quay về Dashboard
         </Button>
       </div>
