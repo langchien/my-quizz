@@ -1,3 +1,4 @@
+import { Spinner } from '@/components/ui/spinner'
 import { useAuth } from '@/hooks/useAuth'
 import { dashboardLoader, quizEditorLoader, soloLoader } from '@/routes/loaders'
 import ProtectedRoute from '@/routes/ProtectedRoute'
@@ -68,8 +69,8 @@ function RootLayout() {
     }
 
     return (
-      <div className='flex min-h-screen items-center justify-center bg-gray-50 dark:bg-slate-950'>
-        <div className='h-12 w-12 animate-spin rounded-full border-4 border-red-500/30 border-t-red-500' />
+      <div className='flex min-h-screen items-center justify-center bg-background'>
+        <Spinner className='size-12 text-primary' />
       </div>
     )
   }
@@ -218,8 +219,8 @@ function GlobalInitialLoader() {
   }
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-gray-50 dark:bg-slate-950'>
-      <div className='h-12 w-12 animate-spin rounded-full border-4 border-red-500/30 border-t-red-500' />
+    <div className='flex min-h-screen items-center justify-center bg-background'>
+      <Spinner className='size-12 text-primary' />
     </div>
   )
 }

@@ -39,6 +39,18 @@
     --color-card: var(--card);
     --color-foreground: var(--foreground);
     --color-background: var(--background);
+    --color-game-option-1: var(--game-option-1);
+    --color-game-option-2: var(--game-option-2);
+    --color-game-option-3: var(--game-option-3);
+    --color-game-option-4: var(--game-option-4);
+    --color-game-option-1-hover: var(--game-option-1-hover);
+    --color-game-option-2-hover: var(--game-option-2-hover);
+    --color-game-option-3-hover: var(--game-option-3-hover);
+    --color-game-option-4-hover: var(--game-option-4-hover);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -73,6 +85,18 @@
     --chart-4: oklch(0.505 0.213 27.518);
     --chart-5: oklch(0.444 0.177 26.899);
     --radius: 0.625rem;
+    --game-option-1: oklch(0.637 0.237 29.234);
+    --game-option-2: oklch(0.546 0.245 262.881);
+    --game-option-3: oklch(0.795 0.184 86.047);
+    --game-option-4: oklch(0.548 0.216 142.496);
+    --game-option-1-hover: oklch(0.577 0.237 29.234);
+    --game-option-2-hover: oklch(0.488 0.243 264.052);
+    --game-option-3-hover: oklch(0.737 0.184 85.604);
+    --game-option-4-hover: oklch(0.488 0.200 142.496);
+    --success: oklch(0.723 0.219 149.579);
+    --success-foreground: oklch(0.985 0 0);
+    --warning: oklch(0.795 0.184 86.047);
+    --warning-foreground: oklch(0.421 0.095 57.708);
     --sidebar: oklch(0.985 0.001 106.423);
     --sidebar-foreground: oklch(0.147 0.004 49.25);
     --sidebar-primary: oklch(0.577 0.245 27.325);
@@ -107,6 +131,18 @@
     --chart-3: oklch(0.577 0.245 27.325);
     --chart-4: oklch(0.505 0.213 27.518);
     --chart-5: oklch(0.444 0.177 26.899);
+    --game-option-1: oklch(0.637 0.237 29.234);
+    --game-option-2: oklch(0.546 0.245 262.881);
+    --game-option-3: oklch(0.795 0.184 86.047);
+    --game-option-4: oklch(0.548 0.216 142.496);
+    --game-option-1-hover: oklch(0.577 0.237 29.234);
+    --game-option-2-hover: oklch(0.488 0.243 264.052);
+    --game-option-3-hover: oklch(0.737 0.184 85.604);
+    --game-option-4-hover: oklch(0.488 0.200 142.496);
+    --success: oklch(0.723 0.219 149.579);
+    --success-foreground: oklch(0.985 0 0);
+    --warning: oklch(0.795 0.184 86.047);
+    --warning-foreground: oklch(0.421 0.095 57.708);
     --sidebar: oklch(0.216 0.006 56.043);
     --sidebar-foreground: oklch(0.985 0.001 106.423);
     --sidebar-primary: oklch(0.637 0.237 25.331);
@@ -130,4 +166,61 @@
   html {
     @apply font-sans;
     }
+}
+@layer utilities {
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .glass-button {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+  }
+  .glass-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .font-code { font-family: 'Courier New', Courier, monospace; letter-spacing: 0.1em; }
+
+  .bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+    animation: float 20s infinite ease-in-out alternate;
+  }
+  .orb-1 { width: 400px; height: 400px; background: rgba(255, 0, 150, 0.4); top: -100px; left: -100px; }
+  .orb-2 { width: 500px; height: 500px; background: rgba(100, 0, 255, 0.4); bottom: -150px; right: 10%; animation-delay: -5s; }
+  .orb-3 { width: 300px; height: 300px; background: rgba(0, 200, 255, 0.3); top: 40%; left: 30%; animation-delay: -10s; }
+
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 50px) scale(1.1); }
+  }
+}
+
+@layer utilities {
+  .glow-1 { box-shadow: inset 0 0 20px rgba(163, 230, 53, 0.2), 0 0 20px rgba(163, 230, 53, 0.1); }
+  .glow-2 { box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.2), 0 0 20px rgba(168, 85, 247, 0.1); }
+  .glow-3 { box-shadow: inset 0 0 20px rgba(249, 115, 22, 0.2), 0 0 20px rgba(249, 115, 22, 0.1); }
+  .glow-4 { box-shadow: inset 0 0 20px rgba(45, 212, 191, 0.2), 0 0 20px rgba(45, 212, 191, 0.1); }
+
+  .bg-animated-gradient {
+    background: linear-gradient(-45deg, #2e0854, #4c0e66, #1f0538, #3a0b52);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 }

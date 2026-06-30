@@ -1,3 +1,4 @@
+import { Spinner } from '@/components/ui/spinner'
 import { useAuth } from '@/hooks/useAuth'
 import AppRoutes from '@/routes/AppRoutes'
 import { useEffect } from 'react'
@@ -21,10 +22,10 @@ export function App() {
   // This GATES the router creation — loaders won't run until auth is ready.
   if (!initialized) {
     return (
-      <div className='flex min-h-screen items-center justify-center bg-gray-50 dark:bg-slate-950'>
+      <div className='flex min-h-screen items-center justify-center bg-background'>
         <div className='flex flex-col items-center gap-4'>
-          <div className='h-12 w-12 animate-spin rounded-full border-4 border-red-500/30 border-t-red-500' />
-          <p className='text-sm text-gray-500 dark:text-gray-400'>Đang khởi tạo...</p>
+          <Spinner className='size-12 text-primary' />
+          <p className='text-sm text-muted-foreground'>Đang khởi tạo...</p>
         </div>
       </div>
     )

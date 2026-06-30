@@ -123,7 +123,6 @@ class SoloService {
    * Xử lý đáp án redemption — cập nhật điểm nếu trả lời đúng.
    */
   submitRedemptionAnswer(
-    quizId: string,
     questionId: string,
     selectedOptionId: string,
     isCorrect: boolean,

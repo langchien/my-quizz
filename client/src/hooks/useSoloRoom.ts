@@ -217,7 +217,6 @@ export function useSoloRoom(quiz: Quiz | null, userId?: string) {
       else playSound('incorrect')
 
       const { pointsEarned, answer } = soloService.submitRedemptionAnswer(
-        quiz.id,
         wrongAnswer.questionId,
         option.id,
         option.isCorrect,

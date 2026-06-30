@@ -36,6 +36,7 @@ export class FirebaseAuthRepository implements IAuthRepository {
             uid: fbUser.uid,
             email: fbUser.email || '',
             displayName: fbUser.displayName || undefined,
+            photoURL: fbUser.photoURL || undefined,
             createdAt: new Date().toISOString(),
           }
           await setDoc(userRef, userProfile)
@@ -63,6 +64,7 @@ export class FirebaseAuthRepository implements IAuthRepository {
       uid: fbUser.uid,
       email: fbUser.email || '',
       displayName: fbUser.displayName || undefined,
+      photoURL: fbUser.photoURL || undefined,
     }
   }
 
@@ -106,6 +108,7 @@ export class FirebaseAuthRepository implements IAuthRepository {
         uid: user.uid,
         email: credentials.email,
         displayName: credentials.displayName,
+        photoURL: user.photoURL || undefined,
         createdAt: new Date().toISOString(),
       }
 
@@ -132,6 +135,7 @@ export class FirebaseAuthRepository implements IAuthRepository {
           uid: fbUser.uid,
           email: fbUser.email || '',
           displayName: fbUser.displayName || undefined,
+          photoURL: fbUser.photoURL || undefined,
           createdAt: new Date().toISOString(),
         }
         await setDoc(userRef, userProfile)
@@ -141,6 +145,7 @@ export class FirebaseAuthRepository implements IAuthRepository {
           uid: fbUser.uid,
           email: data?.email || fbUser.email || '',
           displayName: data?.displayName || fbUser.displayName || undefined,
+          photoURL: data?.photoURL || fbUser.photoURL || undefined,
         }
       }
 

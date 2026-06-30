@@ -19,6 +19,14 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
         link: 'text-primary underline-offset-4 hover:underline',
+        'auth-primary':
+          'w-full rounded-xl bg-white font-semibold text-red-600 shadow-lg hover:bg-white/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 dark:bg-slate-100 dark:text-red-600',
+        'auth-google':
+          'w-full rounded-xl border border-white/20 bg-white/10 font-medium text-white shadow-sm hover:bg-white/20',
+        'gradient-orange':
+          'border-0 bg-gradient-to-r from-orange-500 to-rose-500 text-white hover:from-orange-600 hover:to-rose-600',
+        'gradient-violet':
+          'border-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-[0_4px_20px_rgba(139,92,246,0.4)] hover:from-violet-700 hover:to-fuchsia-700',
       },
       size: {
         default:
