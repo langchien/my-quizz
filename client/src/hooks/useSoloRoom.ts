@@ -4,7 +4,18 @@ import type { AnswerOption, Question, Quiz } from '@/types/quiz'
 import type { SoloAnswer, SoloProgress, SoloResult } from '@/types/room'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { type GameThemeId } from '@/config/gameThemes'
+
 export type SoloPhase = 'intro' | 'playing' | 'feedback' | 'redemption' | 'review' | 'finished'
+
+/** Game settings from SoloSetup page */
+export interface SoloGameSettings {
+  playerName: string
+  timerEnabled: boolean
+  shuffleQuestions: boolean
+  shuffleAnswers: boolean
+  gameTheme: GameThemeId
+}
 
 interface FlashcardItem {
   question: Question
@@ -13,12 +24,26 @@ interface FlashcardItem {
   pointsEarned: number
 }
 
+/** Fisher-Yates shuffle helper */
+function shuffleArray<T>(arr: T[]): T[] {
+  const result = [...arr]
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[result[i], result[j]] = [result[j], result[i]]
+  }
+  return result
+}
+
 /**
  * Custom hook quản lý toàn bộ state machine cho Solo game.
  *
  * Flow: intro → playing ↔ feedback → redemption → review / finished
+ *
+ * @param quiz - Quiz data
+ * @param userId - UID của user (đăng nhập hoặc undefined)
+ * @param gameSettings - Cài đặt từ SoloSetup (nếu có)
  */
-export function useSoloRoom(quiz: Quiz | null, userId?: string) {
+export function useSoloRoom(quiz: Quiz | null, userId?: string, gameSettings?: SoloGameSettings) {
   const [phase, setPhase] = useState<SoloPhase>('intro')
   const [progress, setProgress] = useState<SoloProgress | null>(null)
   const [timeLeft, setTimeLeft] = useState(0)
@@ -49,6 +74,27 @@ export function useSoloRoom(quiz: Quiz | null, userId?: string) {
     return existing !== null && existing.currentQuestionIndex < quiz.questions.length
   }, [quiz])
 
+  // Prepare shuffled questions if needed
+  const preparedQuestions = useMemo(() => {
+    if (!quiz) return []
+    let questions = [...quiz.questions]
+    if (gameSettings?.shuffleQuestions) {
+      // Fisher-Yates shuffle
+      for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        ;[questions[i], questions[j]] = [questions[j], questions[i]]
+      }
+    }
+    if (gameSettings?.shuffleAnswers) {
+      questions = questions.map((q) => ({
+        ...q,
+        options: shuffleArray([...q.options]),
+      }))
+    }
+    return questions
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quiz?.id]) // Only compute once when quiz loads
+
   // ─── Start / Resume ────────────────────────────
 
   const handleStart = useCallback(
@@ -75,12 +121,26 @@ export function useSoloRoom(quiz: Quiz | null, userId?: string) {
     [quiz],
   )
 
+  // Auto-start when gameSettings provided (coming from SoloSetup)
+  useEffect(() => {
+    if (gameSettings && quiz && phase === 'intro') {
+      handleStart(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Run once on mount
+
   // ─── Timer countdown (local, no Firestore) ─────
 
   useEffect(() => {
     if (phase !== 'playing' || !quiz || !progress || hasAnswered) return
 
-    const question = quiz.questions[progress.currentQuestionIndex]
+    // If timer disabled, just set a large timeLeft and skip countdown
+    if (gameSettings && !gameSettings.timerEnabled) {
+      setTimeLeft(999)
+      return
+    }
+
+    const question = getActiveQuestion()
     if (!question) return
 
     const timeLimitMs = question.timeLimit * 1000
@@ -105,7 +165,7 @@ export function useSoloRoom(quiz: Quiz | null, userId?: string) {
 
   const handleTimeUp = useCallback(() => {
     if (!quiz || !progress) return
-    const question = quiz.questions[progress.currentQuestionIndex]
+    const question = getActiveQuestion()
     if (!question || hasAnswered) return
 
     setHasAnswered(true)
@@ -133,7 +193,7 @@ export function useSoloRoom(quiz: Quiz | null, userId?: string) {
     (option: AnswerOption) => {
       if (hasAnswered || !quiz || !progress) return
 
-      const question = quiz.questions[progress.currentQuestionIndex]
+      const question = getActiveQuestion()
       if (!question) return
 
       setHasAnswered(true)
@@ -320,10 +380,16 @@ export function useSoloRoom(quiz: Quiz | null, userId?: string) {
 
   // ─── Derived state ─────────────────────────────
 
-  const currentQuestion = useMemo(() => {
+  // Helper to get current question from prepared (potentially shuffled) list
+  const getActiveQuestion = useCallback(() => {
     if (!quiz || !progress) return null
-    return quiz.questions[progress.currentQuestionIndex] || null
-  }, [quiz, progress])
+    const questions = preparedQuestions.length > 0 ? preparedQuestions : quiz.questions
+    return questions[progress.currentQuestionIndex] || null
+  }, [quiz, progress, preparedQuestions])
+
+  const currentQuestion = useMemo(() => {
+    return getActiveQuestion()
+  }, [getActiveQuestion])
 
   const currentRedemptionQuestion = useMemo(() => {
     if (!quiz || redemptionQuestions.length === 0) return null

@@ -42,6 +42,8 @@ export default function LiveHost() {
     'bg-game-option-2',
     'bg-game-option-3',
     'bg-game-option-4',
+    'bg-game-option-5',
+    'bg-game-option-6',
   ]
 
   if (loading || !session)
@@ -272,11 +274,27 @@ export default function LiveHost() {
 
             <div className='glass-panel mb-8 w-full rounded-2xl text-white shadow-2xl'>
               <div className='p-12 text-center'>
+                {/* Progress Counter */}
+                <div className='mb-4 text-sm font-bold tracking-wider text-yellow-300 uppercase'>
+                  Câu {(session.currentQuestionIndex || 0) + 1} / {quiz?.questions.length || '?'}
+                </div>
                 <h2 className='text-4xl font-bold'>{currentQuestion.content}</h2>
+                {/* Question Image */}
+                {currentQuestion.imageUrl && (
+                  <div className='mt-6 flex justify-center'>
+                    <img
+                      src={currentQuestion.imageUrl}
+                      alt='Ảnh câu hỏi'
+                      className='max-h-48 rounded-xl border border-white/10 object-contain'
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
-            <div className='grid w-full grid-cols-2 gap-4'>
+            <div
+              className={`grid w-full gap-4 ${currentQuestion.options.length <= 4 ? 'grid-cols-2' : 'grid-cols-3'}`}
+            >
               {currentQuestion.options.map((opt, i) => {
                 const bgColor = gameOptionColors[i % gameOptionColors.length]
                 return (

@@ -29,7 +29,7 @@ export function QuizPreviewModal({ quiz, open, onOpenChange, onHostLive }: QuizP
   const handlePractice = useCallback(() => {
     if (!quiz) return
     onOpenChange(false)
-    navigate(`/solo/${quiz.id}`)
+    navigate(`/solo/${quiz.id}/setup`)
   }, [quiz, navigate, onOpenChange])
 
   const handleHostLive = useCallback(() => {

@@ -168,27 +168,27 @@ client/src/
 
 > **Ưu tiên:** Cao — Wayground luôn có màn hình setup trước mỗi game.
 
-- [ ] **8.1. Màn hình Game Setup (Pre-game Configuration)**
-  - [ ] Tạo page `/solo/:quizId/setup` hiển thị trước khi vào game Solo.
-  - [ ] Hiển thị thông tin quiz (tên, số câu, tác giả) + nút Share.
-  - [ ] Nhập tên người chơi + nút sinh nickname ngẫu nhiên.
-  - [ ] Toggle settings: **Timer** (bật/tắt đếm ngược), **Xáo trộn câu hỏi**, **Xáo trộn đáp án**.
-  - [ ] Nút "Bắt đầu" để vào game.
-  - [ ] **Files:** `pages/solo/SoloSetup.tsx` [NEW], `routes/AppRoutes.tsx` [MODIFY]
+- [x] **8.1. Màn hình Game Setup (Pre-game Configuration)**
+  - [x] Tạo page `/solo/:quizId/setup` hiển thị trước khi vào game Solo.
+  - [x] Hiển thị thông tin quiz (tên, số câu, tác giả) + nút Share.
+  - [x] Nhập tên người chơi + nút sinh nickname ngẫu nhiên.
+  - [x] Toggle settings: **Timer** (bật/tắt đếm ngược), **Xáo trộn câu hỏi**, **Xáo trộn đáp án**.
+  - [x] Nút "Bắt đầu" để vào game.
+  - [x] **Files:** `pages/solo/SoloSetup.tsx` [NEW], `routes/AppRoutes.tsx` [MODIFY]
 
-- [ ] **8.2. Game Themes — 3 themes đơn giản**
-  - [ ] **Classic** (tím/gradient — mặc định, giữ nguyên giao diện hiện tại).
-  - [ ] **Dark Mode** (nền tối hoàn toàn, chữ sáng).
-  - [ ] **Focus** (tối giản, ít animation, nền trung tính).
-  - [ ] Chọn theme tại màn hình Setup hoặc Settings, lưu vào localStorage.
-  - [ ] Theme áp dụng CSS variables cho toàn bộ giao diện game.
-  - [ ] **Files:** `config/gameThemes.ts` [NEW], `components/ThemeSelector.tsx` [NEW]
+- [x] **8.2. Game Themes — 3 themes đơn giản**
+  - [x] **Classic** (tím/gradient — mặc định, giữ nguyên giao diện hiện tại).
+  - [x] **Dark Mode** (nền tối hoàn toàn, chữ sáng).
+  - [x] **Focus** (tối giản, ít animation, nền trung tính).
+  - [x] Chọn theme tại màn hình Setup hoặc Settings, lưu vào localStorage.
+  - [x] Theme áp dụng CSS variables cho toàn bộ giao diện game.
+  - [x] **Files:** `config/gameThemes.ts` [NEW], `components/ThemeSelector.tsx` [NEW]
 
-- [ ] **8.3. Cải tiến giao diện câu hỏi**
-  - [ ] Hỗ trợ 2-6 đáp án (thay vì cố định 4) — update `Question` type, QuizEditor, và giao diện chơi.
-  - [ ] Hiển thị ảnh kèm câu hỏi (thêm field `imageUrl` vào `Question`) + zoom ảnh khi click.
-  - [ ] Progress counter "1/8" phía trên câu hỏi (tương tự Wayground).
-  - [ ] **Files:** `types/quiz.ts` [MODIFY], `pages/dashboard/QuizEditor.tsx` [MODIFY], `pages/solo/SoloPlay.tsx` [MODIFY], `pages/host/LiveHost.tsx` [MODIFY], `pages/player/LivePlayer.tsx` [MODIFY]
+- [x] **8.3. Cải tiến giao diện câu hỏi**
+  - [x] Hỗ trợ 2-6 đáp án (thay vì cố định 4) — update `Question` type, QuizEditor, và giao diện chơi.
+  - [x] Hiển thị ảnh kèm câu hỏi (thêm field `imageUrl` vào `Question`) + zoom ảnh khi click.
+  - [x] Progress counter "1/8" phía trên câu hỏi (tương tự Wayground).
+  - [x] **Files:** `types/quiz.ts` [MODIFY], `pages/dashboard/QuizEditor.tsx` [MODIFY], `pages/solo/SoloPlay.tsx` [MODIFY], `pages/host/LiveHost.tsx` [MODIFY], `pages/player/LivePlayer.tsx` [MODIFY]
 
 ---
 
@@ -292,14 +292,14 @@ client/src/
 
 ## THỨ TỰ TRIỂN KHAI ĐỀ XUẤT
 
-| # | Phần | Mô tả | Lý do ưu tiên |
-|---|---|---|---|
-| 1 | **10.1 + 10.2** | User type mở rộng + Onboarding Wizard 4 bước | Foundation — nhiều phần khác phụ thuộc |
-| 2 | **10.3 + 10.4 + 10.5** | Settings + Header Dropdown + Avatar Preset | Quản lý tài khoản hoàn chỉnh |
-| 3 | **7.1 + 7.3** | Quiz Preview Modal + Nickname Generator | UX Dashboard cải thiện |
-| 4 | **7.4** | Activity Tabs (Running/Completed/Created) | Thay thế tab Lịch sử cũ |
-| 5 | **8.1 + 8.2** | Game Setup + 3 Themes (Classic/Dark/Focus) | Nâng trải nghiệm game |
-| 6 | **8.3** | Cải tiến câu hỏi (2-6 đáp án, ảnh) | Nâng cao quiz editor |
-| 7 | **9.1 + 9.3** | Challenge Friends + Share | Tính năng xã hội |
-| 8 | **7.2 + 7.5** | Quiz Metadata + Search | Khám phá quiz |
-| 9 | **11** | UX Polish (Toasts, Transitions, Mobile) | Hoàn thiện cuối |
+| #   | Phần                   | Mô tả                                        | Lý do ưu tiên                          |
+| --- | ---------------------- | -------------------------------------------- | -------------------------------------- |
+| 1   | **10.1 + 10.2**        | User type mở rộng + Onboarding Wizard 4 bước | Foundation — nhiều phần khác phụ thuộc |
+| 2   | **10.3 + 10.4 + 10.5** | Settings + Header Dropdown + Avatar Preset   | Quản lý tài khoản hoàn chỉnh           |
+| 3   | **7.1 + 7.3**          | Quiz Preview Modal + Nickname Generator      | UX Dashboard cải thiện                 |
+| 4   | **7.4**                | Activity Tabs (Running/Completed/Created)    | Thay thế tab Lịch sử cũ                |
+| 5   | **8.1 + 8.2**          | Game Setup + 3 Themes (Classic/Dark/Focus)   | Nâng trải nghiệm game                  |
+| 6   | **8.3**                | Cải tiến câu hỏi (2-6 đáp án, ảnh)           | Nâng cao quiz editor                   |
+| 7   | **9.1 + 9.3**          | Challenge Friends + Share                    | Tính năng xã hội                       |
+| 8   | **7.2 + 7.5**          | Quiz Metadata + Search                       | Khám phá quiz                          |
+| 9   | **11**                 | UX Polish (Toasts, Transitions, Mobile)      | Hoàn thiện cuối                        |

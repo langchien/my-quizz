@@ -8,6 +8,9 @@ import { toast } from 'sonner'
 // Simple ID generator to avoid adding external dependency just for UI temp IDs
 const generateId = () => Math.random().toString(36).substring(2, 9)
 
+const MIN_OPTIONS = 2
+const MAX_OPTIONS = 6
+
 const defaultQuestion = (): Question => ({
   id: generateId(),
   type: 'multiple_choice',
@@ -68,6 +71,10 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
           setError(`Vui lòng nhập nội dung cho lựa chọn ${j + 1} của câu hỏi ${i + 1}`)
           return
         }
+      }
+      if (q.options.length < MIN_OPTIONS || q.options.length > MAX_OPTIONS) {
+        setError(`Câu hỏi ${i + 1} phải có từ ${MIN_OPTIONS} đến ${MAX_OPTIONS} đáp án`)
+        return
       }
     }
 
@@ -179,6 +186,41 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
     })
   }, [])
 
+  // Add a new answer option to a question (max 6)
+  const addOption = useCallback((qIndex: number) => {
+    setQuestions((prev) => {
+      const next = [...prev]
+      const q = next[qIndex]
+      if (q.options.length >= MAX_OPTIONS) return prev
+      next[qIndex] = {
+        ...q,
+        options: [...q.options, { id: generateId(), content: '', isCorrect: false }],
+      }
+      return next
+    })
+  }, [])
+
+  // Remove an answer option from a question (min 2)
+  const removeOption = useCallback((qIndex: number, oIndex: number) => {
+    setQuestions((prev) => {
+      const next = [...prev]
+      const q = next[qIndex]
+      if (q.options.length <= MIN_OPTIONS) {
+        setError(`Câu hỏi phải có ít nhất ${MIN_OPTIONS} đáp án`)
+        return prev
+      }
+      const newOptions = [...q.options]
+      const wasCorrect = newOptions[oIndex].isCorrect
+      newOptions.splice(oIndex, 1)
+      // If removed option was the correct one, mark first as correct
+      if (wasCorrect && !newOptions.some((o) => o.isCorrect)) {
+        newOptions[0] = { ...newOptions[0], isCorrect: true }
+      }
+      next[qIndex] = { ...q, options: newOptions }
+      return next
+    })
+  }, [])
+
   return {
     // Form state
     title,
@@ -206,5 +248,9 @@ export function useQuizEditor(initialQuiz: Quiz | null) {
     updateQuestion,
     updateOption,
     importQuestions,
+    addOption,
+    removeOption,
+    MIN_OPTIONS,
+    MAX_OPTIONS,
   }
 }

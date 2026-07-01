@@ -31,6 +31,8 @@ export default function LivePlayer() {
     'bg-game-option-2',
     'bg-game-option-3',
     'bg-game-option-4',
+    'bg-game-option-5',
+    'bg-game-option-6',
   ]
 
   if (loading || !session || !participantId) {
@@ -68,7 +70,9 @@ export default function LivePlayer() {
 
         {isPlaying && currentQuestion && !hasAnswered && (
           <div className='flex h-full w-full flex-col justify-center'>
-            <div className='mx-auto grid h-[60vh] w-full max-w-2xl grid-cols-2 gap-4'>
+            <div
+              className={`mx-auto grid h-[60vh] w-full max-w-2xl gap-4 ${currentQuestion.options.length <= 4 ? 'grid-cols-2' : 'grid-cols-3'}`}
+            >
               {currentQuestion.options.map((opt, i) => {
                 const bgColor = gameOptionColors[i % gameOptionColors.length]
                 return (

@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
+import { getGameTheme, getStoredGameTheme } from '@/config/gameThemes'
 import { useAuth } from '@/hooks/useAuth'
-import { useSoloRoom } from '@/hooks/useSoloRoom'
+import { useSoloRoom, type SoloGameSettings } from '@/hooks/useSoloRoom'
 import { cn } from '@/lib/utils'
 import type { Quiz } from '@/types/quiz'
 import {
@@ -10,21 +11,42 @@ import {
   BookOpen,
   CheckCircle2,
   ChevronLeft,
+  Maximize2,
   Pause,
   Play,
   RefreshCw,
   RotateCcw,
   Sparkles,
   Trophy,
+  X,
   XCircle,
   Zap,
 } from 'lucide-react'
-import { Link, useLoaderData, useNavigate } from 'react-router'
+import { useState } from 'react'
+import { Link, useLoaderData, useLocation, useNavigate } from 'react-router'
+
+/** Responsive grid class cho options dựa trên số lượng */
+function getOptionsGridClass(count: number): string {
+  if (count <= 2) return 'grid-cols-1 md:grid-cols-2'
+  if (count <= 4) return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
+  return 'grid-cols-2 md:grid-cols-3'
+}
 
 export default function SoloPlay() {
   const quiz = useLoaderData() as Quiz
   const { user } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  // Read game settings from SoloSetup navigation state
+  const gameSettings = (location.state as { gameSettings?: SoloGameSettings } | null)?.gameSettings
+
+  // Determine game theme
+  const themeId = gameSettings?.gameTheme || getStoredGameTheme()
+  const theme = getGameTheme(themeId)
+
+  // Image zoom state
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null)
 
   const {
     isIntro,
@@ -58,13 +80,18 @@ export default function SoloPlay() {
     handleFlashcardPrev,
     handleBackToResult,
     handleRestart,
-  } = useSoloRoom(quiz, user?.uid)
+  } = useSoloRoom(quiz, user?.uid, gameSettings)
+
+  // Timer visibility
+  const showTimer = !gameSettings || gameSettings.timerEnabled
 
   const glowClasses = [
     'glow-1 border-lime-400/30 hover:shadow-[0_10px_40px_rgba(163,230,53,0.3)]',
     'glow-2 border-purple-400/30 hover:shadow-[0_10px_40px_rgba(168,85,247,0.3)]',
     'glow-3 border-orange-400/30 hover:shadow-[0_10px_40px_rgba(249,115,22,0.3)]',
     'glow-4 border-teal-400/30 hover:shadow-[0_10px_40px_rgba(45,212,191,0.3)]',
+    'glow-5 border-pink-400/30 hover:shadow-[0_10px_40px_rgba(236,72,153,0.3)]',
+    'glow-6 border-sky-400/30 hover:shadow-[0_10px_40px_rgba(56,189,248,0.3)]',
   ]
 
   const glowGradients = [
@@ -72,9 +99,18 @@ export default function SoloPlay() {
     'from-purple-500/40 via-pink-500/20',
     'from-orange-500/40 via-red-500/20',
     'from-teal-400/40 via-cyan-400/20',
+    'from-pink-500/40 via-rose-500/20',
+    'from-sky-400/40 via-blue-400/20',
   ]
 
-  const optionTextColors = ['text-lime-50', 'text-purple-50', 'text-orange-50', 'text-teal-50']
+  const optionTextColors = [
+    'text-lime-50',
+    'text-purple-50',
+    'text-orange-50',
+    'text-teal-50',
+    'text-pink-50',
+    'text-sky-50',
+  ]
 
   if (!quiz) {
     return (
@@ -85,15 +121,44 @@ export default function SoloPlay() {
   }
 
   return (
-    <div className='bg-animated-gradient relative flex min-h-screen flex-col overflow-hidden font-sans text-white'>
-      {/* Background Decoration Elements */}
-      <div className='pointer-events-none absolute top-[-10%] left-[-10%] h-[40%] w-[40%] animate-pulse rounded-full bg-purple-600 opacity-30 mix-blend-multiply blur-[100px] filter'></div>
-      <div
-        className='pointer-events-none absolute right-[-10%] bottom-[-10%] h-[40%] w-[40%] animate-pulse rounded-full bg-pink-600 opacity-30 mix-blend-multiply blur-[100px] filter'
-        style={{ animationDelay: '2s' }}
-      ></div>
+    <div
+      className={cn(
+        'relative flex min-h-screen flex-col overflow-hidden font-sans text-white',
+        theme.bgClass,
+      )}
+    >
+      {/* Background Decoration Elements — only show for themes that support it */}
+      {theme.showOrbs && (
+        <>
+          <div className='pointer-events-none absolute top-[-10%] left-[-10%] h-[40%] w-[40%] animate-pulse rounded-full bg-purple-600 opacity-30 mix-blend-multiply blur-[100px] filter'></div>
+          <div
+            className='pointer-events-none absolute right-[-10%] bottom-[-10%] h-[40%] w-[40%] animate-pulse rounded-full bg-pink-600 opacity-30 mix-blend-multiply blur-[100px] filter'
+            style={{ animationDelay: '2s' }}
+          ></div>
+        </>
+      )}
 
-      {/* ═══ INTRO SCREEN ═══ */}
+      {/* Image Zoom Modal */}
+      {zoomedImage && (
+        <div
+          className='fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm'
+          onClick={() => setZoomedImage(null)}
+        >
+          <button
+            className='absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20'
+            onClick={() => setZoomedImage(null)}
+          >
+            <X className='size-6' />
+          </button>
+          <img
+            src={zoomedImage}
+            alt='Phóng to ảnh câu hỏi'
+            className='max-h-[90vh] max-w-[90vw] rounded-xl object-contain'
+          />
+        </div>
+      )}
+
+      {/* ═══ INTRO SCREEN (fallback — chỉ hiện khi truy cập trực tiếp, không qua SoloSetup) ═══ */}
       {isIntro && (
         <div className='z-10 flex flex-1 flex-col items-center justify-center p-6'>
           <div className='glass-panel w-full max-w-lg rounded-3xl p-10 text-center shadow-2xl'>
@@ -176,24 +241,26 @@ export default function SoloPlay() {
             </div>
             {/* Right side Timer */}
             <div className='flex items-center gap-3'>
-              <div
-                className={cn(
-                  'glass-panel flex items-center justify-center rounded-lg px-4 py-2 text-lg font-bold',
-                  timeLeft <= 5 ? 'animate-pulse border-red-500/50 text-red-400' : 'text-white',
-                )}
-              >
-                {timeLeft}s
-              </div>
+              {showTimer && (
+                <div
+                  className={cn(
+                    'glass-panel flex items-center justify-center rounded-lg px-4 py-2 text-lg font-bold',
+                    timeLeft <= 5 ? 'animate-pulse border-red-500/50 text-red-400' : 'text-white',
+                  )}
+                >
+                  {timeLeft}s
+                </div>
+              )}
             </div>
           </header>
 
           <main className='relative z-10 mx-auto flex w-full max-w-7xl flex-grow flex-col items-center justify-center gap-8 p-6 sm:p-12'>
-            {/* Question Progress Badge */}
+            {/* Question Progress Counter */}
             <div
-              className='glass-panel absolute top-0 z-20 -translate-y-1/2 transform rounded-full px-4 py-1.5 text-sm font-semibold text-yellow-300'
+              className='glass-panel absolute top-0 z-20 -translate-y-1/2 transform rounded-full px-5 py-2 text-sm font-bold text-yellow-300'
               style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)' }}
             >
-              {(progress?.currentQuestionIndex || 0) + 1} / {quiz.questions.length}
+              Câu {(progress?.currentQuestionIndex || 0) + 1} / {quiz.questions.length}
             </div>
 
             {/* Question Card */}
@@ -201,10 +268,33 @@ export default function SoloPlay() {
               <h1 className='text-center text-xl leading-relaxed font-medium tracking-wide text-white/90 drop-shadow-md md:text-3xl'>
                 {currentQuestion.content}
               </h1>
+              {/* Question Image */}
+              {currentQuestion.imageUrl && (
+                <div className='mt-6 flex justify-center'>
+                  <div
+                    className='group relative cursor-zoom-in overflow-hidden rounded-xl border border-white/10'
+                    onClick={() => setZoomedImage(currentQuestion.imageUrl!)}
+                  >
+                    <img
+                      src={currentQuestion.imageUrl}
+                      alt='Ảnh câu hỏi'
+                      className='max-h-48 w-auto object-contain transition-transform group-hover:scale-105'
+                    />
+                    <div className='absolute right-2 bottom-2 rounded-md bg-black/50 p-1'>
+                      <Maximize2 className='size-4 text-white/70' />
+                    </div>
+                  </div>
+                </div>
+              )}
             </section>
 
-            {/* Options Grid */}
-            <section className='mt-8 grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-4'>
+            {/* Options Grid — responsive based on option count */}
+            <section
+              className={cn(
+                'mt-8 grid w-full gap-4 md:gap-6',
+                getOptionsGridClass(currentQuestion.options.length),
+              )}
+            >
               {currentQuestion.options.map((opt, i) => {
                 const glow = glowClasses[i % glowClasses.length]
                 const gradient = glowGradients[i % glowGradients.length]

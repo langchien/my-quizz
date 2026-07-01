@@ -92,3 +92,41 @@ export function SoloSkeleton() {
     </div>
   )
 }
+
+/**
+ * Skeleton loading cho trang SoloSetup (pre-game configuration).
+ */
+export function SoloSetupSkeleton() {
+  return (
+    <div className='flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-950'>
+      <div className='w-full max-w-2xl space-y-6 px-6'>
+        {/* Quiz info card */}
+        <div className='rounded-3xl bg-white/5 p-8 text-center'>
+          <Skeleton className='mx-auto mb-6 size-20 rounded-full bg-muted' />
+          <Skeleton className='mx-auto mb-3 h-8 w-3/4 bg-muted' />
+          <Skeleton className='mx-auto mb-4 h-5 w-1/2 bg-muted/60' />
+          <div className='mx-auto flex max-w-xs justify-center gap-8'>
+            <Skeleton className='h-14 w-20 bg-muted' />
+            <Skeleton className='h-14 w-20 bg-muted' />
+          </div>
+        </div>
+        {/* Player name */}
+        <div className='rounded-2xl bg-white/5 p-6'>
+          <Skeleton className='mb-3 h-4 w-32 bg-muted' />
+          <Skeleton className='h-12 w-full bg-muted' />
+        </div>
+        {/* Settings */}
+        <div className='rounded-2xl bg-white/5 p-6'>
+          <Skeleton className='mb-4 h-4 w-40 bg-muted' />
+          <div className='space-y-4'>
+            <Skeleton className='h-12 w-full bg-muted' />
+            <Skeleton className='h-12 w-full bg-muted' />
+            <Skeleton className='h-12 w-full bg-muted' />
+          </div>
+        </div>
+        {/* Start button */}
+        <Skeleton className='h-16 w-full rounded-2xl bg-muted' />
+      </div>
+    </div>
+  )
+}

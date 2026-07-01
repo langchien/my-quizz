@@ -8,9 +8,10 @@ export interface Question {
   id: string
   content: string
   type: 'multiple_choice' // MVP supports single-correct multiple choice questions
-  options: AnswerOption[]
+  options: AnswerOption[] // Supports 2-6 answer options
   timeLimit: number // time limit in seconds (e.g. 10, 20, 30)
   points: number // max points for this question (e.g. 1000)
+  imageUrl?: string // URL ảnh kèm câu hỏi (tùy chọn)
 }
 
 export type QuizDifficulty = 'easy' | 'medium' | 'hard'

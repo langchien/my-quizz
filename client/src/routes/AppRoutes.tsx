@@ -18,6 +18,7 @@ import {
   HostSkeleton,
   JoinRoomSkeleton,
   PlayerSkeleton,
+  SoloSetupSkeleton,
   SoloSkeleton,
 } from '@/components/skeletons/GameSkeleton'
 import { QuizEditorSkeleton } from '@/components/skeletons/QuizEditorSkeleton'
@@ -31,6 +32,7 @@ const LazyLiveHost = React.lazy(() => import('@/pages/host/LiveHost'))
 const LazyJoinRoom = React.lazy(() => import('@/pages/player/JoinRoom'))
 const LazyLivePlayer = React.lazy(() => import('@/pages/player/LivePlayer'))
 const LazySoloPlay = React.lazy(() => import('@/pages/solo/SoloPlay'))
+const LazySoloSetup = React.lazy(() => import('@/pages/solo/SoloSetup'))
 
 // AuthGuard for public routes (redirects to dashboard if already logged in)
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -57,6 +59,9 @@ function RootLayout() {
     }
     if (nextPath.startsWith('/play/')) {
       return <PlayerSkeleton />
+    }
+    if (nextPath.match(/\/solo\/[^/]+\/setup$/)) {
+      return <SoloSetupSkeleton />
     }
     if (nextPath.startsWith('/solo/')) {
       return <SoloSkeleton />
@@ -169,6 +174,16 @@ function createRouter() {
           errorElement: <GameError />,
         },
         {
+          path: '/solo/:quizId/setup',
+          loader: soloLoader,
+          element: (
+            <Suspense fallback={<SoloSetupSkeleton />}>
+              <LazySoloSetup />
+            </Suspense>
+          ),
+          errorElement: <GameError />,
+        },
+        {
           path: '/solo/:quizId',
           loader: soloLoader,
           element: (
@@ -207,6 +222,9 @@ function GlobalInitialLoader() {
   }
   if (path.startsWith('/play/')) {
     return <PlayerSkeleton />
+  }
+  if (path.match(/\/solo\/[^/]+\/setup$/)) {
+    return <SoloSetupSkeleton />
   }
   if (path.startsWith('/solo/')) {
     return <SoloSkeleton />

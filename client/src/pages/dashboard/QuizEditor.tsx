@@ -23,6 +23,8 @@ import {
   ArrowLeft,
   CheckCircle2,
   FileJson,
+  ImagePlus,
+  Minus,
   Plus,
   Save,
   Trash2,
@@ -59,6 +61,10 @@ export default function QuizEditor() {
     updateQuestion,
     updateOption,
     importQuestions,
+    addOption,
+    removeOption,
+    MIN_OPTIONS,
+    MAX_OPTIONS,
   } = useQuizEditor(initialQuiz)
 
   const [isImportOpen, setIsImportOpen] = useState(false)
@@ -68,6 +74,8 @@ export default function QuizEditor() {
     'bg-game-option-2',
     'bg-game-option-3',
     'bg-game-option-4',
+    'bg-game-option-5',
+    'bg-game-option-6',
   ]
 
   return (
@@ -254,11 +262,43 @@ export default function QuizEditor() {
                     </Field>
                   </div>
 
-                  <div className='flex flex-col gap-3'>
-                    <Label>
-                      Các đáp án (Đánh dấu vào đáp án đúng){' '}
-                      <span className='text-destructive'>*</span>
+                  {/* Image URL */}
+                  <Field>
+                    <Label className='flex items-center gap-2'>
+                      <ImagePlus className='size-4' />
+                      Ảnh kèm câu hỏi (URL, tùy chọn)
                     </Label>
+                    <Input
+                      placeholder='https://example.com/image.jpg'
+                      value={q.imageUrl || ''}
+                      onChange={(e) =>
+                        updateQuestion(qIndex, 'imageUrl', e.target.value || undefined)
+                      }
+                    />
+                    {q.imageUrl && (
+                      <div className='mt-2 overflow-hidden rounded-lg border border-border'>
+                        <img
+                          src={q.imageUrl}
+                          alt='Preview ảnh câu hỏi'
+                          className='max-h-40 w-full bg-muted/30 object-contain'
+                          onError={(e) => {
+                            ;(e.target as HTMLImageElement).style.display = 'none'
+                          }}
+                        />
+                      </div>
+                    )}
+                  </Field>
+
+                  <div className='flex flex-col gap-3'>
+                    <div className='flex items-center justify-between'>
+                      <Label>
+                        Các đáp án (Đánh dấu vào đáp án đúng){' '}
+                        <span className='text-destructive'>*</span>
+                      </Label>
+                      <span className='text-xs text-muted-foreground'>
+                        {q.options.length}/{MAX_OPTIONS} đáp án
+                      </span>
+                    </div>
                     <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                       {q.options.map((opt, oIndex) => {
                         const bgColor = gameOptionColors[oIndex % gameOptionColors.length]
@@ -283,14 +323,34 @@ export default function QuizEditor() {
                               }
                               placeholder={`Lựa chọn ${oIndex + 1}`}
                               className={cn(
-                                'h-12 pl-16 shadow-sm',
+                                'h-12 pr-10 pl-16 shadow-sm',
                                 opt.isCorrect ? 'border-2 border-foreground/30' : 'border-border',
                               )}
                             />
+                            {q.options.length > MIN_OPTIONS && (
+                              <Button
+                                variant='ghost'
+                                size='icon'
+                                className='absolute right-1 size-8 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive'
+                                onClick={() => removeOption(qIndex, oIndex)}
+                              >
+                                <Minus className='size-4' />
+                              </Button>
+                            )}
                           </div>
                         )
                       })}
                     </div>
+                    {q.options.length < MAX_OPTIONS && (
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        className='mt-1 gap-2 self-start text-muted-foreground'
+                        onClick={() => addOption(qIndex)}
+                      >
+                        <Plus className='size-4' /> Thêm đáp án
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>
