@@ -4,6 +4,7 @@ import type { GameSession, Participant, PlayerAnswer, RoomStatus } from '@/types
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   limit,
@@ -37,6 +38,13 @@ export class FirebaseRoomRepository implements IRoomRepository {
 
     await setDoc(docRef, newSession)
     return newSession.id
+  }
+
+  async getSessionById(sessionId: string): Promise<GameSession | null> {
+    const docRef = doc(db, this.sessionsCol, sessionId)
+    const docSnap = await getDoc(docRef)
+    if (!docSnap.exists()) return null
+    return docSnap.data() as GameSession
   }
 
   async getSessionByCode(roomCode: string): Promise<GameSession | null> {

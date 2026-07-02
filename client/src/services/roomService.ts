@@ -55,6 +55,10 @@ class RoomService {
     return this.repository.getSessionByCode(roomCode)
   }
 
+  async getSessionById(sessionId: string): Promise<GameSession | null> {
+    return this.repository.getSessionById(sessionId)
+  }
+
   async joinSession(
     roomCode: string,
     playerName: string,

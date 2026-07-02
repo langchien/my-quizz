@@ -10,7 +10,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { DIFFICULTY_LABELS } from '@/config/quizCategories'
 import type { Quiz } from '@/types/quiz'
-import { BookOpen, CalendarDays, Copy, HelpCircle, Play, Share2, Trophy } from 'lucide-react'
+import { BookOpen, CalendarDays, Copy, HelpCircle, Play, Share2, Trophy, Users } from 'lucide-react'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router'
 import { toast } from 'sonner'
@@ -30,6 +30,12 @@ export function QuizPreviewModal({ quiz, open, onOpenChange, onHostLive }: QuizP
     if (!quiz) return
     onOpenChange(false)
     navigate(`/solo/${quiz.id}/setup`)
+  }, [quiz, navigate, onOpenChange])
+
+  const handleChallenge = useCallback(() => {
+    if (!quiz) return
+    onOpenChange(false)
+    navigate(`/challenge/${quiz.id}/setup`)
   }, [quiz, navigate, onOpenChange])
 
   const handleHostLive = useCallback(() => {
@@ -129,6 +135,9 @@ export function QuizPreviewModal({ quiz, open, onOpenChange, onHostLive }: QuizP
           <div className='flex flex-col gap-2 sm:flex-row'>
             <Button onClick={handlePractice} className='flex-1 gap-2' variant='default'>
               <BookOpen className='size-4' /> Tự luyện
+            </Button>
+            <Button onClick={handleChallenge} className='flex-1 gap-2' variant='outline'>
+              <Users className='size-4' /> Thách đấu
             </Button>
             {onHostLive && (
               <Button onClick={handleHostLive} className='flex-1 gap-2' variant='gradient-orange'>

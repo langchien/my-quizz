@@ -33,6 +33,7 @@ const LazyJoinRoom = React.lazy(() => import('@/pages/player/JoinRoom'))
 const LazyLivePlayer = React.lazy(() => import('@/pages/player/LivePlayer'))
 const LazySoloPlay = React.lazy(() => import('@/pages/solo/SoloPlay'))
 const LazySoloSetup = React.lazy(() => import('@/pages/solo/SoloSetup'))
+const LazyChallengeSetup = React.lazy(() => import('@/pages/player/ChallengeSetup'))
 
 // AuthGuard for public routes (redirects to dashboard if already logged in)
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -53,6 +54,9 @@ function RootLayout() {
     }
     if (nextPath.startsWith('/dashboard/quiz')) {
       return <QuizEditorSkeleton />
+    }
+    if (nextPath.startsWith('/challenge/')) {
+      return <HostSkeleton />
     }
     if (nextPath.startsWith('/host/')) {
       return <HostSkeleton />
@@ -152,6 +156,15 @@ function createRouter() {
               ),
               errorElement: <GameError />,
             },
+            {
+              path: '/challenge/:quizId/setup',
+              element: (
+                <Suspense fallback={<HostSkeleton />}>
+                  <LazyChallengeSetup />
+                </Suspense>
+              ),
+              errorElement: <GameError />,
+            },
           ],
         },
 
@@ -216,6 +229,9 @@ function GlobalInitialLoader() {
   }
   if (path.startsWith('/dashboard/quiz')) {
     return <QuizEditorSkeleton />
+  }
+  if (path.startsWith('/challenge/')) {
+    return <HostSkeleton />
   }
   if (path.startsWith('/host/')) {
     return <HostSkeleton />

@@ -196,22 +196,22 @@ client/src/
 
 > **Ưu tiên:** Trung bình — Chức năng cốt lõi đã có, cần mở rộng.
 
-- [ ] **9.1. Challenge Friends (Người chơi tự tạo phòng)**
-  - [ ] Cho phép user đã đăng nhập tạo phòng Live từ quiz công khai.
-  - [ ] Luồng: Chọn quiz → "Thách đấu bạn bè" → tạo phòng → chia sẻ mã → chờ → Start.
-  - [ ] Người tạo trở thành Host của game.
-  - [ ] **Files:** `pages/player/ChallengeSetup.tsx` [NEW], `services/roomService.ts` [MODIFY], `routes/AppRoutes.tsx` [MODIFY]
+- [x] **9.1. Challenge Friends (Người chơi tự tạo phòng)**
+  - [x] Cho phép user đã đăng nhập tạo phòng Live từ quiz công khai.
+  - [x] Luồng: Chọn quiz → "Thách đấu bạn bè" → tạo phòng → chia sẻ mã → chờ → Start.
+  - [x] Người tạo trở thành Host của game.
+  - [x] **Files:** `pages/player/ChallengeSetup.tsx` [NEW], `services/roomService.ts` [MODIFY], `routes/AppRoutes.tsx` [MODIFY]
 
-- [ ] **9.2. Cải tiến Lobby**
-  - [ ] Hiển thị mã phòng lớn + nút **Copy mã** + nút **Chia sẻ link trực tiếp**.
-  - [ ] Avatar ngẫu nhiên cho mỗi người chơi (emoji/icon từ danh sách preset).
-  - [ ] Animation slide-in khi người chơi mới tham gia.
-  - [ ] **Files:** `pages/host/LiveHost.tsx` [MODIFY], `pages/player/LivePlayer.tsx` [MODIFY]
+- [x] **9.2. Cải tiến Lobby**
+  - [x] Hiển thị mã phòng lớn + nút **Copy mã** + nút **Chia sẻ link trực tiếp**.
+  - [x] Avatar ngẫu nhiên cho mỗi người chơi (emoji/icon từ danh sách preset).
+  - [x] Animation slide-in khi người chơi mới tham gia.
+  - [x] **Files:** `pages/host/LiveHost.tsx` [MODIFY], `pages/player/LivePlayer.tsx` [MODIFY]
 
-- [ ] **9.3. Chia sẻ quiz & phòng (Share)**
-  - [ ] Component `ShareButton` — copy link quiz hoặc mã phòng vào clipboard.
-  - [ ] Toast "Đã sao chép!" khi copy thành công.
-  - [ ] **Files:** `components/ShareButton.tsx` [NEW]
+- [x] **9.3. Chia sẻ quiz & phòng (Share)**
+  - [x] Component `ShareButton` — copy link quiz hoặc mã phòng vào clipboard.
+  - [x] Toast "Đã sao chép!" khi copy thành công.
+  - [x] **Files:** `components/ShareButton.tsx` [NEW]
 
 ---
 

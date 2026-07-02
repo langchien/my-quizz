@@ -3,6 +3,7 @@ import type { GameSession, Participant, PlayerAnswer, RoomStatus } from '@/types
 export interface IRoomRepository {
   // Session
   createSession(sessionData: Omit<GameSession, 'id' | 'createdAt'>): Promise<string>
+  getSessionById(sessionId: string): Promise<GameSession | null>
   getSessionByCode(roomCode: string): Promise<GameSession | null>
   updateSessionStatus(
     sessionId: string,

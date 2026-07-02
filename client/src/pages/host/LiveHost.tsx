@@ -1,16 +1,9 @@
+import { ShareButton } from '@/components/ShareButton'
 import { Button } from '@/components/ui/button'
+import { getAvatarEmoji } from '@/config/avatarEmojis'
 import { useHostGameControl } from '@/hooks/useHostGameControl'
 import { cn } from '@/lib/utils'
-import {
-  Copy,
-  Maximize,
-  MoreHorizontal,
-  Settings2,
-  Trophy,
-  Users,
-  Volume2,
-  Wand2,
-} from 'lucide-react'
+import { Maximize, MoreHorizontal, Settings2, Trophy, Users, Volume2, Wand2 } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
 
 export default function LiveHost() {
@@ -126,17 +119,14 @@ export default function LiveHost() {
                       <h2 className='text-3xl font-bold md:text-4xl'>myquizz.com</h2>
                     </div>
                   </div>
-                  <button
-                    aria-label='Copy Link'
+                  <ShareButton
+                    value={`${window.location.origin}/join?code=${session.roomCode}`}
+                    icon='link'
+                    variant='ghost'
+                    size='icon'
+                    toastMessage='Đã sao chép link tham gia!'
                     className='glass-button rounded-xl p-3 text-gray-300 hover:text-white'
-                    onClick={() =>
-                      navigator.clipboard.writeText(
-                        `http://myquizz.com/join?code=${session.roomCode}`,
-                      )
-                    }
-                  >
-                    <Copy className='h-6 w-6' />
-                  </button>
+                  />
                 </div>
                 <hr className='mb-8 border-white/10' />
                 {/* Step 2: Code */}
@@ -154,13 +144,14 @@ export default function LiveHost() {
                       </h1>
                     </div>
                   </div>
-                  <button
-                    aria-label='Copy Code'
+                  <ShareButton
+                    value={session.roomCode}
+                    icon='copy'
+                    variant='ghost'
+                    size='icon'
+                    toastMessage='Đã sao chép mã phòng!'
                     className='glass-button rounded-xl p-3 text-gray-300 hover:text-white'
-                    onClick={() => navigator.clipboard.writeText(session.roomCode)}
-                  >
-                    <Copy className='h-6 w-6' />
-                  </button>
+                  />
                 </div>
               </section>
               {/* Share Panel */}
@@ -169,27 +160,29 @@ export default function LiveHost() {
                   <img
                     alt='Mã QR tham gia'
                     className='h-full w-full object-cover'
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://myquizz.com/join?code=${session.roomCode}`}
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`${window.location.origin}/join?code=${session.roomCode}`)}`}
                   />
                 </div>
                 <p className='mb-4 text-sm font-medium tracking-wider text-gray-300 uppercase'>
                   Chia sẻ qua
                 </p>
                 <div className='flex items-center gap-3'>
-                  <button
-                    aria-label='Copy Link'
+                  <ShareButton
+                    value={`${window.location.origin}/join?code=${session.roomCode}`}
+                    icon='link'
+                    variant='ghost'
+                    size='icon'
+                    toastMessage='Đã sao chép link phòng!'
                     className='glass-button rounded-full p-2.5 transition-colors hover:bg-white/20'
-                  >
-                    <Copy className='h-5 w-5 text-blue-300' />
-                  </button>
-                  <button
-                    aria-label='Google Classroom'
+                  />
+                  <ShareButton
+                    value={session.roomCode}
+                    icon='copy'
+                    variant='ghost'
+                    size='icon'
+                    toastMessage='Đã sao chép mã phòng!'
                     className='glass-button rounded-full p-2.5 transition-colors hover:bg-white/20'
-                  >
-                    <svg className='h-5 w-5 text-green-400' fill='currentColor' viewBox='0 0 24 24'>
-                      <path d='M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z'></path>
-                    </svg>
-                  </button>
+                  />
                   <button
                     aria-label='More Options'
                     className='glass-button rounded-full p-2.5 transition-colors hover:bg-white/20'
@@ -212,8 +205,9 @@ export default function LiveHost() {
                 {participants.map((p) => (
                   <div
                     key={p.id}
-                    className='animate-bounce-in glass-button rounded-full px-4 py-2 font-bold text-white'
+                    className='glass-button flex animate-slide-in-up items-center gap-2 rounded-full px-4 py-2 font-bold text-white'
                   >
+                    <span className='text-xl'>{getAvatarEmoji(p.name)}</span>
                     {p.name}
                   </div>
                 ))}

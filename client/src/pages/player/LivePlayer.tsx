@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
+import { getAvatarEmoji } from '@/config/avatarEmojis'
 import { usePlayerGame } from '@/hooks/usePlayerGame'
 import { cn } from '@/lib/utils'
 import { CheckCircle2, XCircle } from 'lucide-react'
@@ -54,7 +55,10 @@ export default function LivePlayer() {
     <div className='flex min-h-screen flex-col bg-background font-sans'>
       {/* Header */}
       <header className='flex items-center justify-between border-b border-border bg-card p-4 shadow-sm'>
-        <div className='font-bold text-foreground'>{me?.name || 'Player'}</div>
+        <div className='flex items-center gap-2 font-bold text-foreground'>
+          <span className='text-xl'>{me?.name ? getAvatarEmoji(me.name) : '👤'}</span>
+          {me?.name || 'Player'}
+        </div>
         <div className='rounded-full bg-foreground px-4 py-1 font-black text-background'>
           {me?.score || 0}
         </div>
@@ -63,6 +67,7 @@ export default function LivePlayer() {
       <main className='flex flex-1 flex-col items-center justify-center p-4'>
         {isLobby && (
           <div className='flex animate-pulse flex-col gap-4 text-center'>
+            <div className='mb-4 text-6xl'>{me?.name ? getAvatarEmoji(me.name) : '🎮'}</div>
             <h2 className='text-3xl font-bold text-foreground'>Bạn đã vào phòng!</h2>
             <p className='text-xl text-muted-foreground'>Đang chờ Host bắt đầu...</p>
           </div>
