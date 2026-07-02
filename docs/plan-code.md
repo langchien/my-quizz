@@ -219,8 +219,8 @@ client/src/
 
 > **Ưu tiên:** Cao — Thiếu hoàn toàn, cần bổ dung đầy đủ.
 
-- [ ] **10.1. Mở rộng User type & Repository**
-  - [ ] Thêm fields vào `User` type:
+- [x] **10.1. Mở rộng User type & Repository**
+  - [x] Thêm fields vào `User` type:
     - `username`: Tên đăng nhập duy nhất.
     - `firstName`, `lastName`: Tách riêng họ và tên.
     - `grade`: Lớp/cấp học (Lớp 1-12, Đại học, Khác).
@@ -230,45 +230,45 @@ client/src/
     - `useCase`: Mục đích sử dụng (K-12, Doanh nghiệp, Đại học, Gia sư).
     - `preferences`: `{ theme, language }`.
     - `onboardingCompleted`: boolean — đã hoàn thành onboarding chưa.
-  - [ ] Tạo `IUserRepository` interface + `FirebaseUserRepository`.
-  - [ ] Tạo `userService` điều phối logic user.
-  - [ ] **Files:** `types/user.ts` [MODIFY], `repositories/IUserRepository.ts` [NEW], `repositories/FirebaseUserRepository.ts` [NEW], `services/userService.ts` [NEW]
+  - [x] Tạo `IUserRepository` interface + `FirebaseUserRepository`.
+  - [x] Tạo `userService` điều phối logic user.
+  - [x] **Files:** `types/user.ts` [MODIFY], `repositories/IUserRepository.ts` [NEW], `repositories/FirebaseUserRepository.ts` [NEW], `services/userService.ts` [NEW]
 
-- [ ] **10.2. Onboarding Wizard khi đăng ký (4 bước)**
-  - [ ] **Bước 1**: Nhập Họ + Tên.
-  - [ ] **Bước 2**: Mục đích sử dụng — Trường học K-12, Doanh nghiệp, Đại học, Gia sư/Tự học.
-  - [ ] **Bước 3**: Vai trò — Học sinh, Giáo viên, Quản trị viên.
-  - [ ] **Bước 4**: Chọn độ tuổi/lớp học + chọn avatar từ danh sách preset.
-  - [ ] Redirect đến Onboarding sau khi đăng ký lần đầu (nếu `onboardingCompleted = false`).
-  - [ ] Lưu tất cả vào Firestore `users` collection.
-  - [ ] **Files:** `pages/auth/Onboarding.tsx` [NEW], `routes/AppRoutes.tsx` [MODIFY]
+- [x] **10.2. Onboarding Wizard khi đăng ký (4 bước)**
+  - [x] **Bước 1**: Nhập Họ + Tên.
+  - [x] **Bước 2**: Mục đích sử dụng — Trường học K-12, Doanh nghiệp, Đại học, Gia sư/Tự học.
+  - [x] **Bước 3**: Vai trò — Học sinh, Giáo viên, Quản trị viên.
+  - [x] **Bước 4**: Chọn độ tuổi/lớp học + chọn avatar từ danh sách preset.
+  - [x] Redirect đến Onboarding sau khi đăng ký lần đầu (nếu `onboardingCompleted = false`).
+  - [x] Lưu tất cả vào Firestore `users` collection.
+  - [x] **Files:** `pages/auth/Onboarding.tsx` [NEW], `routes/AppRoutes.tsx` [MODIFY]
 
-- [ ] **10.3. Trang Cài đặt (`/settings`)**
-  - [ ] **👤 Profile:**
+- [x] **10.3. Trang Cài đặt (`/settings`)**
+  - [x] **👤 Profile:**
     - Username (đổi được, kiểm tra unique).
     - Name (Tên hiển thị).
     - Grade (lớp/cấp).
     - Language (mặc định tiếng Việt).
-  - [ ] **🎮 Game settings:**
+  - [x] **🎮 Game settings:**
     - Game Theme mặc định (chọn từ 3 themes: Classic, Dark, Focus).
-  - [ ] **🔒 Account settings:**
+  - [x] **🔒 Account settings:**
     - Đổi mật khẩu (`updatePassword` Firebase Auth).
     - Xóa tài khoản (xác nhận → xóa Firestore data + Auth user).
     - Đăng xuất.
-  - [ ] Footer: Liên hệ, Điều khoản, Chính sách bảo mật.
-  - [ ] **Files:** `pages/profile/SettingsPage.tsx` [NEW], `routes/AppRoutes.tsx` [MODIFY]
+  - [x] Footer: Liên hệ, Điều khoản, Chính sách bảo mật.
+  - [x] **Files:** `pages/profile/SettingsPage.tsx` [NEW], `routes/AppRoutes.tsx` [MODIFY]
 
-- [ ] **10.4. Dropdown Menu Header cải tiến**
-  - [ ] Thay nút "Đăng xuất" bằng **Avatar + Dropdown** (shadcn DropdownMenu).
-  - [ ] Dropdown: Username, Email → Cài đặt → Đăng xuất.
-  - [ ] Trên header: thêm nút **"Tạo Quiz"**.
-  - [ ] **Files:** `components/Header.tsx` [MODIFY], `components/UserDropdown.tsx` [NEW]
+- [x] **10.4. Dropdown Menu Header cải tiến**
+  - [x] Thay nút "Đăng xuất" bằng **Avatar + Dropdown** (shadcn DropdownMenu).
+  - [x] Dropdown: Username, Email → Cài đặt → Đăng xuất.
+  - [x] Trên header: thêm nút **"Tạo Quiz"**.
+  - [x] **Files:** `components/Header.tsx` [MODIFY], `components/UserDropdown.tsx` [NEW]
 
-- [ ] **10.5. Avatar từ danh sách preset**
-  - [ ] Tạo danh sách ~20 avatar (emoji animals/expressions) cho user chọn.
-  - [ ] Hiển thị avatar đã chọn trên Header, Lobby, và Leaderboard.
-  - [ ] Chọn avatar trong Onboarding (bước 4) và trong Settings.
-  - [ ] **Files:** `config/avatarPresets.ts` [NEW], `components/AvatarPicker.tsx` [NEW]
+- [x] **10.5. Avatar từ danh sách preset**
+  - [x] Tạo danh sách ~20 avatar (emoji animals/expressions) cho user chọn.
+  - [x] Hiển thị avatar đã chọn trên Header, Lobby, và Leaderboard.
+  - [x] Chọn avatar trong Onboarding (bước 4) và trong Settings.
+  - [x] **Files:** `config/avatarPresets.ts` [NEW], `components/AvatarPicker.tsx` [NEW]
 
 ---
 
@@ -276,17 +276,17 @@ client/src/
 
 > **Ưu tiên:** Thấp — Tối ưu sau khi các phần core hoàn thành.
 
-- [ ] **11.1. Toast/Notification System**
-  - [ ] Sử dụng shadcn `Sonner` toast cho thông báo toàn ứng dụng.
-  - [ ] Áp dụng: thành công tạo quiz, lỗi kết nối, copy link, xóa quiz, v.v.
+- [x] **11.1. Toast/Notification System**
+  - [x] Sử dụng shadcn `Sonner` toast cho thông báo toàn ứng dụng.
+  - [x] Áp dụng: thành công tạo quiz, lỗi kết nối, copy link, xóa quiz, v.v.
 
-- [ ] **11.2. View Transitions (Chuyển trang mượt mà)**
-  - [ ] Thêm React View Transitions cho animation chuyển trang (Dashboard → Game, Game → Results).
-  - [ ] Shared element animation cho quiz card → quiz detail.
+- [x] **11.2. View Transitions (Chuyển trang mượt mà)**
+  - [x] Thêm React View Transitions cho animation chuyển trang (Dashboard → Game, Game → Results).
+  - [x] Shared element animation cho quiz card → quiz detail.
 
-- [ ] **11.3. Responsive Mobile**
-  - [ ] Rà soát và cải thiện responsive cho tất cả các trang trên mobile.
-  - [ ] Bottom navigation bar cho mobile.
+- [x] **11.3. Responsive Mobile**
+  - [x] Rà soát và cải thiện responsive cho tất cả các trang trên mobile.
+  - [x] Bottom navigation bar cho mobile.
 
 ---
 

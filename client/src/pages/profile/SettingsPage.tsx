@@ -1,5 +1,7 @@
 import { AvatarPicker } from '@/components/AvatarPicker'
+import { BottomNav } from '@/components/BottomNav'
 import { Header } from '@/components/Header'
+import { PageTransition } from '@/components/PageTransition'
 import { ThemeSelector } from '@/components/ThemeSelector'
 import {
   AlertDialog,
@@ -140,272 +142,278 @@ export default function SettingsPage() {
   }, [deletePassword, deleteAccount])
 
   return (
-    <div className='min-h-screen bg-background'>
-      <Header />
+    <PageTransition>
+      <div className='min-h-screen bg-background pb-20 sm:pb-0'>
+        <Header />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className='mx-auto max-w-2xl px-4 py-8'
-      >
-        {/* Back button */}
-        <Link
-          to='/dashboard'
-          className='mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground'
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className='mx-auto max-w-2xl px-4 py-8'
         >
-          <ArrowLeft className='size-4' />
-          Quay lại Dashboard
-        </Link>
+          <Link
+            to='/dashboard'
+            viewTransition
+            className='mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground'
+          >
+            <ArrowLeft className='size-4' />
+            Quay lại Dashboard
+          </Link>
 
-        <h1 className='mb-8 text-3xl font-bold tracking-tight'>Cài đặt</h1>
+          <h1 className='mb-8 text-3xl font-bold tracking-tight'>Cài đặt</h1>
 
-        <div className='flex flex-col gap-6'>
-          {/* ─── 👤 Profile ─────────────────────── */}
-          <Card>
-            <CardHeader>
-              <div className='flex items-center gap-2'>
-                <User className='size-5 text-primary' />
-                <CardTitle>Thông tin cá nhân</CardTitle>
-              </div>
-              <CardDescription>Cập nhật thông tin hiển thị và hồ sơ của bạn</CardDescription>
-            </CardHeader>
-            <CardContent className='flex flex-col gap-5'>
-              {/* Avatar */}
-              <div className='flex flex-col gap-2'>
-                <Label>Avatar</Label>
-                <div className='flex items-center gap-4'>
-                  <span className='flex size-16 items-center justify-center rounded-2xl bg-muted text-4xl'>
-                    {avatarUrl}
-                  </span>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-                  >
-                    {showAvatarPicker ? 'Ẩn' : 'Đổi avatar'}
-                  </Button>
+          <div className='flex flex-col gap-6'>
+            {/* ─── 👤 Profile ─────────────────────── */}
+            <Card>
+              <CardHeader>
+                <div className='flex items-center gap-2'>
+                  <User className='size-5 text-primary' />
+                  <CardTitle>Thông tin cá nhân</CardTitle>
                 </div>
-                {showAvatarPicker && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className='mt-2 rounded-xl border bg-muted/50 p-3'
-                  >
-                    <AvatarPicker
-                      value={avatarUrl}
-                      onChange={(emoji) => {
-                        setAvatarUrl(emoji)
-                        setShowAvatarPicker(false)
-                      }}
-                      columns={8}
-                    />
-                  </motion.div>
-                )}
-              </div>
-
-              {/* Username */}
-              <div className='flex flex-col gap-1.5'>
-                <Label htmlFor='settings-username'>Tên người dùng</Label>
-                <Input
-                  id='settings-username'
-                  placeholder='username'
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-
-              {/* Name fields */}
-              <div className='grid grid-cols-2 gap-4'>
-                <div className='flex flex-col gap-1.5'>
-                  <Label htmlFor='settings-lastname'>Họ</Label>
-                  <Input
-                    id='settings-lastname'
-                    placeholder='Nguyễn'
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-                <div className='flex flex-col gap-1.5'>
-                  <Label htmlFor='settings-firstname'>Tên</Label>
-                  <Input
-                    id='settings-firstname'
-                    placeholder='Văn A'
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              {/* Grade */}
-              <div className='flex flex-col gap-1.5'>
-                <Label>Lớp / Cấp học</Label>
-                <Select value={grade || undefined} onValueChange={(val) => setGrade(val as Grade)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Chọn lớp/cấp...' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {GRADE_OPTIONS.map((g) => (
-                      <SelectItem key={g.value} value={g.value}>
-                        {g.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Language (mặc định, không đổi được) */}
-              <div className='flex flex-col gap-1.5'>
-                <Label>Ngôn ngữ</Label>
-                <Input value='Tiếng Việt' disabled className='opacity-60' />
-              </div>
-
-              <Button onClick={handleSaveProfile} disabled={isSaving} className='mt-2 self-start'>
-                {isSaving ? 'Đang lưu...' : 'Lưu thay đổi'}
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* ─── 🎮 Game Settings ─────────────── */}
-          <Card>
-            <CardHeader>
-              <div className='flex items-center gap-2'>
-                <Gamepad2 className='size-5 text-primary' />
-                <CardTitle>Cài đặt trò chơi</CardTitle>
-              </div>
-              <CardDescription>Tùy chỉnh giao diện mặc định khi chơi game</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Label className='mb-3 block'>Game Theme mặc định</Label>
-              <ThemeSelector value={gameTheme} onChange={handleSaveGameTheme} />
-            </CardContent>
-          </Card>
-
-          {/* ─── 🔒 Account ───────────────────── */}
-          <Card>
-            <CardHeader>
-              <div className='flex items-center gap-2'>
-                <Shield className='size-5 text-primary' />
-                <CardTitle>Tài khoản</CardTitle>
-              </div>
-              <CardDescription>Quản lý bảo mật và tài khoản của bạn</CardDescription>
-            </CardHeader>
-            <CardContent className='flex flex-col gap-4'>
-              {/* Đổi mật khẩu */}
-              <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant='outline' className='justify-start gap-2'>
-                    <KeyRound data-icon='inline-start' />
-                    Đổi mật khẩu
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Đổi mật khẩu</DialogTitle>
-                    <DialogDescription>
-                      Nhập mật khẩu hiện tại và mật khẩu mới để thay đổi
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className='flex flex-col gap-4 py-4'>
-                    <div className='flex flex-col gap-1.5'>
-                      <Label htmlFor='current-password'>Mật khẩu hiện tại</Label>
-                      <Input
-                        id='current-password'
-                        type='password'
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                      />
-                    </div>
-                    <div className='flex flex-col gap-1.5'>
-                      <Label htmlFor='new-password'>Mật khẩu mới</Label>
-                      <Input
-                        id='new-password'
-                        type='password'
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        placeholder='Tối thiểu 6 ký tự'
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
+                <CardDescription>Cập nhật thông tin hiển thị và hồ sơ của bạn</CardDescription>
+              </CardHeader>
+              <CardContent className='flex flex-col gap-5'>
+                {/* Avatar */}
+                <div className='flex flex-col gap-2'>
+                  <Label>Avatar</Label>
+                  <div className='flex items-center gap-4'>
+                    <span className='flex size-16 items-center justify-center rounded-2xl bg-muted text-4xl'>
+                      {avatarUrl}
+                    </span>
                     <Button
-                      onClick={handleChangePassword}
-                      disabled={isChangingPassword || !currentPassword || newPassword.length < 6}
+                      variant='outline'
+                      size='sm'
+                      onClick={() => setShowAvatarPicker(!showAvatarPicker)}
                     >
-                      {isChangingPassword ? 'Đang xử lý...' : 'Xác nhận đổi'}
+                      {showAvatarPicker ? 'Ẩn' : 'Đổi avatar'}
                     </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+                  </div>
+                  {showAvatarPicker && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className='mt-2 rounded-xl border bg-muted/50 p-3'
+                    >
+                      <AvatarPicker
+                        value={avatarUrl}
+                        onChange={(emoji) => {
+                          setAvatarUrl(emoji)
+                          setShowAvatarPicker(false)
+                        }}
+                        columns={8}
+                      />
+                    </motion.div>
+                  )}
+                </div>
 
-              <Separator />
+                {/* Username */}
+                <div className='flex flex-col gap-1.5'>
+                  <Label htmlFor='settings-username'>Tên người dùng</Label>
+                  <Input
+                    id='settings-username'
+                    placeholder='username'
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </div>
 
-              {/* Đăng xuất */}
-              <Button variant='outline' className='justify-start gap-2' onClick={handleLogout}>
-                <LogOut data-icon='inline-start' />
-                Đăng xuất
-              </Button>
-
-              <Separator />
-
-              {/* Xóa tài khoản */}
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant='outline'
-                    className='justify-start gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive'
-                  >
-                    <Trash2 data-icon='inline-start' />
-                    Xóa tài khoản
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Xóa tài khoản vĩnh viễn?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Hành động này không thể hoàn tác. Tất cả dữ liệu bao gồm quiz, lịch sử chơi và
-                      thông tin cá nhân sẽ bị xóa vĩnh viễn.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <div className='flex flex-col gap-1.5 py-4'>
-                    <Label htmlFor='delete-password'>Nhập mật khẩu để xác nhận</Label>
+                {/* Name fields */}
+                <div className='grid grid-cols-2 gap-4'>
+                  <div className='flex flex-col gap-1.5'>
+                    <Label htmlFor='settings-lastname'>Họ</Label>
                     <Input
-                      id='delete-password'
-                      type='password'
-                      value={deletePassword}
-                      onChange={(e) => setDeletePassword(e.target.value)}
-                      placeholder='Mật khẩu của bạn'
+                      id='settings-lastname'
+                      placeholder='Nguyễn'
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
                     />
                   </div>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Hủy</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleDeleteAccount}
-                      disabled={isDeletingAccount || !deletePassword}
-                      className='text-destructive-foreground bg-destructive hover:bg-destructive/90'
-                    >
-                      {isDeletingAccount ? 'Đang xóa...' : 'Xóa tài khoản'}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </CardContent>
-          </Card>
+                  <div className='flex flex-col gap-1.5'>
+                    <Label htmlFor='settings-firstname'>Tên</Label>
+                    <Input
+                      id='settings-firstname'
+                      placeholder='Văn A'
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </div>
+                </div>
 
-          {/* ─── Footer ────────────────────────── */}
-          <div className='py-6 text-center text-xs text-muted-foreground'>
-            <div className='flex items-center justify-center gap-4'>
-              <span>Liên hệ</span>
-              <span>•</span>
-              <span>Điều khoản sử dụng</span>
-              <span>•</span>
-              <span>Chính sách bảo mật</span>
+                {/* Grade */}
+                <div className='flex flex-col gap-1.5'>
+                  <Label>Lớp / Cấp học</Label>
+                  <Select
+                    value={grade || undefined}
+                    onValueChange={(val) => setGrade(val as Grade)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder='Chọn lớp/cấp...' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GRADE_OPTIONS.map((g) => (
+                        <SelectItem key={g.value} value={g.value}>
+                          {g.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Language (mặc định, không đổi được) */}
+                <div className='flex flex-col gap-1.5'>
+                  <Label>Ngôn ngữ</Label>
+                  <Input value='Tiếng Việt' disabled className='opacity-60' />
+                </div>
+
+                <Button onClick={handleSaveProfile} disabled={isSaving} className='mt-2 self-start'>
+                  {isSaving ? 'Đang lưu...' : 'Lưu thay đổi'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* ─── 🎮 Game Settings ─────────────── */}
+            <Card>
+              <CardHeader>
+                <div className='flex items-center gap-2'>
+                  <Gamepad2 className='size-5 text-primary' />
+                  <CardTitle>Cài đặt trò chơi</CardTitle>
+                </div>
+                <CardDescription>Tùy chỉnh giao diện mặc định khi chơi game</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Label className='mb-3 block'>Game Theme mặc định</Label>
+                <ThemeSelector value={gameTheme} onChange={handleSaveGameTheme} />
+              </CardContent>
+            </Card>
+
+            {/* ─── 🔒 Account ───────────────────── */}
+            <Card>
+              <CardHeader>
+                <div className='flex items-center gap-2'>
+                  <Shield className='size-5 text-primary' />
+                  <CardTitle>Tài khoản</CardTitle>
+                </div>
+                <CardDescription>Quản lý bảo mật và tài khoản của bạn</CardDescription>
+              </CardHeader>
+              <CardContent className='flex flex-col gap-4'>
+                {/* Đổi mật khẩu */}
+                <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant='outline' className='justify-start gap-2'>
+                      <KeyRound data-icon='inline-start' />
+                      Đổi mật khẩu
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Đổi mật khẩu</DialogTitle>
+                      <DialogDescription>
+                        Nhập mật khẩu hiện tại và mật khẩu mới để thay đổi
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className='flex flex-col gap-4 py-4'>
+                      <div className='flex flex-col gap-1.5'>
+                        <Label htmlFor='current-password'>Mật khẩu hiện tại</Label>
+                        <Input
+                          id='current-password'
+                          type='password'
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                        />
+                      </div>
+                      <div className='flex flex-col gap-1.5'>
+                        <Label htmlFor='new-password'>Mật khẩu mới</Label>
+                        <Input
+                          id='new-password'
+                          type='password'
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder='Tối thiểu 6 ký tự'
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        onClick={handleChangePassword}
+                        disabled={isChangingPassword || !currentPassword || newPassword.length < 6}
+                      >
+                        {isChangingPassword ? 'Đang xử lý...' : 'Xác nhận đổi'}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+                <Separator />
+
+                {/* Đăng xuất */}
+                <Button variant='outline' className='justify-start gap-2' onClick={handleLogout}>
+                  <LogOut data-icon='inline-start' />
+                  Đăng xuất
+                </Button>
+
+                <Separator />
+
+                {/* Xóa tài khoản */}
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant='outline'
+                      className='justify-start gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive'
+                    >
+                      <Trash2 data-icon='inline-start' />
+                      Xóa tài khoản
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Xóa tài khoản vĩnh viễn?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Hành động này không thể hoàn tác. Tất cả dữ liệu bao gồm quiz, lịch sử chơi
+                        và thông tin cá nhân sẽ bị xóa vĩnh viễn.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className='flex flex-col gap-1.5 py-4'>
+                      <Label htmlFor='delete-password'>Nhập mật khẩu để xác nhận</Label>
+                      <Input
+                        id='delete-password'
+                        type='password'
+                        value={deletePassword}
+                        onChange={(e) => setDeletePassword(e.target.value)}
+                        placeholder='Mật khẩu của bạn'
+                      />
+                    </div>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Hủy</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={handleDeleteAccount}
+                        disabled={isDeletingAccount || !deletePassword}
+                        className='text-destructive-foreground bg-destructive hover:bg-destructive/90'
+                      >
+                        {isDeletingAccount ? 'Đang xóa...' : 'Xóa tài khoản'}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </CardContent>
+            </Card>
+
+            {/* ─── Footer ────────────────────────── */}
+            <div className='py-6 text-center text-xs text-muted-foreground'>
+              <div className='flex items-center justify-center gap-4'>
+                <span>Liên hệ</span>
+                <span>•</span>
+                <span>Điều khoản sử dụng</span>
+                <span>•</span>
+                <span>Chính sách bảo mật</span>
+              </div>
+              <p className='mt-2'>© 2025 My-Quizz. All rights reserved.</p>
             </div>
-            <p className='mt-2'>© 2025 My-Quizz. All rights reserved.</p>
           </div>
-        </div>
-      </motion.div>
-    </div>
+        </motion.div>
+        <BottomNav />
+      </div>
+    </PageTransition>
   )
 }

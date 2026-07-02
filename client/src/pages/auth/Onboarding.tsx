@@ -1,4 +1,5 @@
 import { AvatarPicker } from '@/components/AvatarPicker'
+import { PageTransition } from '@/components/PageTransition'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { InputGroup, InputGroupInput } from '@/components/ui/input-group'
@@ -142,129 +143,131 @@ export default function Onboarding() {
   ]
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-red-600 via-rose-500 to-orange-500 p-4'>
-      {/* Decorative orbs */}
-      <div className='bg-orb orb-1' />
-      <div className='bg-orb orb-2' />
-      <div className='bg-orb orb-3' />
+    <PageTransition>
+      <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-red-600 via-rose-500 to-orange-500 p-4'>
+        {/* Decorative orbs */}
+        <div className='bg-orb orb-1' />
+        <div className='bg-orb orb-2' />
+        <div className='bg-orb orb-3' />
 
-      <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className='relative z-10 w-full max-w-lg'
-      >
-        <Card
-          variant='glass'
-          className='relative overflow-hidden rounded-3xl border-white/20 bg-white/10 text-white backdrop-blur-xl'
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className='relative z-10 w-full max-w-lg'
         >
-          {/* Decorative blurs */}
-          <div className='absolute -top-10 -left-10 size-40 rounded-full bg-white/10 blur-2xl' />
-          <div className='absolute -right-10 -bottom-10 size-40 rounded-full bg-white/10 blur-2xl' />
+          <Card
+            variant='glass'
+            className='relative overflow-hidden rounded-3xl border-white/20 bg-white/10 text-white backdrop-blur-xl'
+          >
+            {/* Decorative blurs */}
+            <div className='absolute -top-10 -left-10 size-40 rounded-full bg-white/10 blur-2xl' />
+            <div className='absolute -right-10 -bottom-10 size-40 rounded-full bg-white/10 blur-2xl' />
 
-          <div className='relative z-10 p-8'>
-            {/* Progress */}
-            <div className='mb-8'>
-              <div className='mb-3 flex items-center justify-between text-sm text-white/70'>
-                <span>
-                  Bước {step} / {TOTAL_STEPS}
-                </span>
-                <span className='flex items-center gap-1'>
-                  <Sparkles className='size-3' />
-                  Thiết lập tài khoản
-                </span>
+            <div className='relative z-10 p-8'>
+              {/* Progress */}
+              <div className='mb-8'>
+                <div className='mb-3 flex items-center justify-between text-sm text-white/70'>
+                  <span>
+                    Bước {step} / {TOTAL_STEPS}
+                  </span>
+                  <span className='flex items-center gap-1'>
+                    <Sparkles className='size-3' />
+                    Thiết lập tài khoản
+                  </span>
+                </div>
+                <Progress
+                  value={progressPercent}
+                  className='h-2 bg-white/10 [&>div]:bg-white/80 [&>div]:transition-all [&>div]:duration-500'
+                />
               </div>
-              <Progress
-                value={progressPercent}
-                className='h-2 bg-white/10 [&>div]:bg-white/80 [&>div]:transition-all [&>div]:duration-500'
-              />
-            </div>
 
-            {/* Step title */}
-            <AnimatePresence mode='wait'>
-              <motion.div
-                key={`title-${step}`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.2 }}
-                className='mb-6 text-center'
-              >
-                <h1 className='text-2xl font-bold tracking-tight sm:text-3xl'>
-                  {stepTitles[step - 1]}
-                </h1>
-                <p className='mt-2 text-sm text-white/70'>{stepDescriptions[step - 1]}</p>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Step content */}
-            <CardContent className='min-h-[260px] p-0'>
-              <AnimatePresence mode='wait' custom={1}>
+              {/* Step title */}
+              <AnimatePresence mode='wait'>
                 <motion.div
-                  key={step}
-                  custom={1}
-                  variants={stepVariants}
-                  initial='enter'
-                  animate='center'
-                  exit='exit'
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  key={`title-${step}`}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                  className='mb-6 text-center'
                 >
-                  {step === 1 && <Step1Name formData={formData} updateField={updateField} />}
-                  {step === 2 && <Step2UseCase formData={formData} updateField={updateField} />}
-                  {step === 3 && <Step3Role formData={formData} updateField={updateField} />}
-                  {step === 4 && <Step4Profile formData={formData} updateField={updateField} />}
+                  <h1 className='text-2xl font-bold tracking-tight sm:text-3xl'>
+                    {stepTitles[step - 1]}
+                  </h1>
+                  <p className='mt-2 text-sm text-white/70'>{stepDescriptions[step - 1]}</p>
                 </motion.div>
               </AnimatePresence>
-            </CardContent>
 
-            {/* Navigation buttons */}
-            <div className='mt-8 flex items-center justify-between gap-4'>
-              <Button
-                type='button'
-                variant='ghost'
-                onClick={prevStep}
-                disabled={step === 1}
-                className={cn(
-                  'gap-2 text-white/80 hover:bg-white/10 hover:text-white',
-                  step === 1 && 'invisible',
-                )}
-              >
-                <ArrowLeft data-icon='inline-start' />
-                Quay lại
-              </Button>
+              {/* Step content */}
+              <CardContent className='min-h-[260px] p-0'>
+                <AnimatePresence mode='wait' custom={1}>
+                  <motion.div
+                    key={step}
+                    custom={1}
+                    variants={stepVariants}
+                    initial='enter'
+                    animate='center'
+                    exit='exit'
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  >
+                    {step === 1 && <Step1Name formData={formData} updateField={updateField} />}
+                    {step === 2 && <Step2UseCase formData={formData} updateField={updateField} />}
+                    {step === 3 && <Step3Role formData={formData} updateField={updateField} />}
+                    {step === 4 && <Step4Profile formData={formData} updateField={updateField} />}
+                  </motion.div>
+                </AnimatePresence>
+              </CardContent>
 
-              {step < TOTAL_STEPS ? (
+              {/* Navigation buttons */}
+              <div className='mt-8 flex items-center justify-between gap-4'>
                 <Button
                   type='button'
-                  onClick={nextStep}
-                  disabled={!isStepValid()}
-                  className='gap-2 bg-white/20 px-8 py-2.5 font-semibold text-white backdrop-blur-md transition-all hover:bg-white/30 disabled:opacity-40'
-                >
-                  Tiếp theo
-                  <ArrowRight data-icon='inline-end' />
-                </Button>
-              ) : (
-                <Button
-                  type='button'
-                  onClick={submitOnboarding}
-                  disabled={!isStepValid() || isSubmitting}
-                  className='gap-2 bg-white px-8 py-2.5 font-semibold text-rose-600 transition-all hover:bg-white/90 disabled:opacity-40'
-                >
-                  {isSubmitting ? (
-                    'Đang lưu...'
-                  ) : (
-                    <>
-                      <Check data-icon='inline-start' />
-                      Hoàn thành
-                    </>
+                  variant='ghost'
+                  onClick={prevStep}
+                  disabled={step === 1}
+                  className={cn(
+                    'gap-2 text-white/80 hover:bg-white/10 hover:text-white',
+                    step === 1 && 'invisible',
                   )}
+                >
+                  <ArrowLeft data-icon='inline-start' />
+                  Quay lại
                 </Button>
-              )}
+
+                {step < TOTAL_STEPS ? (
+                  <Button
+                    type='button'
+                    onClick={nextStep}
+                    disabled={!isStepValid()}
+                    className='gap-2 bg-white/20 px-8 py-2.5 font-semibold text-white backdrop-blur-md transition-all hover:bg-white/30 disabled:opacity-40'
+                  >
+                    Tiếp theo
+                    <ArrowRight data-icon='inline-end' />
+                  </Button>
+                ) : (
+                  <Button
+                    type='button'
+                    onClick={submitOnboarding}
+                    disabled={!isStepValid() || isSubmitting}
+                    className='gap-2 bg-white px-8 py-2.5 font-semibold text-rose-600 transition-all hover:bg-white/90 disabled:opacity-40'
+                  >
+                    {isSubmitting ? (
+                      'Đang lưu...'
+                    ) : (
+                      <>
+                        <Check data-icon='inline-start' />
+                        Hoàn thành
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
-        </Card>
-      </motion.div>
-    </div>
+          </Card>
+        </motion.div>
+      </div>
+    </PageTransition>
   )
 }
 

@@ -29,7 +29,7 @@ export function useJoinRoom() {
         // Save participantId to localStorage so player can refresh page
         localStorage.setItem(`myquizz_participant_${sessionId}`, participantId)
 
-        navigate(`/play/${sessionId}`, { state: { participantId } })
+        navigate(`/play/${sessionId}`, { state: { participantId }, viewTransition: true })
       } catch (err: any) {
         setError(err.message || 'Lỗi khi tham gia phòng. Vui lòng kiểm tra lại mã.')
       } finally {

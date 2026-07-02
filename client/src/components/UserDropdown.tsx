@@ -69,7 +69,7 @@ export function UserDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => navigate('/settings')}>
+          <DropdownMenuItem onClick={() => navigate('/settings', { viewTransition: true })}>
             <Settings data-icon='inline-start' />
             Cài đặt
           </DropdownMenuItem>

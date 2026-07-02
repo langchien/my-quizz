@@ -1,7 +1,9 @@
 import { ActivityTabs } from '@/components/ActivityTabs'
+import { BottomNav } from '@/components/BottomNav'
 import { Header } from '@/components/Header'
 import { ImportQuizDialog } from '@/components/ImportQuizDialog'
 import { LoadingOverlay } from '@/components/LoadingOverlay'
+import { PageTransition } from '@/components/PageTransition'
 import { QuizPreviewModal } from '@/components/QuizPreviewModal'
 import { QuizSearch } from '@/components/QuizSearch'
 import {
@@ -52,259 +54,271 @@ export default function Dashboard() {
   const [previewQuiz, setPreviewQuiz] = useState<Quiz | null>(null)
 
   return (
-    <div className='min-h-screen bg-background transition-colors duration-300'>
-      <Header />
+    <PageTransition>
+      <div className='min-h-screen bg-background pb-20 transition-colors duration-300 sm:pb-0'>
+        <Header />
 
-      <main className='mx-auto max-w-7xl px-4 py-8'>
-        {/* Tab Navigation — 3 tabs: Bộ câu hỏi, Hoạt động, Khám phá */}
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => setActiveTab(v as 'quizzes' | 'history' | 'explore')}
-          className='mb-8'
-        >
-          <TabsList variant='line' className='border-b border-border'>
-            <TabsTrigger value='quizzes' className='gap-2'>
-              <BookOpen data-icon='inline-start' /> Bộ câu hỏi
-            </TabsTrigger>
-            <TabsTrigger value='history' className='gap-2'>
-              <SquareActivity data-icon='inline-start' /> Hoạt động
-            </TabsTrigger>
-            <TabsTrigger value='explore' className='gap-2'>
-              <Compass data-icon='inline-start' /> Khám phá
-            </TabsTrigger>
-          </TabsList>
+        <main className='mx-auto max-w-7xl px-4 py-8'>
+          {/* Tab Navigation — 3 tabs: Bộ câu hỏi, Hoạt động, Khám phá */}
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as 'quizzes' | 'history' | 'explore')}
+            className='mb-8'
+          >
+            <TabsList variant='line' className='border-b border-border'>
+              <TabsTrigger value='quizzes' className='gap-2'>
+                <BookOpen data-icon='inline-start' /> Bộ câu hỏi
+              </TabsTrigger>
+              <TabsTrigger value='history' className='gap-2'>
+                <SquareActivity data-icon='inline-start' /> Hoạt động
+              </TabsTrigger>
+              <TabsTrigger value='explore' className='gap-2'>
+                <Compass data-icon='inline-start' /> Khám phá
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Tab: Bộ câu hỏi */}
-          <TabsContent value='quizzes' className='mt-6'>
-            <div className='mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
-              <div>
-                <h2 className='text-2xl font-semibold text-foreground'>Bộ câu hỏi của tôi</h2>
-                <p className='mt-1 text-sm text-muted-foreground'>
-                  Quản lý và tổ chức các bài trắc nghiệm của bạn.
-                </p>
-              </div>
-              <div className='flex w-full gap-2 sm:w-auto'>
-                <Button
-                  onClick={openImportDialog}
-                  variant='outline'
-                  className='w-full gap-2 sm:w-auto'
-                >
-                  <FileJson data-icon='inline-start' /> Import từ JSON
-                </Button>
-                <Link
-                  to='/dashboard/quiz/new'
-                  className={cn(buttonVariants(), 'w-full gap-2 sm:w-auto')}
-                >
-                  <Plus data-icon='inline-start' /> Tạo Quiz mới
-                </Link>
-              </div>
-            </div>
-
-            {isRevalidating ? (
-              <div className='flex items-center justify-center py-20'>
-                <Spinner className='size-10 text-primary' />
-              </div>
-            ) : quizzes.length === 0 ? (
-              <div className='rounded-2xl border border-dashed border-border bg-card py-16 text-center shadow-sm'>
-                <div className='mb-4 inline-flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary'>
-                  <Plus size={32} />
+            {/* Tab: Bộ câu hỏi */}
+            <TabsContent value='quizzes' className='mt-6'>
+              <div className='mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center'>
+                <div>
+                  <h2 className='text-2xl font-semibold text-foreground'>Bộ câu hỏi của tôi</h2>
+                  <p className='mt-1 text-sm text-muted-foreground'>
+                    Quản lý và tổ chức các bài trắc nghiệm của bạn.
+                  </p>
                 </div>
-                <h3 className='mb-2 text-xl font-medium text-foreground'>
-                  Bạn chưa có bộ câu hỏi nào
-                </h3>
-                <p className='mb-6 text-muted-foreground'>
-                  Hãy tạo bộ câu hỏi đầu tiên của bạn để bắt đầu trò chơi!
-                </p>
-                <div className='flex items-center justify-center gap-4'>
-                  <Link to='/dashboard/quiz/new' className={cn(buttonVariants(), 'gap-2')}>
-                    Bắt đầu tạo Quiz
-                  </Link>
-                  <Button onClick={openImportDialog} variant='outline'>
-                    Import từ JSON
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
-                {quizzes.map((quiz) => (
-                  <Card
-                    key={quiz.id}
-                    className='flex cursor-pointer flex-col border-border shadow-sm transition-shadow hover:shadow-md'
-                    onClick={() => setPreviewQuiz(quiz)}
+                <div className='flex w-full gap-2 sm:w-auto'>
+                  <Button
+                    onClick={openImportDialog}
+                    variant='outline'
+                    className='w-full gap-2 sm:w-auto'
                   >
-                    <CardHeader>
-                      <div className='flex items-start justify-between gap-2'>
-                        <CardTitle className='line-clamp-1 flex-1 text-xl' title={quiz.title}>
-                          {quiz.title}
-                        </CardTitle>
-                        {quiz.isPublished ? (
-                          <Badge variant='success'>Công khai</Badge>
-                        ) : (
-                          <Badge variant='secondary'>Bản nháp</Badge>
-                        )}
-                      </div>
-                      <CardDescription className='mt-2 line-clamp-2'>
-                        {quiz.description || 'Không có mô tả'}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className='flex-1'>
-                      <div className='flex items-center gap-4 text-sm text-muted-foreground'>
-                        <div className='flex flex-col'>
-                          <span className='font-medium text-foreground'>
-                            {quiz.questions?.length || 0}
-                          </span>
-                          <span className='text-xs'>Câu hỏi</span>
-                        </div>
-                        <Separator orientation='vertical' className='h-8' />
-                        <div className='flex flex-col'>
-                          <span className='font-medium text-foreground'>{quiz.playCount || 0}</span>
-                          <span className='text-xs'>Lượt chơi</span>
-                        </div>
-                        <Separator orientation='vertical' className='h-8' />
-                        <div className='flex flex-col'>
-                          <span className='font-medium text-foreground'>
-                            {new Date(quiz.updatedAt).toLocaleDateString('vi-VN')}
-                          </span>
-                          <span className='text-xs'>Cập nhật</span>
-                        </div>
-                      </div>
-
-                      {/* Badges: category + difficulty */}
-                      {(quiz.category || quiz.difficulty) && (
-                        <div className='mt-3 flex flex-wrap gap-1.5'>
-                          {quiz.category && (
-                            <Badge variant='outline' className='text-xs'>
-                              {quiz.category}
-                            </Badge>
-                          )}
-                          {quiz.difficulty && (
-                            <Badge
-                              variant={
-                                quiz.difficulty === 'easy'
-                                  ? 'success'
-                                  : quiz.difficulty === 'hard'
-                                    ? 'destructive'
-                                    : 'secondary'
-                              }
-                              className='text-xs'
-                            >
-                              {DIFFICULTY_LABELS[quiz.difficulty]}
-                            </Badge>
-                          )}
-                        </div>
-                      )}
-                    </CardContent>
-                    <CardFooter className='flex justify-between gap-2 border-t border-border bg-muted/30 p-4'>
-                      <div className='flex gap-2' onClick={(e) => e.stopPropagation()}>
-                        <Link
-                          to={`/dashboard/quiz/${quiz.id}/edit`}
-                          className={cn(
-                            buttonVariants({ variant: 'outline', size: 'sm' }),
-                            'gap-1 px-2',
-                          )}
-                        >
-                          <Edit data-icon='inline-start' />{' '}
-                          <span className='hidden sm:inline'>Sửa</span>
-                        </Link>
-
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant='destructive' size='sm' className='gap-1 px-2'>
-                              <Trash2 data-icon='inline-start' />{' '}
-                              <span className='hidden sm:inline'>Xóa</span>
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Bạn có chắc chắn muốn xóa?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Hành động này không thể hoàn tác. Bộ câu hỏi{' '}
-                                <span className='font-semibold text-foreground'>
-                                  "{quiz.title}"
-                                </span>{' '}
-                                sẽ bị xóa vĩnh viễn khỏi hệ thống.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Hủy</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => handleDelete(quiz.id)}
-                                className='text-destructive-foreground bg-destructive hover:bg-destructive/80'
-                              >
-                                Xóa vĩnh viễn
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-
-                      <div className='flex gap-2' onClick={(e) => e.stopPropagation()}>
-                        <Button
-                          variant='gradient-orange'
-                          size='sm'
-                          className='gap-2'
-                          onClick={() => handleHost(quiz.id, quiz.title)}
-                        >
-                          <Play data-icon='inline-start' /> Host
-                        </Button>
-                        <Link
-                          to={`/solo/${quiz.id}`}
-                          className={cn(
-                            buttonVariants({ variant: 'outline', size: 'sm' }),
-                            'gap-2',
-                          )}
-                        >
-                          <BookOpen data-icon='inline-start' /> Tự luyện
-                        </Link>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                ))}
+                    <FileJson data-icon='inline-start' /> Import từ JSON
+                  </Button>
+                  <Link
+                    to='/dashboard/quiz/new'
+                    viewTransition
+                    className={cn(buttonVariants(), 'w-full gap-2 sm:w-auto')}
+                  >
+                    <Plus data-icon='inline-start' /> Tạo Quiz mới
+                  </Link>
+                </div>
               </div>
-            )}
-          </TabsContent>
 
-          {/* Tab: Hoạt động (thay thế tab Lịch sử cũ) */}
-          <TabsContent value='history' className='mt-6'>
-            <ActivityTabs quizzes={quizzes} />
-          </TabsContent>
+              {isRevalidating ? (
+                <div className='flex items-center justify-center py-20'>
+                  <Spinner className='size-10 text-primary' />
+                </div>
+              ) : quizzes.length === 0 ? (
+                <div className='rounded-2xl border border-dashed border-border bg-card py-16 text-center shadow-sm'>
+                  <div className='mb-4 inline-flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary'>
+                    <Plus size={32} />
+                  </div>
+                  <h3 className='mb-2 text-xl font-medium text-foreground'>
+                    Bạn chưa có bộ câu hỏi nào
+                  </h3>
+                  <p className='mb-6 text-muted-foreground'>
+                    Hãy tạo bộ câu hỏi đầu tiên của bạn để bắt đầu trò chơi!
+                  </p>
+                  <div className='flex items-center justify-center gap-4'>
+                    <Link
+                      to='/dashboard/quiz/new'
+                      viewTransition
+                      className={cn(buttonVariants(), 'gap-2')}
+                    >
+                      Bắt đầu tạo Quiz
+                    </Link>
+                    <Button onClick={openImportDialog} variant='outline'>
+                      Import từ JSON
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
+                  {quizzes.map((quiz) => (
+                    <Card
+                      key={quiz.id}
+                      className='flex cursor-pointer flex-col border-border shadow-sm transition-shadow hover:shadow-md'
+                      onClick={() => setPreviewQuiz(quiz)}
+                    >
+                      <CardHeader>
+                        <div className='flex items-start justify-between gap-2'>
+                          <CardTitle className='line-clamp-1 flex-1 text-xl' title={quiz.title}>
+                            {quiz.title}
+                          </CardTitle>
+                          {quiz.isPublished ? (
+                            <Badge variant='success'>Công khai</Badge>
+                          ) : (
+                            <Badge variant='secondary'>Bản nháp</Badge>
+                          )}
+                        </div>
+                        <CardDescription className='mt-2 line-clamp-2'>
+                          {quiz.description || 'Không có mô tả'}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className='flex-1'>
+                        <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+                          <div className='flex flex-col'>
+                            <span className='font-medium text-foreground'>
+                              {quiz.questions?.length || 0}
+                            </span>
+                            <span className='text-xs'>Câu hỏi</span>
+                          </div>
+                          <Separator orientation='vertical' className='h-8' />
+                          <div className='flex flex-col'>
+                            <span className='font-medium text-foreground'>
+                              {quiz.playCount || 0}
+                            </span>
+                            <span className='text-xs'>Lượt chơi</span>
+                          </div>
+                          <Separator orientation='vertical' className='h-8' />
+                          <div className='flex flex-col'>
+                            <span className='font-medium text-foreground'>
+                              {new Date(quiz.updatedAt).toLocaleDateString('vi-VN')}
+                            </span>
+                            <span className='text-xs'>Cập nhật</span>
+                          </div>
+                        </div>
 
-          {/* Tab: Khám phá (tìm kiếm quiz công khai) */}
-          <TabsContent value='explore' className='mt-6'>
-            <div className='mb-6'>
-              <h2 className='text-2xl font-semibold text-foreground'>Khám phá Quiz</h2>
-              <p className='mt-1 text-sm text-muted-foreground'>
-                Tìm kiếm và chơi thử các bộ câu hỏi từ cộng đồng.
-              </p>
-            </div>
-            <QuizSearch />
-          </TabsContent>
-        </Tabs>
-      </main>
+                        {/* Badges: category + difficulty */}
+                        {(quiz.category || quiz.difficulty) && (
+                          <div className='mt-3 flex flex-wrap gap-1.5'>
+                            {quiz.category && (
+                              <Badge variant='outline' className='text-xs'>
+                                {quiz.category}
+                              </Badge>
+                            )}
+                            {quiz.difficulty && (
+                              <Badge
+                                variant={
+                                  quiz.difficulty === 'easy'
+                                    ? 'success'
+                                    : quiz.difficulty === 'hard'
+                                      ? 'destructive'
+                                      : 'secondary'
+                                }
+                                className='text-xs'
+                              >
+                                {DIFFICULTY_LABELS[quiz.difficulty]}
+                              </Badge>
+                            )}
+                          </div>
+                        )}
+                      </CardContent>
+                      <CardFooter className='flex justify-between gap-2 border-t border-border bg-muted/30 p-4'>
+                        <div className='flex gap-2' onClick={(e) => e.stopPropagation()}>
+                          <Link
+                            to={`/dashboard/quiz/${quiz.id}/edit`}
+                            viewTransition
+                            className={cn(
+                              buttonVariants({ variant: 'outline', size: 'sm' }),
+                              'gap-1 px-2',
+                            )}
+                          >
+                            <Edit data-icon='inline-start' />{' '}
+                            <span className='hidden sm:inline'>Sửa</span>
+                          </Link>
 
-      {/* Quiz Preview Modal */}
-      <QuizPreviewModal
-        quiz={previewQuiz}
-        open={!!previewQuiz}
-        onOpenChange={(open) => {
-          if (!open) setPreviewQuiz(null)
-        }}
-        onHostLive={(quizId, title) => handleHost(quizId, title)}
-      />
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant='destructive' size='sm' className='gap-1 px-2'>
+                                <Trash2 data-icon='inline-start' />{' '}
+                                <span className='hidden sm:inline'>Xóa</span>
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Bạn có chắc chắn muốn xóa?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Hành động này không thể hoàn tác. Bộ câu hỏi{' '}
+                                  <span className='font-semibold text-foreground'>
+                                    "{quiz.title}"
+                                  </span>{' '}
+                                  sẽ bị xóa vĩnh viễn khỏi hệ thống.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Hủy</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(quiz.id)}
+                                  className='text-destructive-foreground bg-destructive hover:bg-destructive/80'
+                                >
+                                  Xóa vĩnh viễn
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
 
-      <ImportQuizDialog
-        isOpen={isImportOpen}
-        onClose={closeImportDialog}
-        onImport={handleImportQuiz}
-        mode='quiz'
-      />
+                        <div className='flex gap-2' onClick={(e) => e.stopPropagation()}>
+                          <Button
+                            variant='gradient-orange'
+                            size='sm'
+                            className='gap-2'
+                            onClick={() => handleHost(quiz.id, quiz.title)}
+                          >
+                            <Play data-icon='inline-start' /> Host
+                          </Button>
+                          <Link
+                            to={`/solo/${quiz.id}`}
+                            viewTransition
+                            className={cn(
+                              buttonVariants({ variant: 'outline', size: 'sm' }),
+                              'gap-2',
+                            )}
+                          >
+                            <BookOpen data-icon='inline-start' /> Tự luyện
+                          </Link>
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
 
-      {importing && (
-        <LoadingOverlay
-          message='Đang import bộ câu hỏi mới...'
-          subMessage='Vui lòng không đóng trình duyệt hoặc tải lại trang'
+            {/* Tab: Hoạt động (thay thế tab Lịch sử cũ) */}
+            <TabsContent value='history' className='mt-6'>
+              <ActivityTabs quizzes={quizzes} />
+            </TabsContent>
+
+            {/* Tab: Khám phá (tìm kiếm quiz công khai) */}
+            <TabsContent value='explore' className='mt-6'>
+              <div className='mb-6'>
+                <h2 className='text-2xl font-semibold text-foreground'>Khám phá Quiz</h2>
+                <p className='mt-1 text-sm text-muted-foreground'>
+                  Tìm kiếm và chơi thử các bộ câu hỏi từ cộng đồng.
+                </p>
+              </div>
+              <QuizSearch />
+            </TabsContent>
+          </Tabs>
+        </main>
+
+        {/* Quiz Preview Modal */}
+        <QuizPreviewModal
+          quiz={previewQuiz}
+          open={!!previewQuiz}
+          onOpenChange={(open) => {
+            if (!open) setPreviewQuiz(null)
+          }}
+          onHostLive={(quizId, title) => handleHost(quizId, title)}
         />
-      )}
-    </div>
+
+        <ImportQuizDialog
+          isOpen={isImportOpen}
+          onClose={closeImportDialog}
+          onImport={handleImportQuiz}
+          mode='quiz'
+        />
+
+        {importing && (
+          <LoadingOverlay
+            message='Đang import bộ câu hỏi mới...'
+            subMessage='Vui lòng không đóng trình duyệt hoặc tải lại trang'
+          />
+        )}
+        <BottomNav />
+      </div>
+    </PageTransition>
   )
 }

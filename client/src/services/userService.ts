@@ -10,7 +10,11 @@ import {
 } from 'firebase/auth'
 
 class UserService {
-  constructor(private readonly repository: IUserRepository) {}
+  private readonly repository: IUserRepository
+
+  constructor(repository: IUserRepository) {
+    this.repository = repository
+  }
 
   /** Lấy user profile từ Firestore */
   async getUserProfile(uid: string): Promise<UserProfile | null> {

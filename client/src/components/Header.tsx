@@ -15,9 +15,12 @@ export function Header() {
   }, [theme, setTheme])
 
   return (
-    <header className='bg-linear-to-r from-red-600 via-rose-500 to-orange-500 text-white shadow-lg'>
+    <header
+      className='bg-linear-to-r from-red-600 via-rose-500 to-orange-500 text-white shadow-lg'
+      style={{ viewTransitionName: 'site-header' }}
+    >
       <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-4'>
-        <Link to='/dashboard' className='text-2xl font-bold tracking-tight'>
+        <Link to='/dashboard' viewTransition className='text-2xl font-bold tracking-tight'>
           My-Quizz
         </Link>
         <div className='flex items-center gap-3'>
@@ -28,7 +31,7 @@ export function Header() {
               variant='ghost'
               className='hidden gap-2 bg-white/20 font-medium text-white backdrop-blur-md transition-all hover:bg-white/30 hover:text-white sm:inline-flex'
             >
-              <Link to='/dashboard/quiz/new'>
+              <Link to='/dashboard/quiz/new' viewTransition>
                 <Plus data-icon='inline-start' />
                 Tạo Quiz
               </Link>

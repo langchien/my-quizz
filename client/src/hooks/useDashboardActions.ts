@@ -20,12 +20,14 @@ export function useDashboardActions() {
     async (quizId: string, quizTitle?: string) => {
       if (!user) return
       setHostingQuizId(quizId)
+      const toastId = toast.loading('Đang tạo phòng...')
       try {
         const { sessionId } = await roomService.createLiveSession(quizId, user.uid, quizTitle)
+        toast.dismiss(toastId)
         navigate(`/host/${sessionId}`)
       } catch (err) {
         console.error(err)
-        toast.error('Không thể tạo phòng lúc này')
+        toast.error('Không thể tạo phòng lúc này', { id: toastId })
       } finally {
         setHostingQuizId(null)
       }
