@@ -1,12 +1,13 @@
 import { useTheme } from '@/components/theme-provider'
 import { Button } from '@/components/ui/button'
+import { UserDropdown } from '@/components/UserDropdown'
 import { useAuth } from '@/hooks/useAuth'
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Plus, Sun } from 'lucide-react'
 import { useCallback } from 'react'
 import { Link } from 'react-router'
 
 export function Header() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { theme, setTheme } = useTheme()
 
   const toggleTheme = useCallback(() => {
@@ -19,11 +20,22 @@ export function Header() {
         <Link to='/dashboard' className='text-2xl font-bold tracking-tight'>
           My-Quizz
         </Link>
-        <div className='flex items-center gap-4'>
-          <span className='hidden text-white/90 sm:inline-block'>
-            Xin chào, {user?.displayName || user?.email}
-          </span>
+        <div className='flex items-center gap-3'>
+          {/* Nút Tạo Quiz */}
+          {user && (
+            <Button
+              asChild
+              variant='ghost'
+              className='hidden gap-2 bg-white/20 font-medium text-white backdrop-blur-md transition-all hover:bg-white/30 hover:text-white sm:inline-flex'
+            >
+              <Link to='/dashboard/quiz/new'>
+                <Plus data-icon='inline-start' />
+                Tạo Quiz
+              </Link>
+            </Button>
+          )}
 
+          {/* Toggle Dark/Light mode */}
           <Button
             onClick={toggleTheme}
             variant='ghost'
@@ -38,13 +50,8 @@ export function Header() {
             )}
           </Button>
 
-          <Button
-            onClick={logout}
-            variant='ghost'
-            className='bg-white/20 px-4 py-2 font-medium text-white backdrop-blur-md transition-all hover:bg-white/30 hover:text-white'
-          >
-            Đăng xuất
-          </Button>
+          {/* Avatar + Dropdown thay cho nút Đăng xuất */}
+          <UserDropdown />
         </div>
       </div>
     </header>

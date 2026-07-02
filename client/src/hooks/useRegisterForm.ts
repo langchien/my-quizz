@@ -26,7 +26,7 @@ export function useRegisterForm() {
     try {
       const user = await authService.register(data)
       setUser(user)
-      navigate('/dashboard')
+      navigate('/onboarding')
     } catch (error: any) {
       toast.error(error.message || 'Đăng ký thất bại', {
         duration: 6000,
@@ -38,7 +38,7 @@ export function useRegisterForm() {
     try {
       const user = await authService.loginWithGoogle()
       setUser(user)
-      navigate('/dashboard')
+      navigate('/onboarding')
     } catch (error: any) {
       toast.error(error.message || 'Đăng ký bằng Google thất bại', {
         duration: 6000,

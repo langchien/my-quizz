@@ -34,6 +34,8 @@ const LazyLivePlayer = React.lazy(() => import('@/pages/player/LivePlayer'))
 const LazySoloPlay = React.lazy(() => import('@/pages/solo/SoloPlay'))
 const LazySoloSetup = React.lazy(() => import('@/pages/solo/SoloSetup'))
 const LazyChallengeSetup = React.lazy(() => import('@/pages/player/ChallengeSetup'))
+const LazyOnboarding = React.lazy(() => import('@/pages/auth/Onboarding'))
+const LazySettingsPage = React.lazy(() => import('@/pages/profile/SettingsPage'))
 
 // AuthGuard for public routes (redirects to dashboard if already logged in)
 function PublicRoute({ children }: { children: React.ReactNode }) {
@@ -73,8 +75,11 @@ function RootLayout() {
     if (nextPath === '/join') {
       return <JoinRoomSkeleton />
     }
-    if (nextPath === '/login' || nextPath === '/register') {
+    if (nextPath === '/login' || nextPath === '/register' || nextPath === '/onboarding') {
       return <AuthSkeleton />
+    }
+    if (nextPath === '/settings') {
+      return <DashboardSkeleton />
     }
 
     return (
@@ -165,6 +170,30 @@ function createRouter() {
               ),
               errorElement: <GameError />,
             },
+            {
+              path: '/settings',
+              element: (
+                <Suspense fallback={<DashboardSkeleton />}>
+                  <LazySettingsPage />
+                </Suspense>
+              ),
+            },
+          ],
+        },
+
+        // ─── Onboarding (protected, separate from main layout) ─
+        {
+          path: '/onboarding',
+          element: <ProtectedRoute />,
+          children: [
+            {
+              index: true,
+              element: (
+                <Suspense fallback={<AuthSkeleton />}>
+                  <LazyOnboarding />
+                </Suspense>
+              ),
+            },
           ],
         },
 
@@ -248,8 +277,11 @@ function GlobalInitialLoader() {
   if (path === '/join') {
     return <JoinRoomSkeleton />
   }
-  if (path === '/login' || path === '/register') {
+  if (path === '/login' || path === '/register' || path === '/onboarding') {
     return <AuthSkeleton />
+  }
+  if (path === '/settings') {
+    return <DashboardSkeleton />
   }
 
   return (
